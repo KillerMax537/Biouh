@@ -518,20 +518,58 @@
         });
 
         // Efeito hover nos elementos interativos
-        document.querySelectorAll('a, .profile-pic, button').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.classList.add('hovered');
-                // Cria mais partículas ao entrar em elementos interativos
-                for (let i = 0; i < 5; i++) {
-                    const rect = el.getBoundingClientRect();
-                    createParticle(
-                        rect.left + Math.random() * rect.width,
-                        rect.top + Math.random() * rect.height
-                    );
-                }
-            });
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
+// Mensagem aleatória ao clicar na foto
+document.querySelector('.profile-pic').addEventListener('click', function(e) {
+    e.stopPropagation(); // Evita que o clique afete outros elementos
+    
+    // Cria um balão de mensagem temporário
+    const messageBox = document.createElement('div');
+    const randomMessage = randomClickMessages[Math.floor(Math.random() * randomClickMessages.length)];
+    
+    messageBox.textContent = randomMessage;
+    messageBox.style.cssText = `
+        position: absolute;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: #ff66b2;
+        padding: 8px 15px;
+        border-radius: 15px;
+        border: 1px solid #ff66b2;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        z-index: 9999;
+        animation: floatUp 2s forwards;
+    `;
+    
+    // Adiciona animação de flutuação
+    document.head.insertAdjacentHTML('beforeend', `
+        <style>
+            @keyframes floatUp {
+                0% { opacity: 0; transform: translateX(-50%) translateY(0); }
+                20% { opacity: 1; }
+                80% { opacity: 1; }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+            }
+        </style>
+    `);
+    
+    this.appendChild(messageBox);
+    
+    // Remove a mensagem após a animação
+    setTimeout(() => {
+        messageBox.remove();
+    }, 2000);
+    
+    // Efeito extra: cria partículas rosa
+    for (let i = 0; i < 10; i++) {
+        createParticle(
+            e.clientX + (Math.random() - 0.5) * 50,
+            e.clientY + (Math.random() - 0.5) * 50
+        );
+    }
+});
 
         // ===== PARTÍCULAS FLUTUANTES =====
         if (document.getElementById('particles-js')) {

@@ -4,7 +4,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
-    cursor: none !important;
+    cursor: none;
 }
 
 body {
@@ -102,6 +102,11 @@ body {
     border: 3px solid #ff66b2;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
+}
+
+.profile-pic:active {
+    transform: scale(0.95) !important;
+    box-shadow: 0 0 30px #ff66b2 !important;
 }
 
 .speech-bubble {
