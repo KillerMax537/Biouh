@@ -101,12 +101,20 @@ body {
     background: url('assets/profile-pic.png') no-repeat center/cover;
     border: 3px solid #ff66b2;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
+    cursor: pointer !important; /* Força o cursor de clique */
+    position: relative; /* Permite posicionar as mensagens */
+    user-select: none; 
+}
+
+@keyframes clickEffect {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
 }
 
 .profile-pic:active {
-    transform: scale(0.95) !important;
-    box-shadow: 0 0 30px #ff66b2 !important;
+    animation: clickEffect 0.3s ease;
+    filter: brightness(1.2);
 }
 
 .speech-bubble {

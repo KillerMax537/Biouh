@@ -1,3 +1,4 @@
+
 // Animação do Título
 let docTitle = document.title;
 let blinkInterval;
@@ -392,60 +393,91 @@ audio.addEventListener('play', () => {
 loadSong(currentSong);
 audio.volume = 0.7;
 
-// Frases aleatórias em inglês
+
+// Array de mensagens dark/cute
 const randomClickMessages = [  
-    "Oh? Clicking me won’t save you, cutie~ 💀✨",  
-    "You found me! Now... do you dare click again? 👀",  
-    "I *could* curse you... but you’re too cute for that. 😈💖",  
-    "Three more clicks and I steal your snacks. Promise. 🍬",  
-    "Psst... wanna hear a secret? (It’s probably a trap.)",  
-    "I’d haunt you, but you seem fun. Let’s be partners in crime! 🔪🌸",  
-    "Warning: I bite. (Just kidding... unless?)",  
-    "If I vanish, check the shadow realm. I left snacks there. 🖤",  
-    "Do you believe in ghosts? Good. One’s behind you. (Kidding! ...Maybe.)",  
-    "Click me again and I’ll tell you your future… or a lie. 50/50! 🔮",  
-    "I was napping in the void, but your click woke me. Pay up with memes.",  
-    "You’ve activated my *silly mode*. No refunds. 💫",  
-    "I’d summon demons, but they’re all busy. Wanna chat instead?"  
+    "Boo! Did I scare you?~ 👻",  
+    "Click me again and I'll steal your cookies 🍪",  
+    "You've awakened the dark princess... just kidding! 💖",  
+    "This button does nothing... or does it? 👀",  
+    "I'm watching you... through the screen... 😳",  
+    "Three clicks to summon me at midnight 🌙",  
+    "Error 404: Cuteness not found 💀",  
+    "Why are you poking me? >_<",  
+    "Secret unlocked: You're adorable! ✨",  
+    "System overload: Too much kawaii 💥"  
 ];
 
-// Função para mostrar balão de fala
-function showSpeechBubble() {
-    const profilePic = document.querySelector('.profile-pic');
-    const bubble = document.createElement('div');
-    bubble.className = 'speech-bubble';
+// Função para mostrar mensagem
+function showRandomMessage(element, event) {
+    // Cria balão de mensagem
+    const messageBox = document.createElement('div');
+    messageBox.textContent = randomClickMessages[Math.random() * randomClickMessages.length | 0];
     
-    // Seleciona uma frase aleatória
-    const randomIndex = Math.floor(Math.random() * randomPhrases.length);
-    bubble.textContent = randomPhrases[randomIndex];
+    // Estilo do balão
+    messageBox.style.cssText = `
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: #ff66b2;
+        padding: 8px 15px;
+        border-radius: 15px;
+        border: 1px solid #ff66b2;
+        font-size: 14px;
+        white-space: nowrap;
+        z-index: 10000;
+        pointer-events: none;
+        animation: floatUp 1.5s ease-out forwards;
+    `;
+
+    // Adiciona animação
+    document.head.insertAdjacentHTML('beforeend', `
+        <style>
+            @keyframes floatUp {
+                0% { opacity: 0; transform: translateX(-50%) translateY(0); }
+                20% { opacity: 1; }
+                80% { opacity: 1; }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-40px); }
+            }
+        </style>
+    `);
+
+    element.appendChild(messageBox);
     
-    // Adiciona o balão
-    profilePic.appendChild(bubble);
+    // Remove após animação
+    setTimeout(() => messageBox.remove(), 1500);
     
-    // Mostra o balão
-    setTimeout(() => {
-        bubble.style.opacity = '1';
-        bubble.style.visibility = 'visible';
-    }, 10);
-    
-    // Remove o balão após 3 segundos
-    setTimeout(() => {
-        bubble.style.opacity = '0';
-        bubble.style.visibility = 'hidden';
-        setTimeout(() => bubble.remove(), 300);
-    }, 3000);
+    // Efeito de partículas
+    for (let i = 0; i < 8; i++) {
+        createParticle(
+            event.clientX + (Math.random() - 0.5) * 40,
+            event.clientY + (Math.random() - 0.5) * 40,
+            false
+        );
+    }
 }
 
-// Adiciona o evento de clique na foto de perfil
-document.querySelector('.profile-pic').addEventListener('click', function() {
-    // Adiciona a classe de pulo
-    this.classList.add('jumping');
+// Configura o clique - FORMA À PROVA DE FALHAS
+document.addEventListener('DOMContentLoaded', () => {
+    const profilePic = document.querySelector('.profile-pic');
     
-    // Mostra o balão de fala
-    showSpeechBubble();
-    
-    // Remove a classe de pulo após a animação
-    setTimeout(() => {
-        this.classList.remove('jumping');
-    }, 500);
+    if (profilePic) {
+        // Método 1: Event listener normal
+        profilePic.addEventListener('click', function(e) {
+            e.stopPropagation();
+            showRandomMessage(this, e);
+        });
+        
+        // Método 2: Delegation como fallback
+        document.body.addEventListener('click', function(e) {
+            if (e.target.closest('.profile-pic')) {
+                e.stopPropagation();
+                showRandomMessage(e.target.closest('.profile-pic'), e);
+            }
+        });
+    } else {
+        console.error("Elemento .profile-pic não encontrado!");
+    }
 });
