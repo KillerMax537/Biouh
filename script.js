@@ -394,164 +394,128 @@ loadSong(currentSong);
 audio.volume = 0.7;
 
 
-// Array de mensagens dark/cute melhorado
-const randomHoverMessages = [  
-    "Boo! Did I scare you?~ 👻",  
-    "I see you staring... 👀",  
-    "The dark princess approves your presence 💖",  
-    "Patience... I'll reveal my secrets soon 🌙",  
-    "1.5 seconds is all I need to haunt you 😈",  
-    "Loading cuteness... please wait ✨",  
-    "You passed the vibe check 💀",  
-    "Why so serious? Let's play! >_<",  
-    "Secret unlocked: You're persistent! 🍪",  
-    "System message: You're adorable 💥"  
-];
-
-// Variáveis de controle
-let hoverTimeout = null;
-let currentMessageBox = null;
-let isSpeaking = false;
-
-// Função para mostrar mensagem com verificações
-function showHoverMessage(element, event) {
-    // Limpa mensagem anterior se existir
-    if (currentMessageBox) {
-        currentMessageBox.remove();
-        currentMessageBox = null;
+// Sistema de Mensagens Hover
+class HoverMessageSystem {
+    constructor() {
+        this.messages = [
+            "Boo! Did I scare you?~ 👻",
+            "I see you staring... 👀",
+            "The dark princess approves your presence 💖",
+            "Patience... I'll reveal my secrets soon 🌙",
+            "1.5 seconds is all I need to haunt you 😈",
+            "Loading cuteness... please wait ✨",
+            "You passed the vibe check 💀",
+            "Why so serious? Let's play! >_<",
+            "Secret unlocked: You're persistent! 🍪",
+            "System message: You're adorable 💥"
+        ];
+        this.timer = null;
+        this.currentMessage = null;
+        this.init();
     }
-    
-    // Verifica se o elemento ainda está no DOM
-    if (!document.body.contains(element)) return;
-    
-    // Cria balão de mensagem
-    currentMessageBox = document.createElement('div');
-    const randomIndex = Math.floor(Math.random() * randomHoverMessages.length);
-    currentMessageBox.textContent = randomHoverMessages[randomIndex];
-    
-    // Estilo do balão
-    currentMessageBox.style.cssText = `
-        position: absolute;
-        top: -60px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: #ff66b2;
-        padding: 8px 15px;
-        border-radius: 15px;
-        border: 1px solid #ff66b2;
-        font-size: 14px;
-        white-space: nowrap;
-        z-index: 10000;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    `;
 
-    element.appendChild(currentMessageBox);
-    
-    // Força reflow para ativar a transição
-    void currentMessageBox.offsetWidth;
-    
-    // Mostra a mensagem suavemente
-    currentMessageBox.style.opacity = '1';
-    isSpeaking = true;
-    
-    // Configura para esconder após 3 segundos
-    setTimeout(() => {
-        if (currentMessageBox) {
-            currentMessageBox.style.opacity = '0';
-            setTimeout(() => {
-                if (currentMessageBox && document.body.contains(currentMessageBox)) {
-                    currentMessageBox.remove();
-                }
-                currentMessageBox = null;
-                isSpeaking = false;
-            }, 300);
+    init() {
+        const profilePic = document.querySelector('.profile-pic');
+        if (!profilePic) {
+            console.warn('Profile picture element not found');
+            return;
         }
-    }, 3000);
-}
 
-// Configuração dos eventos com verificações
-function setupHoverEvents() {
-    const profilePic = document.querySelector('.profile-pic');
-    
-    if (!profilePic) {
-        console.warn('Elemento .profile-pic não encontrado');
-        return;
+        profilePic.addEventListener('mouseenter', this.handleMouseEnter.bind(this));
+        profilePic.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
+        profilePic.addEventListener('mousemove', this.handleMouseMove.bind(this));
     }
 
-    // Evento mouseenter com timeout
-    profilePic.addEventListener('mouseenter', function(e) {
-        // Verifica se já está mostrando mensagem
-        if (isSpeaking) return;
+    handleMouseEnter(e) {
+        this.startTimer(e.target);
+    }
+
+    handleMouseLeave() {
+        this.clearTimer();
+    }
+
+    handleMouseMove() {
+        this.clearTimer();
+        this.startTimer();
+    }
+
+    startTimer(element) {
+        if (this.timer) return;
         
-        // Limpa timeout anterior se existir
-        if (hoverTimeout) clearTimeout(hoverTimeout);
+        this.timer = setTimeout(() => {
+            this.showMessage(element);
+            this.timer = null;
+        }, 1500);
+    }
+
+    clearTimer() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+    }
+
+    showMessage(element) {
+        if (this.currentMessage) return;
+
+        const messageBox = document.createElement('div');
+        const randomMsg = this.messages[Math.floor(Math.random() * this.messages.length)];
         
-        // Configura novo timeout
-        hoverTimeout = setTimeout(() => {
-            if (!isSpeaking) {
-                showHoverMessage(this, e);
+        messageBox.textContent = randomMsg;
+        messageBox.style.cssText = `
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #ff66b2;
+            padding: 8px 15px;
+            border-radius: 15px;
+            border: 1px solid #ff66b2;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        `;
+
+        const container = document.getElementById('message-container') || document.body;
+        container.appendChild(messageBox);
+
+        // Posiciona corretamente
+        const rect = element.getBoundingClientRect();
+        messageBox.style.left = `${rect.left + rect.width / 2}px`;
+        messageBox.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+
+        // Animação de entrada
+        setTimeout(() => {
+            messageBox.style.opacity = '1';
+            messageBox.style.transform = 'translateX(-50%) translateY(-5px)';
+        }, 10);
+
+        this.currentMessage = messageBox;
+
+        // Remove após 3 segundos
+        setTimeout(() => {
+            this.removeMessage();
+        }, 3000);
+    }
+
+    removeMessage() {
+        if (!this.currentMessage) return;
+
+        this.currentMessage.style.opacity = '0';
+        this.currentMessage.style.transform = 'translateX(-50%) translateY(-15px)';
+        
+        setTimeout(() => {
+            if (this.currentMessage && this.currentMessage.parentNode) {
+                this.currentMessage.parentNode.removeChild(this.currentMessage);
             }
-        }, 1500); // 1.5 segundos
-    });
-
-    // Evento mouseleave
-    profilePic.addEventListener('mouseleave', function() {
-        // Limpa o timeout se o mouse sair antes
-        if (hoverTimeout) {
-            clearTimeout(hoverTimeout);
-            hoverTimeout = null;
-        }
-        // Não faz nada se já estiver mostrando mensagem (deixa terminar)
-    });
-
-    // Evento mousemove para resetar o timer se mover
-    profilePic.addEventListener('mousemove', function() {
-        if (hoverTimeout && !isSpeaking) {
-            clearTimeout(hoverTimeout);
-            hoverTimeout = setTimeout(() => {
-                if (!isSpeaking) {
-                    const fakeEvent = { clientX: 0, clientY: 0 };
-                    showHoverMessage(this, fakeEvent);
-                }
-            }, 1500);
-        }
-    });
+            this.currentMessage = null;
+        }, 300);
+    }
 }
 
 // Inicialização segura
 document.addEventListener('DOMContentLoaded', () => {
-    try {
-        setupHoverEvents();
-    } catch (error) {
-        console.error('Erro ao configurar eventos:', error);
-    }
+    new HoverMessageSystem();
 });
-
-// Fallback caso o DOMContentLoaded já tenha ocorrido
-if (document.readyState !== 'loading') {
-    setupHoverEvents();
-}
-
-// Adiciona estilos necessários
-const styleElement = document.createElement('style');
-styleElement.textContent = `
-    .profile-pic {
-        cursor: pointer;
-        position: relative;
-        user-select: none;
-    }
-    
-    @keyframes floatIn {
-        from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0); }
-    }
-    
-    @keyframes floatOut {
-        from { opacity: 1; transform: translateX(-50%) translateY(0); }
-        to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-    }
-`;
-document.head.appendChild(styleElement);

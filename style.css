@@ -93,6 +93,10 @@ body {
     box-shadow: 0 0 30px rgba(255, 102, 178, 0.6);
 }
 
+.profile-pic:hover {
+    transform: scale(1.05);
+}
+
 .profile-pic {
     width: 100px;
     height: 100px;
@@ -101,9 +105,10 @@ body {
     background: url('assets/profile-pic.png') no-repeat center/cover;
     border: 3px solid #ff66b2;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer !important; /* Força o cursor de clique */
-    position: relative; /* Permite posicionar as mensagens */
-    user-select: none; 
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    transition: transform 0.2s ease;
 }
 
 @keyframes clickEffect {
