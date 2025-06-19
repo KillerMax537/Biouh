@@ -390,13 +390,33 @@
     <div class="cursor"></div>
     <div id="particles-js"></div>
 
-    <!-- Controle de Áudio -->
-    <div class="audio-control" id="audioControl">
-        <i class="fas fa-music"></i>
+<!-- Player de Música Moderno -->
+<div class="music-player" id="musicPlayer">
+    <div class="music-info">
+        <div class="music-title">Tocando: Minha Música</div>
+        <div class="music-progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="music-time">
+            <span id="currentTime">0:00</span>
+            <span id="duration">0:00</span>
+        </div>
     </div>
-    <div class="volume-container" id="volumeContainer">
-        <input type="range" min="0" max="1" step="0.01" value="0.3" class="volume-slider" id="volumeSlider">
+    <div class="music-controls">
+        <button class="control-btn" id="prevBtn"><i class="fas fa-step-backward"></i></button>
+        <button class="control-btn" id="playBtn"><i class="fas fa-play"></i></button>
+        <button class="control-btn" id="nextBtn"><i class="fas fa-step-forward"></i></button>
+        <div class="volume-control">
+            <button class="control-btn" id="volumeBtn"><i class="fas fa-volume-up"></i></button>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.7">
+        </div>
     </div>
+</div>
+
+<!-- Visualizador de Ondas Sonoras (opcional) -->
+<div class="visualizer-container">
+    <canvas id="visualizer"></canvas>
+</div>
 
     <!-- Elemento de Áudio (hidden) -->
     <audio id="backgroundMusic" loop>

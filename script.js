@@ -175,3 +175,219 @@ if (card) {
         card.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(0) rotateY(0)';
     });
 }
+
+// ===== PLAYER DE MÚSICA AVANÇADO =====
+const musicPlayer = document.getElementById('musicPlayer');
+const playBtn = document.getElementById('playBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const volumeBtn = document.getElementById('volumeBtn');
+const progressBar = document.getElementById('progressBar');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const volumeSlider = document.getElementById('volumeSlider');
+const visualizer = document.getElementById('visualizer');
+
+// Lista de músicas (adicione seus arquivos aqui)
+const songs = [
+    {
+        title: "Minha Música Favorita",
+        file: "assets/Music.mp3"
+    },
+    {
+        title: "Outra Música Legal",
+        file: "assets/Music2.mp3"
+    }
+];
+
+let currentSong = 0;
+let isPlaying = false;
+let lastVolume = 0.7;
+let audioContext, analyser, dataArray;
+
+const audio = new Audio();
+
+// Carrega a música
+function loadSong(songIndex) {
+    const song = songs[songIndex];
+    audio.src = song.file;
+    document.querySelector('.music-title').textContent = `Tocando: ${song.title}`;
+    
+    audio.addEventListener('loadedmetadata', () => {
+        updateSongInfo();
+    });
+}
+
+// Atualiza informações da música
+function updateSongInfo() {
+    const duration = audio.duration;
+    const currentTime = audio.currentTime;
+    
+    const progressPercent = (currentTime / duration) * 100;
+    progressBar.style.width = `${progressPercent}%`;
+    
+    const durationMinutes = Math.floor(duration / 60);
+    let durationSeconds = Math.floor(duration % 60);
+    if (durationSeconds < 10) durationSeconds = `0${durationSeconds}`;
+    
+    const currentMinutes = Math.floor(currentTime / 60);
+    let currentSeconds = Math.floor(currentTime % 60);
+    if (currentSeconds < 10) currentSeconds = `0${currentSeconds}`;
+    
+    durationEl.textContent = `${durationMinutes}:${durationSeconds}`;
+    currentTimeEl.textContent = `${currentMinutes}:${currentSeconds}`;
+}
+
+// Toca a música
+function playSong() {
+    isPlaying = true;
+    audio.play();
+    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    musicPlayer.style.transform = 'translateY(0)';
+    
+    audio.addEventListener('timeupdate', updateSongInfo);
+}
+
+// Pausa a música
+function pauseSong() {
+    isPlaying = false;
+    audio.pause();
+    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+}
+
+// Música anterior
+function prevSong() {
+    currentSong--;
+    if (currentSong < 0) {
+        currentSong = songs.length - 1;
+    }
+    loadSong(currentSong);
+    if (isPlaying) playSong();
+}
+
+// Próxima música
+function nextSong() {
+    currentSong++;
+    if (currentSong > songs.length - 1) {
+        currentSong = 0;
+    }
+    loadSong(currentSong);
+    if (isPlaying) playSong();
+}
+
+// Configura o visualizador de áudio
+function setupAudioAnalyzer() {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioContext.createAnalyser();
+    const source = audioContext.createMediaElementSource(audio);
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+    analyser.fftSize = 64;
+    
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    
+    if (visualizer) {
+        const ctx = visualizer.getContext('2d');
+        visualizer.width = 300;
+        visualizer.height = 60;
+        
+        function draw() {
+            requestAnimationFrame(draw);
+            
+            analyser.getByteFrequencyData(dataArray);
+            
+            ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+            
+            const barWidth = (visualizer.width / dataArray.length) * 2.5;
+            let x = 0;
+            
+            for(let i = 0; i < dataArray.length; i++) {
+                const barHeight = dataArray[i] / 2;
+                
+                ctx.fillStyle = `hsl(${330 + i * 2}, 100%, 70%)`;
+                ctx.fillRect(x, visualizer.height - barHeight, barWidth, barHeight);
+                
+                x += barWidth + 2;
+            }
+        }
+        
+        draw();
+    }
+}
+
+// Event Listeners
+playBtn.addEventListener('click', () => {
+    isPlaying ? pauseSong() : playSong();
+});
+
+prevBtn.addEventListener('click', prevSong);
+nextBtn.addEventListener('click', nextSong);
+
+// Barra de progresso clicável
+document.querySelector('.music-progress').addEventListener('click', (e) => {
+    const width = e.target.clientWidth;
+    const clickX = e.offsetX;
+    const duration = audio.duration;
+    audio.currentTime = (clickX / width) * duration;
+});
+
+// Controle de volume
+volumeSlider.addEventListener('input', () => {
+    audio.volume = volumeSlider.value;
+    
+    if (audio.volume == 0) {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+    } else if (audio.volume < 0.5) {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
+    } else {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    }
+    
+    lastVolume = audio.volume;
+});
+
+volumeBtn.addEventListener('click', () => {
+    if (audio.volume > 0) {
+        lastVolume = audio.volume;
+        audio.volume = 0;
+        volumeSlider.value = 0;
+        volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+    } else {
+        audio.volume = lastVolume;
+        volumeSlider.value = lastVolume;
+        if (lastVolume < 0.5) {
+            volumeBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
+        } else {
+            volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        }
+    }
+});
+
+// Quando a música termina, toca a próxima
+audio.addEventListener('ended', nextSong);
+
+// Mostra/esconde o player
+let hideTimeout;
+musicPlayer.addEventListener('mouseenter', () => {
+    clearTimeout(hideTimeout);
+    musicPlayer.style.transform = 'translateY(0)';
+});
+
+musicPlayer.addEventListener('mouseleave', () => {
+    if (!isPlaying) {
+        hideTimeout = setTimeout(() => {
+            musicPlayer.style.transform = 'translateY(100px)';
+        }, 2000);
+    }
+});
+
+// Configura o visualizador quando a música começa
+audio.addEventListener('play', () => {
+    if (!audioContext) {
+        setupAudioAnalyzer();
+    }
+});
+
+// Carrega a primeira música
+loadSong(currentSong);
+audio.volume = 0.7;
