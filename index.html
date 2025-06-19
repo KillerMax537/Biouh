@@ -6,6 +6,78 @@
     <title>Uh... | Portifolio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Adicionando estilos para o modal do Roblox */
+        .roblox-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 2px solid #ff66b2;
+            box-shadow: 0 0 30px rgba(255, 102, 178, 0.5);
+            z-index: 100;
+            text-align: center;
+        }
+
+        .roblox-modal h2 {
+            color: #ff66b2;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .roblox-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .roblox-option {
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 102, 178, 0.2);
+            border: 1px solid #ff66b2;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .roblox-option:hover {
+            background: rgba(255, 102, 178, 0.4);
+            transform: scale(1.05);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #ff66b2;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            backdrop-filter: blur(5px);
+        }
+    </style>
 </head>
 <body>
     <!-- Tela inicial (Click...) -->
@@ -21,9 +93,24 @@
             <p class="bio">Its me Uh... | Scripter, Animator, Composer</p>
             <div class="buttons">
                 <a href="https://discord.gg/QJfTJjtYJJ" class="btn discord-btn">Discord</a>
-                <a href="https://www.roblox.com/communities/34305901/ILI-Studios#!/about" class="btn roblox-btn">Roblox</a>
+                <a href="#" id="roblox-btn" class="btn roblox-btn">Roblox</a>
             </div>
             <p class="credit">By: Julia</p>
+        </div>
+    </div>
+
+    <!-- Modal do Roblox -->
+    <div class="modal-overlay" id="roblox-modal-overlay"></div>
+    <div class="roblox-modal" id="roblox-modal">
+        <span class="close-modal" id="close-modal">&times;</span>
+        <h2>Roblox Options</h2>
+        <div class="roblox-options">
+            <a href="https://www.roblox.com/users/your-profile-id/profile" class="roblox-option" target="_blank">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="https://www.roblox.com/groups/your-group-id" class="roblox-option" target="_blank">
+                <i class="fas fa-users"></i> Group
+            </a>
         </div>
     </div>
 
@@ -33,6 +120,217 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Animação do Título
+        let docTitle = document.title;
+        let blinkInterval;
+
+        function startTitleAnimation() {
+            blinkInterval = setInterval(() => {
+                document.title = document.title === docTitle ? "✧ Uh... ✧" : docTitle;
+            }, 800);
+        }
+
+        // Remove Preloader
+        document.getElementById('preloader').addEventListener('click', function() {
+            this.style.opacity = '0';
+            setTimeout(() => {
+                this.style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                startTitleAnimation();
+            }, 500);
+        });
+
+        // ===== EFEITO AURORA =====
+        document.body.insertAdjacentHTML('afterbegin', '<div class="aurora"></div>');
+
+        // ===== CURSOR PERSONALIZADO =====
+        const cursor = document.querySelector('.cursor');
+
+        // Remove cursor padrão completamente
+        document.body.style.cursor = 'none';
+
+        // Função para criar partículas
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            const size = Math.random() * 8 + 3;
+            const lifespan = Math.random() * 1000 + 500;
+            
+            particle.className = 'particle';
+            particle.style.cssText = `
+                position: fixed;
+                left: ${x}px;
+                top: ${y}px;
+                width: ${size}px;
+                height: ${size}px;
+                background: hsl(${Math.random() * 20 + 330}, 100%, 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: ${Math.random() * 0.6 + 0.4};
+                z-index: 3;
+            `;
+            
+            document.body.appendChild(particle);
+            
+            const animation = particle.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(0.2)`, opacity: 0 }
+            ], { 
+                duration: lifespan,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            });
+            
+            animation.onfinish = () => particle.remove();
+        }
+
+        // Movimento do mouse
+        document.addEventListener('mousemove', (e) => {
+            // Atualiza posição do cursor
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            // Cria partículas com menos restrição de movimento
+            if (Math.random() > 0.3) {
+                createParticle(e.clientX, e.clientY);
+            }
+        });
+
+        // Efeito hover nos elementos interativos
+        document.querySelectorAll('a, .profile-pic, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('hovered');
+                // Cria mais partículas ao entrar em elementos interativos
+                for (let i = 0; i < 5; i++) {
+                    const rect = el.getBoundingClientRect();
+                    createParticle(
+                        rect.left + Math.random() * rect.width,
+                        rect.top + Math.random() * rect.height
+                    );
+                }
+            });
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // ===== PARTÍCULAS FLUTUANTES =====
+        if (document.getElementById('particles-js')) {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { 
+                        value: 30, 
+                        density: { 
+                            enable: true, 
+                            value_area: 800 
+                        } 
+                    },
+                    color: { 
+                        value: '#ff66b2' 
+                    },
+                    shape: { 
+                        type: 'circle' 
+                    },
+                    opacity: { 
+                        value: 0.5,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 1,
+                            opacity_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    size: { 
+                        value: 3,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 2,
+                            size_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    line_linked: { 
+                        enable: false 
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1,
+                        direction: 'top',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false,
+                        attract: {
+                            enable: true,
+                            rotateX: 600,
+                            rotateY: 1200
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: 'window',
+                    events: {
+                        onhover: { 
+                            enable: true,
+                            mode: 'repulse' 
+                        },
+                        onclick: { 
+                            enable: true,
+                            mode: 'push' 
+                        }
+                    }
+                },
+                retina_detect: true
+            });
+        }
+
+        // ===== EFEITO 3D NO CARD =====
+        const card = document.querySelector('.profile-card');
+        if (card) {
+            document.addEventListener('mousemove', (e) => {
+                const x = (window.innerWidth / 2 - e.pageX) / 20;
+                const y = (window.innerHeight / 2 - e.pageY) / 20;
+                card.style.transform = `translate(-50%, -50%) perspective(1000px) rotateX(${y}deg) rotateY(${-x}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        }
+
+        // ===== MODAL DO ROBLOX =====
+        const robloxBtn = document.getElementById('roblox-btn');
+        const robloxModal = document.getElementById('roblox-modal');
+        const robloxModalOverlay = document.getElementById('roblox-modal-overlay');
+        const closeModal = document.getElementById('close-modal');
+
+        // Abrir modal
+        robloxBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            robloxModal.style.display = 'block';
+            robloxModalOverlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Fechar modal
+        closeModal.addEventListener('click', () => {
+            robloxModal.style.display = 'none';
+            robloxModalOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+
+        // Fechar ao clicar no overlay
+        robloxModalOverlay.addEventListener('click', () => {
+            robloxModal.style.display = 'none';
+            robloxModalOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+
+        // Substitua esses links pelos seus links reais do Roblox
+        const profileLink = "https://www.roblox.com/users/1803582764/profile";
+        const groupLink = "https://www.roblox.com/communities/34305901/ILI-Studios#!/about";
+        
+        document.querySelector('.roblox-options a[href*="profile"]').href = profileLink;
+        document.querySelector('.roblox-options a[href*="group"]').href = groupLink;
+    </script>
 </body>
 </html>
