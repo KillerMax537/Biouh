@@ -1,4 +1,3 @@
-
 // Animação do Título
 let docTitle = document.title;
 let blinkInterval;
@@ -28,24 +27,13 @@ const cursor = document.querySelector('.cursor');
 // Remove cursor padrão completamente
 document.body.style.cursor = 'none';
 
-document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-    
-    // Cria partículas que seguem o mouse
-    if (e.movementX > 5 || e.movementY > 5) { // Só cria se o mouse se mover rápido
-        createParticle(e.clientX, e.clientY);
-    }
-});
-
-// ===== PARTÍCULAS DINÂMICAS =====
+// Função para criar partículas
 function createParticle(x, y) {
     const particle = document.createElement('div');
-    particle.className = 'particle';
-    
     const size = Math.random() * 8 + 3;
     const lifespan = Math.random() * 1000 + 500;
     
+    particle.className = 'particle';
     particle.style.cssText = `
         left: ${x}px;
         top: ${y}px;
@@ -53,6 +41,7 @@ function createParticle(x, y) {
         height: ${size}px;
         background: hsl(${Math.random() * 20 + 330}, 100%, 70%);
         opacity: ${Math.random() * 0.6 + 0.4};
+        z-index: 9998;
     `;
     
     document.body.appendChild(particle);
@@ -65,55 +54,25 @@ function createParticle(x, y) {
     animation.onfinish = () => particle.remove();
 }
 
-// ===== INICIALIZAÇÃO =====
-document.getElementById('preloader').addEventListener('click', function() {
-    this.style.opacity = '0';
-    setTimeout(() => {
-        this.style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-        startTitleAnimation();
-    }, 500);
-});
-
+// Movimento do mouse
 document.addEventListener('mousemove', (e) => {
+    // Atualiza posição do cursor
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
-    createParticle(e.clientX, e.clientY);
+    
+    // Cria partículas apenas quando o mouse se move rápido
+    if (e.movementX > 5 || e.movementY > 5) {
+        createParticle(e.clientX, e.clientY);
+    }
 });
 
+// Efeito hover nos elementos interativos
 document.querySelectorAll('a, .profile-pic').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
 });
 
-// Partículas que Seguem o Mouse
-function createParticle(x, y) {
-    const particle = document.createElement('div');
-    particle.style.cssText = `
-        position: absolute;
-        left: ${x}px;
-        top: ${y}px;
-        width: ${Math.random() * 10 + 5}px;
-        height: ${Math.random() * 10 + 5}px;
-        background: rgba(255, 102, 178, ${Math.random() * 0.6 + 0.2});
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9998;
-    `;
-    document.body.appendChild(particle);
-
-    const animation = particle.animate(
-        [
-            { transform: 'translate(0, 0)', opacity: 1 },
-            { transform: `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px)`, opacity: 0 }
-        ],
-        { duration: Math.random() * 1000 + 500 }
-    );
-
-    animation.onfinish = () => particle.remove();
-}
-
-// Partículas Flutuantes
+// ===== PARTÍCULAS FLUTUANTES =====
 particlesJS('particles-js', {
     particles: {
         number: { value: 30, density: { enable: true, value_area: 800 } },
@@ -136,7 +95,7 @@ particlesJS('particles-js', {
     }
 });
 
-// Efeito 3D no Card
+// ===== EFEITO 3D NO CARD =====
 const card = document.querySelector('.profile-card');
 document.addEventListener('mousemove', (e) => {
     const x = (window.innerWidth / 2 - e.pageX) / 20;
@@ -147,4 +106,3 @@ document.addEventListener('mousemove', (e) => {
 card.addEventListener('mouseleave', () => {
     card.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(0) rotateY(0)';
 });
-
