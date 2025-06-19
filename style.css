@@ -183,10 +183,10 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
-    z-index: 0; /* Abaixo do container (z-index: 1) mas acima do body */
+    z-index: 500; /* Abaixo do container (z-index: 1) mas acima do body */
 }
 
 .particle {
     /* Partículas criadas via JS */
-    z-index: 2; /* Acima do background, abaixo do card */
+    z-index: 500; /* Acima do background, abaixo do card */
 }
