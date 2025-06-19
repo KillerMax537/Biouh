@@ -21,7 +21,7 @@
             position: relative;
         }
 
-        /* Z-Index Hierarchy */
+        /* Aurora Effect */
         .aurora {
             position: fixed;
             top: 0;
@@ -91,7 +91,7 @@
             border: 2px solid #ff66b2;
             box-shadow: 0 0 20px rgba(255, 102, 178, 0.3);
             text-align: center;
-            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            transition: transform 0.4s ease, opacity 0.4s ease;
             z-index: 4;
         }
 
@@ -165,6 +165,189 @@
         .credit {
             font-size: 0.7rem;
             color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Arrow Button */
+        .arrow-btn {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #ff66b2;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .arrow-btn:hover {
+            transform: translateY(-50%) scale(1.2);
+            color: #fff;
+        }
+
+        /* Transition Slash Effect */
+        .slash-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, #ff66b2 50%, transparent);
+            z-index: 5;
+            transform: translateX(-100%) skewX(-30deg);
+            display: none;
+        }
+
+        .slash-effect.active {
+            display: block;
+            animation: slash 0.5s forwards;
+        }
+
+        @keyframes slash {
+            0% { transform: translateX(-100%) skewX(-30deg); }
+            100% { transform: translateX(100%) skewX(-30deg); }
+        }
+
+        /* About Section */
+        .about-section {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateX(100%) skewX(-10deg);
+            width: 80%;
+            max-width: 700px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            border: 2px solid #ff66b2;
+            box-shadow: 0 0 25px rgba(255, 102, 178, 0.4);
+            z-index: 4;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .about-section.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateX(0) skewX(0);
+        }
+
+        .about-content > div {
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .about-section.active .about-content > div {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .about-content > div:nth-child(1) { transition-delay: 0.2s; }
+        .about-content > div:nth-child(2) { transition-delay: 0.4s; }
+        .about-content > div:nth-child(3) { transition-delay: 0.6s; }
+        .about-content > div:nth-child(4) { transition-delay: 0.8s; }
+
+        .about-section h2 {
+            color: #ff66b2;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-align: left;
+            text-shadow: 0 0 10px rgba(255, 102, 178, 0.5);
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .about-section h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 102, 178, 0.2);
+            transform: skewX(-10deg);
+            z-index: -1;
+            border-radius: 5px;
+        }
+
+        .about-section p {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            list-style: none;
+        }
+
+        .skill-item {
+            background: rgba(255, 102, 178, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ff66b2;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-3px) skewX(-5deg);
+            background: rgba(255, 102, 178, 0.4);
+            box-shadow: 0 0 10px rgba(255, 102, 178, 0.7);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .video-item {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #ff66b2;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-item:hover {
+            transform: scale(1.03) skewX(-2deg);
+            box-shadow: 0 0 15px rgba(255, 102, 178, 0.7);
+        }
+
+        .video-item iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .back-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 25px;
+            background: transparent;
+            border: 2px solid #ff66b2;
+            color: #ff66b2;
+            border-radius: 20px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05) skewX(-5deg);
+            box-shadow: 0 0 15px rgba(255, 102, 178, 0.7);
+            color: #fff;
         }
 
         /* Cursor */
@@ -389,6 +572,23 @@
             width: 100%;
             height: 100%;
         }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .about-section {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .video-item {
+                padding-top: 75%; /* Adjust aspect ratio for smaller screens */
+            }
+
+            .arrow-btn {
+                right: 5px;
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -397,9 +597,12 @@
         <h1>Click...</h1>
     </div>
 
+    <!-- Slash Effect for Transition -->
+    <div class="slash-effect" id="slash-effect"></div>
+
     <!-- Main Content -->
     <div class="container" id="main-content">
-        <div class="profile-card">
+        <div class="profile-card" id="profile-card">
             <div class="profile-pic"></div>
             <h1 class="name">𓆩 ✧ 𝓾𝓱… ✧ 𓆪</h1>
             <p class="bio">Its me Uh... | Scripter, Animator, Composer</p>
@@ -408,6 +611,43 @@
                 <a href="#" id="roblox-btn" class="btn roblox-btn">Roblox</a>
             </div>
             <p class="credit">By: Julia</p>
+            <div class="arrow-btn" id="arrow-btn"><i class="fas fa-chevron-right"></i></div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-section" id="about-section">
+            <div class="about-content">
+                <div class="about-me">
+                    <h2>Who I Am?</h2>
+                    <p>I'm Uh..., a passionate developer and creator who loves turning ideas into digital experiences. Specializing in scripting, animation, and music composition, I primarily work on Roblox, crafting games and content that captivate and inspire players around the world.</p>
+                </div>
+                <div class="experience">
+                    <h2>Experiency</h2>
+                    <p>With over 5 years of experience, I’ve developed numerous projects on Roblox—from complex scripts to detailed animations and original soundtracks. I’ve contributed to both collaborative and independent projects, always striving for innovation and quality.</p>
+                </div>
+                <div class="skills">
+                    <h2>Habilidades</h2>
+                    <ul class="skills-list">
+                        <li class="skill-item">Lua Scripting</li>
+                        <li class="skill-item">3D Animation</li>
+                        <li class="skill-item">Music Composition</li>
+                        <li class="skill-item">Interface Design</li>
+                        <li class="skill-item">Game Development</li>
+                    </ul>
+                </div>
+                <div class="videos">
+                    <h2>Meus Projetos</h2>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-item">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="back-btn" id="back-btn">Voltar</a>
         </div>
     </div>
 
@@ -549,51 +789,44 @@
         });
 
         // Hover Effects
-        const hoverElements = document.querySelectorAll('.btn, .profile-pic, .roblox-option, .close-modal, .control-btn');
+        const hoverElements = document.querySelectorAll('.btn, .profile-pic, .roblox-option, .close-modal, .control-btn, .arrow-btn, .back-btn, .skill-item, .video-item');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
 
+        // Click Particle Effect
+        function createClickParticles(x, y) {
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                    left: ${x}px;
+                    top: ${y}px;
+                    width: 6px;
+                    height: 6px;
+                    background: #ff66b2;
+                    opacity: ${Math.random() * 0.5 + 0.5};
+                `;
+                document.body.appendChild(particle);
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${Math.random() * 60 - 30}px, ${Math.random() * 60 - 30}px) scale(0.1)`, opacity: 0 }
+                ], {
+                    duration: 600,
+                    easing: 'ease-out'
+                }).onfinish = () => particle.remove();
+            }
+        }
+
         // Profile Picture Click Messages
         const randomClickMessages = [
-    "Hey, that's me! 👀",
-    "Nice click! Want a cookie? 🍪",
-    "Ooh, sparkles! ✨ ...or is it glitter?",
-    "Stop poking me! >_<",
-    "You found me! ...was I hiding?",
-    "Here I am! Like what you see?",
-    "Boo! Did I scare you? 👻",
-    "Three clicks to summon me at midnight 🌙",
-    "That tickles! Hehe~",
-    "I'm not a button... or am I? 🔘",
-    "Error 404: Cuteness not found 💀",
-    "Secret unlocked: You're adorable! 💖",
-    "System overload: Too much kawaii 💥",
-    "Why so serious? Let's play! 🎮",
-    "I can see you... through the screen... 😳",
-    "This isn't a bug, it's a feature! 🐞",
-    "Loading sass... please wait ⌛",
-    "You've activated my trap card! 🃏",
-    "I'd haunt you, but you seem fun 👻",
-    "Warning: May contain traces of magic ✨",
-    "Did you just assume my pixels?",
-    "I'm 90% fluff, 10% dark magic 🧙♀️",
-    "No refunds on clicks! 💸",
-    "Your click has been recorded... just kidding! ...maybe",
-    "Beep boop! ...wait, wrong script 🤖",
-    "I'm watching you... judgementally 👁️",
-    "This message will self-destruct... just kidding! 💣",
-    "You're now subscribed to Cat Facts! 🐈",
-    "Insert clever message here 📝",
-    "System update: Added more sass 💅",
-    "Do you come here often? 😏",
-    "I'm not short, I'm concentrated cute!",
-    "Warning: Cuteness overload imminent 💫",
-    "I put the 'hex' in hexadecimal 🎨",
-    "Your click powered 0.0001% of my sass ⚡",
-    "I'd tell you a joke about UDP... but you might not get it 🎭"
-];
+            "Hey, that's me!",
+            "Nice click!",
+            "Ooh, sparkles!",
+            "Stop poking me!",
+            "You found me!"
+        ];
 
         document.querySelector('.profile-pic').addEventListener('click', function(e) {
             e.stopPropagation();
@@ -605,11 +838,11 @@
                 position: absolute;
                 top: -50px;
                 left: 50%;
-                transform: translateX(-50%);
+                transform: translateX(-50%) skewX(-10deg);
                 background: rgba(0, 0, 0, 0.8);
                 color: #ff66b2;
                 padding: 8px 15px;
-                border-radius: 15px;
+                border-radius: 10px;
                 border: 1px solid #ff66b2;
                 font-size: 0.9rem;
                 white-space: nowrap;
@@ -620,10 +853,10 @@
             document.head.insertAdjacentHTML('beforeend', `
                 <style>
                     @keyframes floatUp {
-                        0% { opacity: 0; transform: translateX(-50%) translateY(0); }
+                        0% { opacity: 0; transform: translateX(-50%) translateY(0) skewX(-10deg); }
                         20% { opacity: 1; }
                         80% { opacity: 1; }
-                        100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+                        100% { opacity: 0; transform: translateX(-50%) translateY(-30px) skewX(-10deg); }
                     }
                 </style>
             `);
@@ -634,12 +867,7 @@
                 messageBox.remove();
             }, 2000);
 
-            for (let i = 0; i < 10; i++) {
-                createParticle(
-                    e.clientX + (Math.random() - 0.5) * 50,
-                    e.clientY + (Math.random() - 0.5) * 50
-                );
-            }
+            createClickParticles(e.clientX, e.clientY);
         });
 
         // Floating Particles
@@ -728,6 +956,46 @@
             createParticle(e.clientX, e.clientY, true);
         });
 
+        // About Section Transition
+        const arrowBtn = document.getElementById('arrow-btn');
+        const aboutSection = document.getElementById('about-section');
+        const profileCard = document.getElementById('profile-card');
+        const backBtn = document.getElementById('back-btn');
+        const slashEffect = document.getElementById('slash-effect');
+
+        arrowBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            createClickParticles(e.clientX, e.clientY);
+            profileCard.style.opacity = '0';
+            profileCard.style.transform = 'translate(-50%, -50%) translateX(-100%) rotate(-5deg)';
+            slashEffect.classList.add('active');
+            setTimeout(() => {
+                profileCard.style.display = 'none';
+                aboutSection.style.display = 'block';
+                setTimeout(() => {
+                    aboutSection.classList.add('active');
+                    slashEffect.classList.remove('active');
+                }, 10);
+            }, 500);
+        });
+
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            createClickParticles(e.clientX, e.clientY);
+            aboutSection.classList.remove('active');
+            aboutSection.style.transform = 'translate(-50%, -50%) translateX(100%) skewX(-10deg)';
+            slashEffect.classList.add('active');
+            setTimeout(() => {
+                aboutSection.style.display = 'none';
+                profileCard.style.display = 'block';
+                setTimeout(() => {
+                    profileCard.style.opacity = '1';
+                    profileCard.style.transform = 'translate(-50%, -50%)';
+                    slashEffect.classList.remove('active');
+                }, 10);
+            }, 500);
+        });
+
         // Roblox Modal
         const robloxBtn = document.getElementById('roblox-btn');
         const robloxModal = document.getElementById('roblox-modal');
@@ -765,7 +1033,7 @@
         const durationEl = document.getElementById('duration');
 
         const playlist = [
-            { title: "Not Munch Time", src: "assets/Music.mp3" }
+            { title: "Minha Música", src: "assets/Music.mp3" }
         ];
         let currentTrackIndex = 0;
 
@@ -882,7 +1150,13 @@
             if (e.key === 'Escape') {
                 robloxModal.style.display = 'none';
                 robloxModalOverlay.style.display = 'none';
+                aboutSection.classList.remove('active');
+                aboutSection.style.display = 'none';
+                profileCard.style.display = 'block';
+                profileCard.style.opacity = '1';
+                profileCard.style.transform = 'translate(-50%, -50%)';
                 document.body.style.overflow = '';
+                slashEffect.classList.remove('active');
             }
         });
     </script>
