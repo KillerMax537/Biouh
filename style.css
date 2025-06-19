@@ -9,11 +9,11 @@
 body {
     height: 100vh;
     overflow: hidden;
-    background: linear-gradient(45deg, #6e45e2, #88d3ce);
+    background: #000000; /* Fundo preto */
     transition: background 1s ease;
 }
 
-/* Tela de "Click..." */
+/* Tela de "Click..." (Estilo Dark) */
 .preloader {
     position: fixed;
     top: 0;
@@ -23,23 +23,24 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.9); /* Preto quase sólido */
     z-index: 100;
     cursor: pointer;
 }
 
 .preloader h1 {
-    color: white;
+    color: #ff66b2; /* Rosa neon */
     font-size: 3rem;
+    text-shadow: 0 0 10px #ff66b2, 0 0 20px #ff66b2; /* Efeito glow */
     animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
     0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
+    50% { opacity: 1; text-shadow: 0 0 15px #ff66b2, 0 0 30px #ff66b2; }
 }
 
-/* Conteúdo Principal (aparece após o click) */
+/* Conteúdo Principal (Dark + Rosa) */
 .container {
     display: none;
     width: 100%;
@@ -53,19 +54,20 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 300px;
+    width: 320px;
     padding: 30px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.7); /* Preto translúcido */
     backdrop-filter: blur(10px);
     border-radius: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid #ff66b2; /* Borda rosa */
+    box-shadow: 0 0 20px rgba(255, 102, 178, 0.3); /* Sombra rosa */
     text-align: center;
     transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
 .profile-card:hover {
     transform: translate(-50%, -50%) perspective(1000px) rotateX(5deg) rotateY(5deg);
-    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 30px rgba(255, 102, 178, 0.6); /* Brilho rosa mais forte */
 }
 
 .profile-pic {
@@ -74,25 +76,27 @@ body {
     margin: 0 auto 15px;
     border-radius: 50%;
     background: url('assets/profile-pic.png') no-repeat center/cover;
-    border: 3px solid white;
+    border: 3px solid #ff66b2; /* Borda rosa */
     transition: transform 0.3s ease;
 }
 
 .profile-pic:hover {
     transform: scale(1.1);
+    box-shadow: 0 0 20px #ff66b2; /* Glow rosa */
 }
 
 .name {
-    background: linear-gradient(45deg, #ff6b6b, #6b6bff);
+    background: linear-gradient(45deg, #ff66b2, #ffffff); /* Rosa → Branco */
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     font-size: 1.8rem;
     margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(255, 102, 178, 0.5);
 }
 
 .bio {
-    color: white;
+    color: #ffffff; /* Branco */
     margin-bottom: 20px;
     font-size: 0.9rem;
     opacity: 0.8;
@@ -115,23 +119,33 @@ body {
 }
 
 .discord-btn {
-    background: #5865F2;
-    border: 2px solid #5865F2;
+    background: transparent;
+    border: 2px solid #ff66b2; /* Rosa */
+    color: #ff66b2;
 }
 
 .roblox-btn {
-    background: #e12c2c;
-    border: 2px solid #e12c2c;
+    background: transparent;
+    border: 2px solid #ffffff; /* Branco */
+    color: #ffffff;
 }
 
 .btn:hover {
     transform: scale(1.05);
-    filter: brightness(1.2);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    background: rgba(255, 102, 178, 0.2); /* Fundo rosa claro */
+    box-shadow: 0 0 15px rgba(255, 102, 178, 0.7); /* Brilho rosa */
+}
+
+.discord-btn:hover {
+    background: rgba(255, 102, 178, 0.3);
+}
+
+.roblox-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .credit {
     font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.3); /* Cinza claro */
     margin-top: 10px;
 }
