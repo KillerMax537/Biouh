@@ -391,3 +391,61 @@ audio.addEventListener('play', () => {
 // Carrega a primeira música
 loadSong(currentSong);
 audio.volume = 0.7;
+
+// Frases aleatórias em inglês
+const randomClickMessages = [  
+    "Oh? Clicking me won’t save you, cutie~ 💀✨",  
+    "You found me! Now... do you dare click again? 👀",  
+    "I *could* curse you... but you’re too cute for that. 😈💖",  
+    "Three more clicks and I steal your snacks. Promise. 🍬",  
+    "Psst... wanna hear a secret? (It’s probably a trap.)",  
+    "I’d haunt you, but you seem fun. Let’s be partners in crime! 🔪🌸",  
+    "Warning: I bite. (Just kidding... unless?)",  
+    "If I vanish, check the shadow realm. I left snacks there. 🖤",  
+    "Do you believe in ghosts? Good. One’s behind you. (Kidding! ...Maybe.)",  
+    "Click me again and I’ll tell you your future… or a lie. 50/50! 🔮",  
+    "I was napping in the void, but your click woke me. Pay up with memes.",  
+    "You’ve activated my *silly mode*. No refunds. 💫",  
+    "I’d summon demons, but they’re all busy. Wanna chat instead?"  
+];
+
+// Função para mostrar balão de fala
+function showSpeechBubble() {
+    const profilePic = document.querySelector('.profile-pic');
+    const bubble = document.createElement('div');
+    bubble.className = 'speech-bubble';
+    
+    // Seleciona uma frase aleatória
+    const randomIndex = Math.floor(Math.random() * randomPhrases.length);
+    bubble.textContent = randomPhrases[randomIndex];
+    
+    // Adiciona o balão
+    profilePic.appendChild(bubble);
+    
+    // Mostra o balão
+    setTimeout(() => {
+        bubble.style.opacity = '1';
+        bubble.style.visibility = 'visible';
+    }, 10);
+    
+    // Remove o balão após 3 segundos
+    setTimeout(() => {
+        bubble.style.opacity = '0';
+        bubble.style.visibility = 'hidden';
+        setTimeout(() => bubble.remove(), 300);
+    }, 3000);
+}
+
+// Adiciona o evento de clique na foto de perfil
+document.querySelector('.profile-pic').addEventListener('click', function() {
+    // Adiciona a classe de pulo
+    this.classList.add('jumping');
+    
+    // Mostra o balão de fala
+    showSpeechBubble();
+    
+    // Remove a classe de pulo após a animação
+    setTimeout(() => {
+        this.classList.remove('jumping');
+    }, 500);
+});

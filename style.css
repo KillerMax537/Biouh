@@ -101,6 +101,47 @@ body {
     background: url('assets/profile-pic.png') no-repeat center/cover;
     border: 3px solid #ff66b2;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.speech-bubble {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 2px solid #ff66b2;
+    font-size: 0.9rem;
+    max-width: 200px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+    border-top-color: #ff66b2;
+}
+
+/* Animação de pular */
+@keyframes jump {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.1); }
+}
+
+.jumping {
+    animation: jump 0.5s ease;
 }
 
 .profile-pic:hover {
