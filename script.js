@@ -394,28 +394,43 @@ loadSong(currentSong);
 audio.volume = 0.7;
 
 
-// Array de mensagens dark/cute
-const randomClickMessages = [  
+// Array de mensagens dark/cute melhorado
+const randomHoverMessages = [  
     "Boo! Did I scare you?~ 👻",  
-    "Click me again and I'll steal your cookies 🍪",  
-    "You've awakened the dark princess... just kidding! 💖",  
-    "This button does nothing... or does it? 👀",  
-    "I'm watching you... through the screen... 😳",  
-    "Three clicks to summon me at midnight 🌙",  
-    "Error 404: Cuteness not found 💀",  
-    "Why are you poking me? >_<",  
-    "Secret unlocked: You're adorable! ✨",  
-    "System overload: Too much kawaii 💥"  
+    "I see you staring... 👀",  
+    "The dark princess approves your presence 💖",  
+    "Patience... I'll reveal my secrets soon 🌙",  
+    "1.5 seconds is all I need to haunt you 😈",  
+    "Loading cuteness... please wait ✨",  
+    "You passed the vibe check 💀",  
+    "Why so serious? Let's play! >_<",  
+    "Secret unlocked: You're persistent! 🍪",  
+    "System message: You're adorable 💥"  
 ];
 
-// Função para mostrar mensagem
-function showRandomMessage(element, event) {
+// Variáveis de controle
+let hoverTimeout = null;
+let currentMessageBox = null;
+let isSpeaking = false;
+
+// Função para mostrar mensagem com verificações
+function showHoverMessage(element, event) {
+    // Limpa mensagem anterior se existir
+    if (currentMessageBox) {
+        currentMessageBox.remove();
+        currentMessageBox = null;
+    }
+    
+    // Verifica se o elemento ainda está no DOM
+    if (!document.body.contains(element)) return;
+    
     // Cria balão de mensagem
-    const messageBox = document.createElement('div');
-    messageBox.textContent = randomClickMessages[Math.random() * randomClickMessages.length | 0];
+    currentMessageBox = document.createElement('div');
+    const randomIndex = Math.floor(Math.random() * randomHoverMessages.length);
+    currentMessageBox.textContent = randomHoverMessages[randomIndex];
     
     // Estilo do balão
-    messageBox.style.cssText = `
+    currentMessageBox.style.cssText = `
         position: absolute;
         top: -60px;
         left: 50%;
@@ -429,55 +444,114 @@ function showRandomMessage(element, event) {
         white-space: nowrap;
         z-index: 10000;
         pointer-events: none;
-        animation: floatUp 1.5s ease-out forwards;
+        opacity: 0;
+        transition: opacity 0.3s ease;
     `;
 
-    // Adiciona animação
-    document.head.insertAdjacentHTML('beforeend', `
-        <style>
-            @keyframes floatUp {
-                0% { opacity: 0; transform: translateX(-50%) translateY(0); }
-                20% { opacity: 1; }
-                80% { opacity: 1; }
-                100% { opacity: 0; transform: translateX(-50%) translateY(-40px); }
-            }
-        </style>
-    `);
-
-    element.appendChild(messageBox);
+    element.appendChild(currentMessageBox);
     
-    // Remove após animação
-    setTimeout(() => messageBox.remove(), 1500);
+    // Força reflow para ativar a transição
+    void currentMessageBox.offsetWidth;
     
-    // Efeito de partículas
-    for (let i = 0; i < 8; i++) {
-        createParticle(
-            event.clientX + (Math.random() - 0.5) * 40,
-            event.clientY + (Math.random() - 0.5) * 40,
-            false
-        );
-    }
+    // Mostra a mensagem suavemente
+    currentMessageBox.style.opacity = '1';
+    isSpeaking = true;
+    
+    // Configura para esconder após 3 segundos
+    setTimeout(() => {
+        if (currentMessageBox) {
+            currentMessageBox.style.opacity = '0';
+            setTimeout(() => {
+                if (currentMessageBox && document.body.contains(currentMessageBox)) {
+                    currentMessageBox.remove();
+                }
+                currentMessageBox = null;
+                isSpeaking = false;
+            }, 300);
+        }
+    }, 3000);
 }
 
-// Configura o clique - FORMA À PROVA DE FALHAS
-document.addEventListener('DOMContentLoaded', () => {
+// Configuração dos eventos com verificações
+function setupHoverEvents() {
     const profilePic = document.querySelector('.profile-pic');
     
-    if (profilePic) {
-        // Método 1: Event listener normal
-        profilePic.addEventListener('click', function(e) {
-            e.stopPropagation();
-            showRandomMessage(this, e);
-        });
+    if (!profilePic) {
+        console.warn('Elemento .profile-pic não encontrado');
+        return;
+    }
+
+    // Evento mouseenter com timeout
+    profilePic.addEventListener('mouseenter', function(e) {
+        // Verifica se já está mostrando mensagem
+        if (isSpeaking) return;
         
-        // Método 2: Delegation como fallback
-        document.body.addEventListener('click', function(e) {
-            if (e.target.closest('.profile-pic')) {
-                e.stopPropagation();
-                showRandomMessage(e.target.closest('.profile-pic'), e);
+        // Limpa timeout anterior se existir
+        if (hoverTimeout) clearTimeout(hoverTimeout);
+        
+        // Configura novo timeout
+        hoverTimeout = setTimeout(() => {
+            if (!isSpeaking) {
+                showHoverMessage(this, e);
             }
-        });
-    } else {
-        console.error("Elemento .profile-pic não encontrado!");
+        }, 1500); // 1.5 segundos
+    });
+
+    // Evento mouseleave
+    profilePic.addEventListener('mouseleave', function() {
+        // Limpa o timeout se o mouse sair antes
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = null;
+        }
+        // Não faz nada se já estiver mostrando mensagem (deixa terminar)
+    });
+
+    // Evento mousemove para resetar o timer se mover
+    profilePic.addEventListener('mousemove', function() {
+        if (hoverTimeout && !isSpeaking) {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(() => {
+                if (!isSpeaking) {
+                    const fakeEvent = { clientX: 0, clientY: 0 };
+                    showHoverMessage(this, fakeEvent);
+                }
+            }, 1500);
+        }
+    });
+}
+
+// Inicialização segura
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        setupHoverEvents();
+    } catch (error) {
+        console.error('Erro ao configurar eventos:', error);
     }
 });
+
+// Fallback caso o DOMContentLoaded já tenha ocorrido
+if (document.readyState !== 'loading') {
+    setupHoverEvents();
+}
+
+// Adiciona estilos necessários
+const styleElement = document.createElement('style');
+styleElement.textContent = `
+    .profile-pic {
+        cursor: pointer;
+        position: relative;
+        user-select: none;
+    }
+    
+    @keyframes floatIn {
+        from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    
+    @keyframes floatOut {
+        from { opacity: 1; transform: translateX(-50%) translateY(0); }
+        to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    }
+`;
+document.head.appendChild(styleElement);
