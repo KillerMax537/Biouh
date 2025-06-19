@@ -4,10 +4,219 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uh... | Portifolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Adicionando estilos para o modal do Roblox */
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            cursor: none !important;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        /* Estrutura de Camadas (Z-Index Hierarchy):
+        0 - body
+        1 - aurora
+        2 - particles-js (partículas flutuantes)
+        3 - container
+        4 - profile-card
+        5 - cursor
+        6 - particles (criadas pelo mouse)
+        9998 - partículas do mouse (alterado para 3)
+        9999 - cursor
+        1000 - preloader
+        */
+
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.3;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 102, 178, 0.8), transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 102, 178, 0.5), transparent 30%);
+            animation: aurora-move 20s infinite alternate;
+        }
+
+        @keyframes aurora-move {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.2) rotate(2deg); }
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .preloader h1 {
+            color: #ff66b2;
+            font-size: 3rem;
+            text-shadow: 0 0 10px #ff66b2;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; text-shadow: 0 0 20px #ff66b2; }
+        }
+
+        /* Container Principal */
+        .container {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            background: url('assets/background.jpg') no-repeat center/cover;
+            position: relative;
+            z-index: 3; /* Acima das partículas flutuantes */
+        }
+
+        /* Profile Card */
+        .profile-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 2px solid #ff66b2;
+            box-shadow: 0 0 20px rgba(255, 102, 178, 0.3);
+            text-align: center;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            z-index: 4; /* Acima do container */
+        }
+
+        .profile-card:hover {
+            transform: translate(-50%, -50%) perspective(1000px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 0 30px rgba(255, 102, 178, 0.6);
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: url('assets/profile-pic.png') no-repeat center/cover;
+            border: 3px solid #ff66b2;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #ff66b2;
+        }
+
+        .name {
+            background: linear-gradient(45deg, #ff66b2, #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .bio {
+            color: #fff;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .discord-btn {
+            background: transparent;
+            border: 2px solid #ff66b2;
+            color: #ff66b2;
+        }
+
+        .roblox-btn {
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 102, 178, 0.7);
+        }
+
+        .credit {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Cursor Customizado */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff66b2;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+        }
+
+        .cursor.hovered {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 102, 178, 0.3);
+            border: 2px solid transparent;
+        }
+
+        /* Partículas */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .particle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 3;
+            mix-blend-mode: screen;
+        }
+
+        /* Modal do Roblox */
         .roblox-modal {
             display: none;
             position: fixed;
@@ -77,6 +286,69 @@
             z-index: 99;
             backdrop-filter: blur(5px);
         }
+
+        /* Controle de Áudio */
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff66b2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #ff66b2;
+            transition: all 0.3s ease;
+        }
+
+        .audio-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px #ff66b2;
+        }
+
+        /* Volume Slider */
+        .volume-container {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff66b2;
+            border-radius: 20px;
+            padding: 10px;
+            display: none;
+            transform: rotate(270deg);
+            transform-origin: right bottom;
+        }
+
+        .volume-slider {
+            width: 80px;
+            -webkit--appearance: none;
+            height: 5px;
+            background: #fff;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+
+        .volume-slider:hover {
+            opacity: 1;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ff66b2;
+            cursor: pointer;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -118,8 +390,23 @@
     <div class="cursor"></div>
     <div id="particles-js"></div>
 
+    <!-- Controle de Áudio -->
+    <div class="audio-control" id="audioControl">
+        <i class="fas fa-music"></i>
+    </div>
+    <div class="volume-container" id="volumeContainer">
+        <input type="range" min="0" max="1" step="0.01" value="0.3" class="volume-slider" id="volumeSlider">
+    </div>
+
+    <!-- Elemento de Áudio (hidden) -->
+    <audio id="backgroundMusic" loop>
+        <source src="assets/Music.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
         // Animação do Título
         let docTitle = document.title;
@@ -131,13 +418,28 @@
             }, 800);
         }
 
-        // Remove Preloader
+        // Remove Preloader e inicia música
         document.getElementById('preloader').addEventListener('click', function() {
             this.style.opacity = '0';
             setTimeout(() => {
                 this.style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
                 startTitleAnimation();
+                
+                // Inicia a música quando o card aparece
+                const music = document.getElementById('backgroundMusic');
+                music.volume = 0.3;
+                
+                // Tenta reproduzir e captura erros de autoplay
+                const playPromise = music.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Autoplay prevented:", error);
+                        // Mostra alerta se autoplay for bloqueado
+                        document.getElementById('audioControl').style.display = 'flex';
+                    });
+                }
             }, 500);
         });
 
@@ -151,7 +453,7 @@
         document.body.style.cursor = 'none';
 
         // Função para criar partículas
-        function createParticle(x, y) {
+        function createParticle(x, y, behindCard = false) {
             const particle = document.createElement('div');
             const size = Math.random() * 8 + 3;
             const lifespan = Math.random() * 1000 + 500;
@@ -167,7 +469,7 @@
                 border-radius: 50%;
                 pointer-events: none;
                 opacity: ${Math.random() * 0.6 + 0.4};
-                z-index: 3;
+                z-index: ${behindCard ? '3' : '9998'};
             `;
             
             document.body.appendChild(particle);
@@ -295,6 +597,11 @@
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(0) rotateY(0)';
             });
+
+            // Cria partículas atrás do card quando o mouse passa por cima
+            card.addEventListener('mousemove', (e) => {
+                createParticle(e.clientX, e.clientY, true);
+            });
         }
 
         // ===== MODAL DO ROBLOX =====
@@ -326,11 +633,60 @@
         });
 
         // Substitua esses links pelos seus links reais do Roblox
-        const profileLink = "https://www.roblox.com/users/1803582764/profile";
-        const groupLink = "https://www.roblox.com/communities/34305901/ILI-Studios#!/about";
+        const profileLink = "https://www.roblox.com/users/YOUR_PROFILE_ID/profile";
+        const groupLink = "https://www.roblox.com/groups/YOUR_GROUP_ID";
         
         document.querySelector('.roblox-options a[href*="profile"]').href = profileLink;
         document.querySelector('.roblox-options a[href*="group"]').href = groupLink;
+
+        // ===== CONTROLE DE MÚSICA =====
+        const audioControl = document.getElementById('audioControl');
+        const volumeContainer = document.getElementById('volumeContainer');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+
+        // Controle para pausar/retomar a música
+        audioControl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                audioControl.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                backgroundMusic.pause();
+                audioControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+        });
+
+        // Mostrar/ocultar controle de volume
+        audioControl.addEventListener('mouseenter', () => {
+            volumeContainer.style.display = 'block';
+        });
+
+        audioControl.addEventListener('mouseleave', () => {
+            setTimeout(() => {
+                if (!volumeContainer.matches(':hover')) {
+                    volumeContainer.style.display = 'none';
+                }
+            }, 300);
+        });
+
+        volumeContainer.addEventListener('mouseleave', () => {
+            volumeContainer.style.display = 'none';
+        });
+
+        // Ajustar volume
+        volumeSlider.addEventListener('input', () => {
+            backgroundMusic.volume = volumeSlider.value;
+        });
+
+        // Fechar modal se pressionar ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                robloxModal.style.display = 'none';
+                robloxModalOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        });
     </script>
 </body>
 </html>
