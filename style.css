@@ -1,0 +1,137 @@
+/* Reset e Estilos Gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(45deg, #6e45e2, #88d3ce);
+    transition: background 1s ease;
+}
+
+/* Tela de "Click..." */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+    cursor: pointer;
+}
+
+.preloader h1 {
+    color: white;
+    font-size: 3rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* Conteúdo Principal (aparece após o click) */
+.container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    background: url('assets/background.jpg') no-repeat center/cover;
+    position: relative;
+}
+
+.profile-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.profile-card:hover {
+    transform: translate(-50%, -50%) perspective(1000px) rotateX(5deg) rotateY(5deg);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: url('assets/profile-pic.png') no-repeat center/cover;
+    border: 3px solid white;
+    transition: transform 0.3s ease;
+}
+
+.profile-pic:hover {
+    transform: scale(1.1);
+}
+
+.name {
+    background: linear-gradient(45deg, #ff6b6b, #6b6bff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.bio {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.discord-btn {
+    background: #5865F2;
+    border: 2px solid #5865F2;
+}
+
+.roblox-btn {
+    background: #e12c2c;
+    border: 2px solid #e12c2c;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.credit {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 10px;
+}
