@@ -1,3 +1,4 @@
+
 // Animação do Título
 let docTitle = document.title;
 let blinkInterval;
@@ -18,8 +19,61 @@ document.getElementById('preloader').addEventListener('click', function() {
     }, 500);
 });
 
-// Cursor Customizado
+// ===== EFEITO AURORA =====
+document.body.insertAdjacentHTML('afterbegin', '<div class="aurora"></div>');
+
+// ===== CURSOR PERSONALIZADO =====
 const cursor = document.querySelector('.cursor');
+
+// Remove cursor padrão completamente
+document.body.style.cursor = 'none';
+
+document.addEventListener('mousemove', (e) => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    
+    // Cria partículas que seguem o mouse
+    if (e.movementX > 5 || e.movementY > 5) { // Só cria se o mouse se mover rápido
+        createParticle(e.clientX, e.clientY);
+    }
+});
+
+// ===== PARTÍCULAS DINÂMICAS =====
+function createParticle(x, y) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    
+    const size = Math.random() * 8 + 3;
+    const lifespan = Math.random() * 1000 + 500;
+    
+    particle.style.cssText = `
+        left: ${x}px;
+        top: ${y}px;
+        width: ${size}px;
+        height: ${size}px;
+        background: hsl(${Math.random() * 20 + 330}, 100%, 70%);
+        opacity: ${Math.random() * 0.6 + 0.4};
+    `;
+    
+    document.body.appendChild(particle);
+    
+    const animation = particle.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(0.2)`, opacity: 0 }
+    ], { duration: lifespan });
+    
+    animation.onfinish = () => particle.remove();
+}
+
+// ===== INICIALIZAÇÃO =====
+document.getElementById('preloader').addEventListener('click', function() {
+    this.style.opacity = '0';
+    setTimeout(() => {
+        this.style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        startTitleAnimation();
+    }, 500);
+});
 
 document.addEventListener('mousemove', (e) => {
     cursor.style.left = e.clientX + 'px';
@@ -93,3 +147,4 @@ document.addEventListener('mousemove', (e) => {
 card.addEventListener('mouseleave', () => {
     card.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(0) rotateY(0)';
 });
+
