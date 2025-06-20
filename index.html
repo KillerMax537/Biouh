@@ -350,6 +350,41 @@
             color: #fff;
         }
 
+        /* View Counter */
+        .view-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ff66b2;
+            border-radius: 20px;
+            padding: 8px 15px;
+            color: #ff66b2;
+            font-size: 0.9rem;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .view-counter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .view-counter:hover {
+            transform: translateY(0) scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 102, 178, 0.7);
+        }
+
+        .view-counter i {
+            font-size: 1rem;
+        }
+
         /* Cursor */
         .cursor {
             width: 20px;
@@ -588,6 +623,11 @@
                 right: 5px;
                 font-size: 1.5rem;
             }
+
+            .view-counter {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
         }
     </style>
 </head>
@@ -618,15 +658,15 @@
         <div class="about-section" id="about-section">
             <div class="about-content">
                 <div class="about-me">
-                    <h2>Who I Am?</h2>
+                    <h2>About-me</h2>
                     <p>I'm Uh..., a passionate developer and creator who loves turning ideas into digital experiences. Specializing in scripting, animation, and music composition, I primarily work on Roblox, crafting games and content that captivate and inspire players around the world.</p>
                 </div>
                 <div class="experience">
-                    <h2>Experiency</h2>
+                    <h2>Experience</h2>
                     <p>With over 5 years of experience, I’ve developed numerous projects on Roblox—from complex scripts to detailed animations and original soundtracks. I’ve contributed to both collaborative and independent projects, always striving for innovation and quality.</p>
                 </div>
                 <div class="skills">
-                    <h2>Abilitys</h2>
+                    <h2>Skills</h2>
                     <ul class="skills-list">
                         <li class="skill-item">Lua Scripting</li>
                         <li class="skill-item">3D Animation</li>
@@ -647,8 +687,14 @@
                     </div>
                 </div>
             </div>
-            <a href="#" class="back-btn" id="back-btn">Voltar</a>
+            <a href="#" class="back-btn" id="back-btn">Back</a>
         </div>
+    </div>
+
+    <!-- View Counter -->
+    <div class="view-counter" id="view-counter">
+        <i class="fas fa-eye"></i>
+        <span id="view-count">0</span>
     </div>
 
     <!-- Roblox Modal -->
@@ -705,7 +751,7 @@
     </audio>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
         // Title Animation
@@ -718,6 +764,17 @@
             }, 800);
         }
 
+        // View Counter
+        function updateViewCounter() {
+            let views = parseInt(localStorage.getItem('portfolioViews') || '0', 10);
+            views += 1;
+            localStorage.setItem('portfolioViews', views);
+            document.getElementById('view-count').textContent = views;
+            setTimeout(() => {
+                document.getElementById('view-counter').classList.add('visible');
+            }, 500);
+        }
+
         // Preloader
         document.getElementById('preloader').addEventListener('click', function() {
             this.style.opacity = '0';
@@ -726,6 +783,7 @@
                 document.getElementById('main-content').style.display = 'block';
                 document.getElementById('musicPlayer').style.display = 'flex';
                 startTitleAnimation();
+                updateViewCounter();
 
                 const music = document.getElementById('backgroundMusic');
                 music.volume = 0.3;
@@ -753,18 +811,18 @@
             const lifespan = Math.random() * 1000 + 500;
 
             particle.className = 'particle';
-            particle.style.cssText = `
-                position: fixed;
-                left: ${x}px;
-                top: ${y}px;
-                width: ${size}px;
-                height: ${size}px;
-                background: hsl(${Math.random() * 20 + 330}, 100%, 70%);
-                border-radius: 50%;
-                pointer-events: none;
-                opacity: ${Math.random() * 0.6 + 0.4};
-                z-index: ${behindCard ? '3' : '9998'};
-            `;
+            particle.style.cssText = [
+                `position: fixed`,
+                `left: ${x}px`,
+                `top: ${y}px`,
+                `width: ${size}px`,
+                `height: ${size}px`,
+                `background: hsl(${Math.random() * 20 + 330}, 100%, 70%)`,
+                `border-radius: 50%`,
+                `pointer-events: none`,
+                `opacity: ${Math.random() * 0.6 + 0.4}`,
+                `z-index: ${behindCard ? '3' : '9998'}`
+            ].join(';');
 
             document.body.appendChild(particle);
 
@@ -789,7 +847,7 @@
         });
 
         // Hover Effects
-        const hoverElements = document.querySelectorAll('.btn, .profile-pic, .roblox-option, .close-modal, .control-btn, .arrow-btn, .back-btn, .skill-item, .video-item');
+        const hoverElements = document.querySelectorAll('.btn, .profile-pic, .roblox-option, .close-modal, .control-btn, .arrow-btn, .back-btn, .skill-item, .video-item, .view-counter');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
@@ -800,14 +858,14 @@
             for (let i = 0; i < 10; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
-                particle.style.cssText = `
-                    left: ${x}px;
-                    top: ${y}px;
-                    width: 6px;
-                    height: 6px;
-                    background: #ff66b2;
-                    opacity: ${Math.random() * 0.5 + 0.5};
-                `;
+                particle.style.cssText = [
+                    `left: ${x}px`,
+                    `top: ${y}px`,
+                    `width: 6px`,
+                    `height: 6px`,
+                    `background: #ff66b2`,
+                    `opacity: ${Math.random() * 0.5 + 0.5}`
+                ].join(';');
                 document.body.appendChild(particle);
                 particle.animate([
                     { transform: 'translate(0, 0) scale(1)', opacity: 1 },
@@ -834,21 +892,21 @@
             const randomMessage = randomClickMessages[Math.floor(Math.random() * randomClickMessages.length)];
 
             messageBox.textContent = randomMessage;
-            messageBox.style.cssText = `
-                position: absolute;
-                top: -50px;
-                left: 50%;
-                transform: translateX(-50%) skewX(-10deg);
-                background: rgba(0, 0, 0, 0.8);
-                color: #ff66b2;
-                padding: 8px 15px;
-                border-radius: 10px;
-                border: 1px solid #ff66b2;
-                font-size: 0.9rem;
-                white-space: nowrap;
-                z-index: 9999;
-                animation: floatUp 2s forwards;
-            `;
+            messageBox.style.cssText = [
+                `position: absolute`,
+                `top: -50px`,
+                `left: 50%`,
+                `transform: translateX(-50%) skewX(-10deg)`,
+                `background: rgba(0, 0, 0, 0.8)`,
+                `color: #ff66b2`,
+                `padding: 8px 15px`,
+                `border-radius: 10px`,
+                `border: 1px solid #ff66b2`,
+                `font-size: 0.9rem`,
+                `white-space: nowrap`,
+                `z-index: 9999`,
+                `animation: floatUp 2s forwards`
+            ].join(';');
 
             document.head.insertAdjacentHTML('beforeend', `
                 <style>
@@ -963,6 +1021,13 @@
         const backBtn = document.getElementById('back-btn');
         const slashEffect = document.getElementById('slash-effect');
 
+        function resetAboutSection() {
+            aboutSection.style.display = 'none';
+            aboutSection.classList.remove('active');
+            aboutSection.style.opacity = '0';
+            aboutSection.style.transform = 'translate(-50%, -50%) translateX(100%) skewX(-10deg)';
+        }
+
         arrowBtn.addEventListener('click', (e) => {
             e.preventDefault();
             createClickParticles(e.clientX, e.clientY);
@@ -974,6 +1039,8 @@
                 aboutSection.style.display = 'block';
                 setTimeout(() => {
                     aboutSection.classList.add('active');
+                    aboutSection.style.opacity = '1';
+                    aboutSection.style.transform = 'translate(-50%, -50%) translateX(0) skewX(0)';
                     slashEffect.classList.remove('active');
                 }, 10);
             }, 500);
@@ -983,11 +1050,14 @@
             e.preventDefault();
             createClickParticles(e.clientX, e.clientY);
             aboutSection.classList.remove('active');
+            aboutSection.style.opacity = '0';
             aboutSection.style.transform = 'translate(-50%, -50%) translateX(100%) skewX(-10deg)';
             slashEffect.classList.add('active');
             setTimeout(() => {
                 aboutSection.style.display = 'none';
                 profileCard.style.display = 'block';
+                profileCard.style.opacity = '0';
+                profileCard.style.transform = 'translate(-50%, -50%) translateX(-100%) rotate(-5deg)';
                 setTimeout(() => {
                     profileCard.style.opacity = '1';
                     profileCard.style.transform = 'translate(-50%, -50%)';
@@ -1150,13 +1220,16 @@
             if (e.key === 'Escape') {
                 robloxModal.style.display = 'none';
                 robloxModalOverlay.style.display = 'none';
-                aboutSection.classList.remove('active');
-                aboutSection.style.display = 'none';
+                resetAboutSection();
                 profileCard.style.display = 'block';
-                profileCard.style.opacity = '1';
-                profileCard.style.transform = 'translate(-50%, -50%)';
+                profileCard.style.opacity = '0';
+                profileCard.style.transform = 'translate(-50%, -50%) translateX(-100%) rotate(-5deg)';
+                setTimeout(() => {
+                    profileCard.style.opacity = '1';
+                    profileCard.style.transform = 'translate(-50%, -50%)';
+                    slashEffect.classList.remove('active');
+                }, 10);
                 document.body.style.overflow = '';
-                slashEffect.classList.remove('active');
             }
         });
     </script>
