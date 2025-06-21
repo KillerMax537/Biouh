@@ -719,7 +719,7 @@
     <!-- Music Player -->
     <div class="music-player" id="musicPlayer">
         <div class="music-info">
-            <div class="music-title">Tocando: Minha Música</div>
+            <div class="music-title">Playing: Munch Time</div>
             <div class="music-progress">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
@@ -1103,13 +1103,15 @@
         const durationEl = document.getElementById('duration');
 
         const playlist = [
-            { title: "Minha Música", src: "assets/Music.mp3" }
+            { title: "Munch Time", src: "assets/Music.mp3" },
+            { title: "Banana Remix", src: "assets/Music2.mp3" },
+            { title: "Error?Nahh~", src: "assets/Music3.mp3" }
         ];
         let currentTrackIndex = 0;
 
         function loadTrack(index) {
             audio.src = playlist[index].src;
-            document.querySelector('.music-title').textContent = `Tocando: ${playlist[index].title}`;
+            document.querySelector('.music-title').textContent = `Playing: ${playlist[index].title}`;
             audio.load();
         }
 
