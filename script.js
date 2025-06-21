@@ -519,3 +519,52 @@ class HoverMessageSystem {
 document.addEventListener('DOMContentLoaded', () => {
     new HoverMessageSystem();
 });
+
+// Mystic Eye Interaction
+const mysticEye = document.getElementById('mysticEye');
+const eyeRevelation = document.getElementById('eyeRevelation');
+let eyeOpen = false;
+
+mysticEye.addEventListener('click', function(e) {
+  e.stopPropagation();
+  
+  // Toggle eye state
+  eyeOpen = !eyeOpen;
+  
+  if (eyeOpen) {
+    mysticEye.classList.add('eye-open');
+    
+    // Create magical particles
+    for (let i = 0; i < 30; i++) {
+      createParticle(
+        e.clientX || mysticEye.getBoundingClientRect().left + 30,
+        e.clientY || mysticEye.getBoundingClientRect().top + 30,
+        false
+      );
+    }
+    
+    // Play sound effect (opcional)
+    const sound = new Audio();
+    sound.src = "https://assets.mixkit.co/sfx/preview/mixkit-magical-sparkle-902.mp3";
+    sound.volume = 0.3;
+    sound.play();
+    
+    // Show revelation
+    setTimeout(() => {
+      eyeRevelation.classList.add('active');
+    }, 500);
+    
+  } else {
+    mysticEye.classList.remove('eye-open');
+    eyeRevelation.classList.remove('active');
+  }
+});
+
+// Close when clicking outside
+document.addEventListener('click', function(e) {
+  if (eyeOpen && !mysticEye.contains(e.target) && !eyeRevelation.contains(e.target)) {
+    mysticEye.classList.remove('eye-open');
+    eyeRevelation.classList.remove('active');
+    eyeOpen = false;
+  }
+});
