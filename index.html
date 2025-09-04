@@ -881,6 +881,14 @@
         }
 
         // View Counter
+        function updateViewCounter() {
+            let views = parseInt(localStorage.getItem('portfolioViews') || 70.000);
+            localStorage.setItem('portfolioViews', views);
+            document.getElementById('view-count').textContent = views;
+            setTimeout(() => {
+                document.getElementById('view-counter').classList.add('visible');
+            }, 500);
+        }
 
         // Preloader with Persona-style Transition
         const preloader = document.getElementById('preloader');
@@ -899,6 +907,7 @@
                     document.getElementById('main-content').style.display = 'block';
                     document.getElementById('musicPlayer').style.display = 'flex';
                     startTitleAnimation();
+                    updateViewCounter();
 
                     const music = document.getElementById('backgroundMusic');
                     music.volume = 0.3;
