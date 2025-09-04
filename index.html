@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uh... | Portfolio</title>
     <style>
-        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +20,6 @@
             position: relative;
         }
 
-        /* Aurora Effect */
         .aurora {
             position: fixed;
             top: 0;
@@ -41,7 +39,6 @@
             100% { transform: scale(1.2) rotate(2deg); }
         }
 
-        /* Enhanced Preloader */
         .preloader {
             position: fixed;
             top: 0;
@@ -129,13 +126,12 @@
             50% { opacity: 0.9; }
         }
 
-        /* Smoother Preloader Background Animation */
         .preloader::before {
             content: '';
             position: absolute;
             width: 200%;
             height: 200%;
-            background: linear Goddess Gradient(45deg, transparent 30%, rgba(255, 102, 178, 0.3) 50%, transparent 70%);
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 102, 178, 0.3) 50%, transparent 70%);
             animation: slash-bg 6s ease-in-out infinite;
             transform: rotate(45deg);
             opacity: 0.5;
@@ -147,7 +143,6 @@
             100% { transform: translateX(50%) rotate(45deg); opacity: 0.5; }
         }
 
-        /* Persona-style Slash Transition */
         .slash-transition {
             position: fixed;
             top: 0;
@@ -170,7 +165,6 @@
             100% { transform: translateX(100%) skewX(-30deg); }
         }
 
-        /* Container */
         .container {
             display: none;
             width: 100%;
@@ -180,7 +174,6 @@
             z-index: 3;
         }
 
-        /* Profile Card */
         .profile-card {
             position: absolute;
             top: 50%;
@@ -270,7 +263,6 @@
             color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Arrow Button */
         .arrow-btn {
             position: absolute;
             top: 50%;
@@ -287,7 +279,6 @@
             color: #fff;
         }
 
-        /* Slash Effect for Transition */
         .slash-effect {
             position: fixed;
             top: 0;
@@ -310,7 +301,6 @@
             100% { transform: translateX(100%) skewX(-30deg); }
         }
 
-        /* About Section */
         .about-section {
             display: none;
             position: absolute;
@@ -364,7 +354,7 @@
         }
 
         .about-section h2::before {
- “‘before’ is a reserved word in strict mode. Use a different name."            content: '';
+            content: '';
             position: absolute;
             left: 0;
             top: 0;
@@ -413,7 +403,7 @@
         .video-item {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            padding-top: 56.25%;
             border-radius: 10px;
             overflow: hidden;
             border: 2px solid #ff66b2;
@@ -453,7 +443,6 @@
             color: #fff;
         }
 
-        /* View Counter */
         .view-counter {
             position: fixed;
             bottom: 20px;
@@ -488,7 +477,6 @@
             font-size: 1rem;
         }
 
-        /* Cursor */
         .cursor {
             width: 20px;
             height: 20px;
@@ -508,7 +496,6 @@
             border: 2px solid transparent;
         }
 
-        /* Particles */
         #particles-js {
             position: fixed;
             width: 100%;
@@ -524,7 +511,6 @@
             mix-blend-mode: screen;
         }
 
-        /* Roblox Modal */
         .roblox-modal {
             display: none;
             position: fixed;
@@ -595,7 +581,6 @@
             backdrop-filter: blur(5px);
         }
 
-        /* Music Player */
         .music-player {
             position: fixed;
             bottom: 20px;
@@ -674,7 +659,7 @@
 
         #volumeSlider {
             width: 80px;
-            -webkit--appearance: none;
+            -webkit-appearance: none;
             height: 5px;
             background: #fff;
             outline: none;
@@ -695,7 +680,6 @@
             cursor: pointer;
         }
 
-        /* Visualizer */
         .visualizer-container {
             position: fixed;
             bottom: 100px;
@@ -711,7 +695,6 @@
             height: 100%;
         }
 
-        /* Responsive Design */
         @media (max-width: 600px) {
             .about-section {
                 width: 90%;
@@ -719,7 +702,7 @@
             }
 
             .video-item {
-                padding-top: 75%; /* Adjust aspect ratio for smaller screens */
+                padding-top: 75%;
             }
 
             .arrow-btn {
@@ -743,17 +726,14 @@
     </style>
 </head>
 <body>
-    <!-- Preloader -->
     <div class="preloader" id="preloader">
         <h1>Click to Enter...</h1>
         <p>Embark on the Journey!</p>
     </div>
 
-    <!-- Persona-style Slash Transition -->
     <div class="slash-transition" id="slash-transition"></div>
     <div class="slash-effect" id="slash-effect"></div>
 
-    <!-- Main Content -->
     <div class="container" id="main-content">
         <div class="profile-card" id="profile-card">
             <div class="profile-pic"></div>
@@ -767,7 +747,6 @@
             <div class="arrow-btn" id="arrow-btn"><i class="fas fa-chevron-right"></i></div>
         </div>
 
-        <!-- About Section -->
         <div class="about-section" id="about-section">
             <div class="about-content">
                 <div class="about-me">
@@ -804,13 +783,11 @@
         </div>
     </div>
 
-    <!-- View Counter -->
     <div class="view-counter" id="view-counter">
         <i class="fas fa-eye"></i>
-        <span id="view-count">70.000</span>
+        <span id="view-count">70,000</span>
     </div>
 
-    <!-- Roblox Modal -->
     <div class="modal-overlay" id="roblox-modal-overlay"></div>
     <div class="roblox-modal" id="roblox-modal">
         <span class="close-modal" id="close-modal">×</span>
@@ -825,11 +802,9 @@
         </div>
     </div>
 
-    <!-- Effects -->
     <div class="cursor"></div>
     <div id="particles-js"></div>
 
-    <!-- Music Player -->
     <div class="music-player" id="musicPlayer">
         <div class="music-info">
             <div class="music-title">Playing: Munch Time</div>
@@ -852,12 +827,10 @@
         </div>
     </div>
 
-    <!-- Visualizer -->
     <div class="visualizer-container">
         <canvas id="visualizer"></canvas>
     </div>
 
-    <!-- Audio -->
     <audio id="backgroundMusic" loop>
         <source src="assets/Music.mp3" type="audio/mpeg">
         Seu navegador não suporta o elemento de áudio.
@@ -866,11 +839,9 @@
         <source src="assets/slash-sound.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
-        // Title Animation
         let docTitle = document.title;
         let blinkInterval;
 
@@ -880,18 +851,16 @@
             }, 800);
         }
 
-        // View Counter
-function updateViewCounter() {
-    let views = parseInt(localStorage.getItem('portfolioViews2') || 70000); // Start with 70,000 if no value exists
-    views += 1; // Increment views each time
-    localStorage.setItem('portfolioViews', views);
-    document.getElementById('view-count').textContent = views.toLocaleString(); // Format with commas for readability
-    setTimeout(() => {
-        document.getElementById('view-counter').classList.add('visible');
-    }, 500);
-}
+        function updateViewCounter() {
+            let views = parseInt(localStorage.getItem('portfolioViews') || '70000');
+            views += 1;
+            localStorage.setItem('portfolioViews', views);
+            document.getElementById('view-count').textContent = views.toLocaleString();
+            setTimeout(() => {
+                document.getElementById('view-counter').classList.add('visible');
+            }, 500);
+        }
 
-        // Preloader with Persona-style Transition
         const preloader = document.getElementById('preloader');
         const slashTransition = document.getElementById('slash-transition');
         const slashSound = document.getElementById('slashSound');
@@ -899,7 +868,7 @@ function updateViewCounter() {
         preloader.addEventListener('click', function() {
             slashTransition.classList.add('active');
             if (slashSound) {
-                slashSound.play().catch(error => console.log("Slash sound playback failed:", error));
+                slashSound.play().catch(error => console.log(error));
             }
             setTimeout(() => {
                 this.style.opacity = '0';
@@ -909,14 +878,12 @@ function updateViewCounter() {
                     document.getElementById('musicPlayer').style.display = 'flex';
                     startTitleAnimation();
                     updateViewCounter();
-
                     const music = document.getElementById('backgroundMusic');
                     music.volume = 0.3;
-
                     const playPromise = music.play();
                     if (playPromise !== undefined) {
                         playPromise.catch(error => {
-                            console.log("Autoplay prevented:", error);
+                            console.log(error);
                             document.getElementById('musicPlayer').style.display = 'flex';
                         });
                     }
@@ -925,10 +892,8 @@ function updateViewCounter() {
             }, 300);
         });
 
-        // Aurora Effect
         document.body.insertAdjacentHTML('afterbegin', '<div class="aurora"></div>');
 
-        // Custom Cursor
         const cursor = document.querySelector('.cursor');
         document.body.style.cursor = 'none';
 
@@ -936,7 +901,6 @@ function updateViewCounter() {
             const particle = document.createElement('div');
             const size = Math.random() * 8 + 3;
             const lifespan = Math.random() * 1000 + 500;
-
             particle.className = 'particle';
             particle.style.cssText = [
                 `position: fixed`,
@@ -950,9 +914,7 @@ function updateViewCounter() {
                 `opacity: ${Math.random() * 0.6 + 0.4}`,
                 `z-index: ${behindCard ? '3' : '9998'}`
             ].join(';');
-
             document.body.appendChild(particle);
-
             const animation = particle.animate([
                 { transform: 'translate(0, 0) scale(1)', opacity: 1 },
                 { transform: `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(0.2)`, opacity: 0 }
@@ -960,27 +922,23 @@ function updateViewCounter() {
                 duration: lifespan,
                 easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
             });
-
             animation.onfinish = () => particle.remove();
         }
 
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
-
             if (Math.random() > 0.3) {
                 createParticle(e.clientX, e.clientY);
             }
         });
 
-        // Hover Effects
         const hoverElements = document.querySelectorAll('.btn, .profile-pic, .roblox-option, .close-modal, .control-btn, .arrow-btn, .back-btn, .skill-item, .video-item, .view-counter');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
 
-        // Click Particle Effect
         function createClickParticles(x, y) {
             for (let i = 0; i < 10; i++) {
                 const particle = document.createElement('div');
@@ -1004,7 +962,6 @@ function updateViewCounter() {
             }
         }
 
-        // Profile Picture Click Messages
         const randomClickMessages = [
             "Hey, that's me!",
             "Nice click!",
@@ -1017,7 +974,6 @@ function updateViewCounter() {
             e.stopPropagation();
             const messageBox = document.createElement('div');
             const randomMessage = randomClickMessages[Math.floor(Math.random() * randomClickMessages.length)];
-
             messageBox.textContent = randomMessage;
             messageBox.style.cssText = [
                 `position: absolute`,
@@ -1034,7 +990,6 @@ function updateViewCounter() {
                 `z-index: 9999`,
                 `animation: floatUp 2s forwards`
             ].join(';');
-
             document.head.insertAdjacentHTML('beforeend', `
                 <style>
                     @keyframes floatUp {
@@ -1045,17 +1000,13 @@ function updateViewCounter() {
                     }
                 </style>
             `);
-
             this.appendChild(messageBox);
-
             setTimeout(() => {
                 messageBox.remove();
             }, 2000);
-
             createClickParticles(e.clientX, e.clientY);
         });
 
-        // Floating Particles
         particlesJS('particles-js', {
             particles: {
                 number: { 
@@ -1125,7 +1076,6 @@ function updateViewCounter() {
             retina_detect: true
         });
 
-        // 3D Card Effect
         const card = document.querySelector('.profile-card');
         document.addEventListener('mousemove', (e) => {
             const x = (window.innerWidth / 2 - e.pageX) / 20;
@@ -1141,7 +1091,6 @@ function updateViewCounter() {
             createParticle(e.clientX, e.clientY, true);
         });
 
-        // About Section Transition
         const arrowBtn = document.getElementById('arrow-btn');
         const aboutSection = document.getElementById('about-section');
         const profileCard = document.getElementById('profile-card');
@@ -1162,7 +1111,7 @@ function updateViewCounter() {
             profileCard.style.transform = 'translate(-50%, -50%) translateX(-100%) rotate(-5deg)';
             slashEffect.classList.add('active');
             if (slashSound) {
-                slashSound.play().catch(error => console.log("Slash sound playback failed:", error));
+                slashSound.play().catch(error => console.log(error));
             }
             setTimeout(() => {
                 profileCard.style.display = 'none';
@@ -1184,7 +1133,7 @@ function updateViewCounter() {
             aboutSection.style.transform = 'translate(-50%, -50%) translateX(100%) skewX(-10deg)';
             slashEffect.classList.add('active');
             if (slashSound) {
-                slashSound.play().catch(error => console.log("Slash sound playback failed:", error));
+                slashSound.play().catch(error => console.log(error));
             }
             setTimeout(() => {
                 aboutSection.style.display = 'none';
@@ -1199,7 +1148,6 @@ function updateViewCounter() {
             }, 500);
         });
 
-        // Roblox Modal
         const robloxBtn = document.getElementById('roblox-btn');
         const robloxModal = document.getElementById('roblox-modal');
         const robloxModalOverlay = document.getElementById('roblox-modal-overlay');
@@ -1224,7 +1172,6 @@ function updateViewCounter() {
             document.body.style.overflow = '';
         });
 
-        // Music Player Controls
         const audio = document.getElementById('backgroundMusic');
         const playBtn = document.getElementById('playBtn');
         const prevBtn = document.getElementById('prevBtn');
@@ -1256,7 +1203,7 @@ function updateViewCounter() {
 
         playBtn.addEventListener('click', () => {
             if (audio.paused) {
-                audio.play().catch(error => console.log("Audio playback failed:", error));
+                audio.play().catch(error => console.log(error));
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
             } else {
                 audio.pause();
@@ -1267,14 +1214,14 @@ function updateViewCounter() {
         prevBtn.addEventListener('click', () => {
             currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
             loadTrack(currentTrackIndex);
-            audio.play().catch(error => console.log("Audio playback failed:", error));
+            audio.play().catch(error => console.log(error));
             playBtn.innerHTML = '<i class="fas fa-pause"></i>';
         });
 
         nextBtn.addEventListener('click', () => {
             currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
             loadTrack(currentTrackIndex);
-            audio.play().catch(error => console.log("Audio playback failed:", error));
+            audio.play().catch(error => console.log(error));
             playBtn.innerHTML = '<i class="fas fa-pause"></i>';
         });
 
@@ -1306,7 +1253,6 @@ function updateViewCounter() {
             nextBtn.click();
         });
 
-        // Audio Visualizer
         const canvas = document.getElementById('visualizer');
         const ctx = canvas.getContext('2d');
         let analyser, dataArray;
@@ -1328,10 +1274,8 @@ function updateViewCounter() {
             analyser.getByteFrequencyData(dataArray);
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
             const barWidth = (canvas.width / dataArray.length) * 2.5;
             let x = 0;
-
             for (let i = 0; i < dataArray.length; i++) {
                 const barHeight = dataArray[i] / 2;
                 ctx.fillStyle = `rgb(${barHeight + 100}, 50, 150)`;
@@ -1350,7 +1294,6 @@ function updateViewCounter() {
             document.querySelector('.visualizer-container').style.display = 'none';
         });
 
-        // ESC Key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 robloxModal.style.display = 'none';
