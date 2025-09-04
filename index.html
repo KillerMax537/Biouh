@@ -807,7 +807,7 @@
     <!-- View Counter -->
     <div class="view-counter" id="view-counter">
         <i class="fas fa-eye"></i>
-        <span id="view-count">0</span>
+        <span id="view-count">70.000</span>
     </div>
 
     <!-- Roblox Modal -->
@@ -881,15 +881,6 @@
         }
 
         // View Counter
-        function updateViewCounter() {
-            let views = parseInt(localStorage.getItem('portfolioViews') || '0', 10);
-            views += 1;
-            localStorage.setItem('portfolioViews', views);
-            document.getElementById('view-count').textContent = views;
-            setTimeout(() => {
-                document.getElementById('view-counter').classList.add('visible');
-            }, 500);
-        }
 
         // Preloader with Persona-style Transition
         const preloader = document.getElementById('preloader');
@@ -908,7 +899,6 @@
                     document.getElementById('main-content').style.display = 'block';
                     document.getElementById('musicPlayer').style.display = 'flex';
                     startTitleAnimation();
-                    updateViewCounter();
 
                     const music = document.getElementById('backgroundMusic');
                     music.volume = 0.3;
