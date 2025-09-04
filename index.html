@@ -882,7 +882,7 @@
 
         // View Counter
 function updateViewCounter() {
-    let views = parseInt(localStorage.getItem('portfolioViews') || 70000); // Start with 70,000 if no value exists
+    let views = parseInt(localStorage.getItem('portfolioViews2') || 70000); // Start with 70,000 if no value exists
     views += 1; // Increment views each time
     localStorage.setItem('portfolioViews', views);
     document.getElementById('view-count').textContent = views.toLocaleString(); // Format with commas for readability
