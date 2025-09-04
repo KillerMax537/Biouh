@@ -881,14 +881,15 @@
         }
 
         // View Counter
-        function updateViewCounter() {
-            let views = parseInt(localStorage.getItem('portfolioViews') || 70.000);
-            localStorage.setItem('portfolioViews', views);
-            document.getElementById('view-count').textContent = views;
-            setTimeout(() => {
-                document.getElementById('view-counter').classList.add('visible');
-            }, 500);
-        }
+function updateViewCounter() {
+    let views = parseInt(localStorage.getItem('portfolioViews') || 70000); // Start with 70,000 if no value exists
+    views += 1; // Increment views each time
+    localStorage.setItem('portfolioViews', views);
+    document.getElementById('view-count').textContent = views.toLocaleString(); // Format with commas for readability
+    setTimeout(() => {
+        document.getElementById('view-counter').classList.add('visible');
+    }, 500);
+}
 
         // Preloader with Persona-style Transition
         const preloader = document.getElementById('preloader');
