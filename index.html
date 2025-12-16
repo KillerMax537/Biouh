@@ -2029,149 +2029,272 @@
                 });
             }
 
-            // ================== HOLOGRAM EFFECTS ==================
-function initHologramEffects() {
+            function initHologramEffects() {
     const hologramContainer = document.querySelector('.hologram-particles');
     const hologramImage = document.querySelector('.hologram-image');
-    
-    // Create floating particles around the hologram
+    const hologramScan = document.querySelector('.hologram-scan');
+
+    // ================== 1. FIX Z-FIGHTING & RENDER ORDER ==================
+    // This prevents flickering by ensuring proper draw order of transparent elements[citation:3]
+    const hologramElements = document.querySelectorAll('.hologram-container > *');
+    let renderOrder = 1;
+    hologramElements.forEach(el => {
+        el.style.zIndex = renderOrder++;
+        if (el.classList.contains('hologram-grid') || el.classList.contains('hologram-glitch')) {
+            el.style.willChange = 'transform, opacity'; // Hint to browser for optimization[citation:6]
+        }
+    });
+
+    // ================== 2. ENHANCED PARTICLE SYSTEM ==================
+    // More controlled particles with performance optimizations[citation:2]
+    const particles = [];
+    const particleCount = 40; // Reduced for better performance with many emitters[citation:2]
+
     function createHologramParticle() {
         const particle = document.createElement('div');
+        const size = Math.random() * 4 + 2;
+        const isBlue = Math.random() > 0.6;
+        
         particle.style.cssText = `
             position: absolute;
-            width: ${Math.random() * 4 + 2}px;
-            height: ${Math.random() * 4 + 2}px;
-            background: ${Math.random() > 0.5 ? 'var(--neon-pink)' : 'var(--cyber-blue)'};
+            width: ${size}px;
+            height: ${size}px;
+            background: ${isBlue ? 'var(--cyber-blue, #00ffff)' : 'var(--neon-pink, #ff00ff)'};
             border-radius: 50%;
             pointer-events: none;
-            opacity: ${Math.random() * 0.5 + 0.2};
-            filter: blur(${Math.random() * 2 + 1}px);
+            opacity: ${Math.random() * 0.4 + 0.1};
+            filter: blur(${Math.random() * 1.5 + 0.5}px);
+            z-index: 5;
         `;
+
+        // Start from random edge for more hologram-like appearance
+        const startEdge = Math.floor(Math.random() * 4);
+        let startX, startY;
         
-        const startX = Math.random() * 100;
-        const startY = Math.random() * 100;
-        
+        switch(startEdge) {
+            case 0: // top
+                startX = Math.random() * 100;
+                startY = 0;
+                break;
+            case 1: // right
+                startX = 100;
+                startY = Math.random() * 100;
+                break;
+            case 2: // bottom
+                startX = Math.random() * 100;
+                startY = 100;
+                break;
+            case 3: // left
+                startX = 0;
+                startY = Math.random() * 100;
+                break;
+        }
+
         particle.style.left = `${startX}%`;
         particle.style.top = `${startY}%`;
         
+        // Random destination inside hologram
+        const endX = 20 + Math.random() * 60;
+        const endY = 20 + Math.random() * 60;
+        
         hologramContainer.appendChild(particle);
-        
-        // Animate particle
-        const duration = Math.random() * 3 + 2;
-        const keyframes = [
-            {
-                transform: `translate(0, 0) scale(1)`,
-                opacity: particle.style.opacity
-            },
-            {
-                transform: `translate(${(Math.random() - 0.5) * 30}px, ${(Math.random() - 0.5) * 30}px) scale(${Math.random() + 0.5})`,
-                opacity: '0'
-            }
-        ];
-        
-        particle.animate(keyframes, {
-            duration: duration * 1000,
-            easing: 'ease-out'
+        particles.push({
+            element: particle,
+            startX, startY,
+            endX, endY,
+            progress: 0,
+            speed: Math.random() * 0.008 + 0.004,
+            life: 1.0,
+            size: size
         });
-        
-        // Remove particle after animation
-        setTimeout(() => {
-            if (particle.parentNode) {
-                particle.remove();
+
+        // Auto-remove if too many particles (memory management)
+        if (particles.length > particleCount * 2) {
+            const oldParticle = particles.shift();
+            if (oldParticle.element.parentNode) {
+                oldParticle.element.remove();
             }
-        }, duration * 1000);
+        }
     }
-    
-    // Create initial particles
-    for (let i = 0; i < 20; i++) {
-        setTimeout(() => createHologramParticle(), i * 100);
-    }
-    
-    // Continuous particle generation
-    setInterval(createHologramParticle, 300);
-    
-    // Music-reactive hologram effect
+
+    // ================== 3. MUSIC-REACTIVE HOLOGRAM ==================
     function updateHologramWithMusic() {
-        if (!analyzer) return;
+        if (!analyzer || !isMusicPlaying) {
+            requestAnimationFrame(updateHologramWithMusic);
+            return;
+        }
         
         const dataArray = new Uint8Array(analyzer.frequencyBinCount);
         analyzer.getByteFrequencyData(dataArray);
         
-        const bass = dataArray[0] / 255;
-        const mid = dataArray[Math.floor(dataArray.length / 3)] / 255;
-        const high = dataArray[Math.floor(dataArray.length * 2 / 3)] / 255;
+        // Get frequency ranges for different effects
+        const bass = dataArray[5] / 255 || 0;
+        const mid = dataArray[Math.floor(dataArray.length / 3)] / 255 || 0;
+        const high = dataArray[Math.floor(dataArray.length * 2 / 3)] / 255 || 0;
         
-        // React to music
-        hologramImage.style.transform = `
-            scale(${1 + bass * 0.05}) 
-            rotateX(${mid * 5}deg) 
-            rotateY(${high * 5}deg)
-        `;
+        // Base color from current track
+        const trackColor = musicLibrary[currentTrack]?.color || '#ff00ff';
         
-        // Pulse with bass
+        // Dynamic filter based on music
+        const hueRotate = 280 + Math.sin(Date.now() * 0.001) * 20 + bass * 40;
+        const saturate = 3 + bass * 2;
+        const brightness = 0.9 + mid * 0.3;
+        const contrast = 1.2 + high * 0.4;
+        
         hologramImage.style.filter = `
             sepia(1) 
-            hue-rotate(${280 + bass * 40}deg) 
-            saturate(${3 + bass * 2}) 
-            brightness(${0.9 + bass * 0.2}) 
-            contrast(${1.2 + bass * 0.3})
+            hue-rotate(${hueRotate}deg) 
+            saturate(${saturate}) 
+            brightness(${brightness}) 
+            contrast(${contrast})
         `;
+        
+        // Subtle pulse with bass
+        const pulseScale = 1 + bass * 0.03;
+        hologramImage.style.transform = `scale(${pulseScale})`;
+        
+        // Scan line speed reacts to music
+        const scanSpeed = 4 + bass * 2;
+        hologramScan.style.animationDuration = `${scanSpeed}s`;
+        
+        // Particle effects react to music
+        particles.forEach(p => {
+            if (mid > 0.3) {
+                p.speed = 0.012 + high * 0.01;
+                p.element.style.opacity = Math.min(p.life, 0.3 + mid * 0.4);
+            }
+        });
         
         requestAnimationFrame(updateHologramWithMusic);
     }
-    
-    // Start music-reactive effects
-    if (analyzer) {
-        updateHologramWithMusic();
-    }
-    
-    // Interactive mouse effects
-    const hologram = document.getElementById('profileHologram');
-    hologram.addEventListener('mousemove', (e) => {
-        const rect = hologram.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        
-        // Create interactive ripple
-        const ripple = document.createElement('div');
-        ripple.style.cssText = `
-            position: absolute;
-            left: ${x}%;
-            top: ${y}%;
-            width: 0;
-            height: 0;
-            border: 2px solid var(--cyber-blue);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 10;
-        `;
-        
-        hologramContainer.appendChild(ripple);
-        
-        // Animate ripple
-        const animation = ripple.animate([
-            { width: '0px', height: '0px', opacity: 1 },
-            { width: '100px', height: '100px', opacity: 0 }
-        ], {
-            duration: 1000,
-            easing: 'ease-out'
+
+    // ================== 4. PARTICLE ANIMATION LOOP ==================
+    // Single efficient animation loop[citation:5]
+    function animateParticles() {
+        particles.forEach((particle, index) => {
+            particle.progress += particle.speed;
+            particle.life -= 0.002;
+            
+            if (particle.progress >= 1 || particle.life <= 0) {
+                // Remove dead particles
+                if (particle.element.parentNode) {
+                    particle.element.remove();
+                }
+                particles.splice(index, 1);
+                return;
+            }
+            
+            // Ease out movement
+            const easeProgress = 1 - Math.pow(1 - particle.progress, 2);
+            const currentX = particle.startX + (particle.endX - particle.startX) * easeProgress;
+            const currentY = particle.startY + (particle.endY - particle.startY) * easeProgress;
+            
+            particle.element.style.left = `${currentX}%`;
+            particle.element.style.top = `${currentY}%`;
+            particle.element.style.opacity = particle.life * (0.3 + Math.sin(Date.now() * 0.005 + index) * 0.1);
+            
+            // Pulsing size
+            const pulse = 1 + Math.sin(Date.now() * 0.003 + index) * 0.2;
+            particle.element.style.transform = `scale(${pulse})`;
         });
         
-        animation.onfinish = () => ripple.remove();
+        requestAnimationFrame(animateParticles);
+    }
+
+    // ================== 5. INTERACTIVE MOUSE EFFECTS ==================
+    let mouseX = 0, mouseY = 0;
+    let targetRotationX = 0, targetRotationY = 0;
+    let currentRotationX = 0, currentRotationY = 0;
+    
+    const hologram = document.getElementById('profileHologram');
+    
+    hologram.addEventListener('mousemove', (e) => {
+        const rect = hologram.getBoundingClientRect();
+        mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+        mouseY = ((e.clientY - rect.top) / rect.height) * 100;
         
-        // Distortion effect
-        hologramImage.style.transform += ` perspective(1000px) rotateY(${(x - 50) / 10}deg) rotateX(${(50 - y) / 10}deg)`;
+        // Calculate rotation based on mouse position
+        targetRotationY = ((mouseX - 50) / 50) * 5; // -5 to +5 degrees
+        targetRotationX = ((50 - mouseY) / 50) * 5;
+        
+        // Create ripple effect
+        if (Math.random() > 0.7) {
+            const ripple = document.createElement('div');
+            ripple.style.cssText = `
+                position: absolute;
+                left: ${mouseX}%;
+                top: ${mouseY}%;
+                width: 0;
+                height: 0;
+                border: 1px solid var(--cyber-blue);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 10;
+            `;
+            
+            hologramContainer.appendChild(ripple);
+            
+            ripple.animate([
+                { width: '0px', height: '0px', opacity: 0.8 },
+                { width: '80px', height: '80px', opacity: 0 }
+            ], {
+                duration: 800,
+                easing: 'ease-out'
+            }).onfinish = () => ripple.remove();
+        }
     });
     
-    // Reset distortion on mouse leave
     hologram.addEventListener('mouseleave', () => {
-        hologramImage.style.transform = 'scale(1) rotateX(0) rotateY(0)';
+        targetRotationX = 0;
+        targetRotationY = 0;
+    });
+    
+    // Smooth rotation animation
+    function updateHologramRotation() {
+        const smoothing = 0.1;
+        currentRotationX += (targetRotationX - currentRotationX) * smoothing;
+        currentRotationY += (targetRotationY - currentRotationY) * smoothing;
+        
+        hologramImage.style.transform = `
+            perspective(1000px) 
+            rotateX(${currentRotationX}deg) 
+            rotateY(${currentRotationY}deg)
+            scale(1)
+        `;
+        
+        requestAnimationFrame(updateHologramRotation);
+    }
+
+    // ================== 6. INITIALIZATION & CONTROLS ==================
+    // Create initial particles
+    for (let i = 0; i < particleCount; i++) {
+        setTimeout(() => createHologramParticle(), i * 100);
+    }
+    
+    // Start animation loops
+    animateParticles();
+    updateHologramRotation();
+    
+    // Start music-reactive effects with a slight delay
+    setTimeout(() => {
+        updateHologramWithMusic();
+    }, 1000);
+    
+    // Continuous particle generation (optimized interval)[citation:6]
+    const particleInterval = setInterval(() => {
+        if (particles.length < particleCount) {
+            createHologramParticle();
+        }
+    }, 500);
+    
+    // Cleanup on page hide (optional optimization)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            clearInterval(particleInterval);
+        }
     });
 }
-
-// Adicione esta chamada na função init após as outras inicializações:
-// initHologramEffects();
 
             // ================== PARTICLE SYSTEM ==================
             function createParticle(x, y, type = 'normal', color = null) {
