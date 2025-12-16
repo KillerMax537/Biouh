@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>𓆩 ✧ 𝓾𝓱… ✧ 𓆪 | Roblox Developer Portfolio</title>
+    <title>𓆩 ✧ 𝓾𝓱… ✧ 𓆪 | Portfolio</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -339,6 +339,183 @@
                 0 0 40px rgba(255, 0, 255, 0.3),
                 inset 0 0 40px rgba(255, 0, 255, 0.1);
         }
+
+        /* ===== HOLOGRAM STYLES ===== */
+.hologram-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hologram-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/profile-pic.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: 
+        sepia(1) 
+        hue-rotate(280deg) 
+        saturate(3) 
+        brightness(0.9) 
+        contrast(1.2);
+    mix-blend-mode: screen;
+    animation: hologramFlicker 5s infinite alternate;
+    z-index: 1;
+}
+
+.hologram-scan {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 20%;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(0, 255, 255, 0.3) 20%,
+        rgba(255, 0, 255, 0.6) 50%,
+        rgba(0, 255, 255, 0.3) 80%,
+        transparent
+    );
+    animation: scanLine 4s linear infinite;
+    z-index: 2;
+}
+
+.hologram-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: gridPulse 8s infinite alternate;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.hologram-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.hologram-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/profile-pic.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    filter: 
+        sepia(1) 
+        hue-rotate(180deg) 
+        saturate(3) 
+        brightness(1.2)
+        contrast(1.5);
+    mix-blend-mode: overlay;
+    animation: glitchEffect 8s infinite;
+    z-index: 5;
+}
+
+/* ===== HOLOGRAM ANIMATIONS ===== */
+@keyframes hologramFlicker {
+    0%, 100% { 
+        filter: 
+            sepia(1) 
+            hue-rotate(280deg) 
+            saturate(3) 
+            brightness(0.9) 
+            contrast(1.2);
+        opacity: 0.9;
+    }
+    50% { 
+        filter: 
+            sepia(1) 
+            hue-rotate(300deg) 
+            saturate(4) 
+            brightness(1.1) 
+            contrast(1.4);
+        opacity: 1;
+    }
+    80% {
+        filter: 
+            sepia(1) 
+            hue-rotate(260deg) 
+            saturate(2.5) 
+            brightness(0.8) 
+            contrast(1.1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes scanLine {
+    0% {
+        top: -100%;
+        opacity: 0.3;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        top: 100%;
+        opacity: 0.3;
+    }
+}
+
+@keyframes gridPulse {
+    0% {
+        opacity: 0.1;
+        transform: scale(1);
+        background-size: 30px 30px;
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(1.02);
+        background-size: 35px 35px;
+    }
+    100% {
+        opacity: 0.1;
+        transform: scale(1);
+        background-size: 30px 30px;
+    }
+}
+
+@keyframes glitchEffect {
+    0%, 96%, 98%, 100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translate(0, 0);
+    }
+    97% {
+        opacity: 0.8;
+        clip-path: inset(20% 0 60% 0);
+        transform: translate(-5px, 0);
+    }
+    99% {
+        opacity: 0.6;
+        clip-path: inset(60% 0 20% 0);
+        transform: translate(5px, 0);
+    }
+}
 
         @keyframes hologramFloat {
             0%, 100% { transform: translateY(0) rotateX(0); }
@@ -933,15 +1110,19 @@
         <section id="home" class="section active">
             <div class="hero-container">
                 <div class="profile-3d">
-                    <div class="profile-hologram" id="profileHologram">
-                        <!-- 3D Content goes here -->
-                    </div>
-                </div>
+    <div class="profile-hologram" id="profileHologram">
+        <div class="hologram-container">
+            <div class="hologram-image"></div>
+            <div class="hologram-scan"></div>
+            <div class="hologram-grid"></div>
+            <div class="hologram-particles"></div>
+            <div class="hologram-glitch"></div>
+        </div>
+    </div>
+</div>
                 <div class="hero-content">
                     <h1 class="hero-title">
-                        <span style="font-size: 2.5rem;">𓆩 ✧</span><br>
-                        𝓾𝓱…<br>
-                        <span style="font-size: 2rem;">✧ 𓆪</span>
+                        <span style="font-size: 2.5rem;">𓆩 ✧</span><br>𝓾𝓱…<br><span style="font-size: 2rem;">✧ 𓆪</span>
                     </h1>
                     <h2 class="hero-subtitle">ROBLOX DEVELOPER • SCRIPTER • ANIMATOR • COMPOSER</h2>
                     <p class="hero-bio">
@@ -1218,7 +1399,17 @@
                 title: "ERROR?NAHH~",
                 file: "assets/Music3.mp3",
                 color: "#00ff88"
-            }
+            },
+            {
+                title: "A Sunny Day",
+                file: "assets/Music4.wav",
+                color: "##ffa057"
+            },
+            {
+                title: "Lost Memory",
+                file: "assets/Music5.mp3",
+                color: "###ffe8cf"
+            },
             // ADD MORE SONGS HERE:
             // {
             //     title: "YOUR SONG NAME",
@@ -1229,7 +1420,7 @@
 
         // ================== INITIALIZATION ==================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('%c🎮 𝓾𝓱… - ROBLOX DEVELOPER PORTFOLIO 🎮', 'font-size: 2rem; color: #ff00ff; text-shadow: 0 0 20px #ff00ff');
+            console.log('%c🎮 𝓾𝓱… - PORTFOLIO 🎮', 'font-size: 2rem; color: #ff00ff; text-shadow: 0 0 20px #ff00ff');
             
             const introScreen = document.getElementById('introScreen');
             const mainContainer = document.getElementById('mainContainer');
@@ -1366,6 +1557,7 @@
                         initNavigation();
                         initSocialLinks();
                         initCreationEffects();
+                        initHologramEffects();
                         
                         // Show music player
                         setTimeout(() => {
@@ -1836,6 +2028,150 @@
                     });
                 });
             }
+
+            // ================== HOLOGRAM EFFECTS ==================
+function initHologramEffects() {
+    const hologramContainer = document.querySelector('.hologram-particles');
+    const hologramImage = document.querySelector('.hologram-image');
+    
+    // Create floating particles around the hologram
+    function createHologramParticle() {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 4 + 2}px;
+            height: ${Math.random() * 4 + 2}px;
+            background: ${Math.random() > 0.5 ? 'var(--neon-pink)' : 'var(--cyber-blue)'};
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: ${Math.random() * 0.5 + 0.2};
+            filter: blur(${Math.random() * 2 + 1}px);
+        `;
+        
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        
+        particle.style.left = `${startX}%`;
+        particle.style.top = `${startY}%`;
+        
+        hologramContainer.appendChild(particle);
+        
+        // Animate particle
+        const duration = Math.random() * 3 + 2;
+        const keyframes = [
+            {
+                transform: `translate(0, 0) scale(1)`,
+                opacity: particle.style.opacity
+            },
+            {
+                transform: `translate(${(Math.random() - 0.5) * 30}px, ${(Math.random() - 0.5) * 30}px) scale(${Math.random() + 0.5})`,
+                opacity: '0'
+            }
+        ];
+        
+        particle.animate(keyframes, {
+            duration: duration * 1000,
+            easing: 'ease-out'
+        });
+        
+        // Remove particle after animation
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.remove();
+            }
+        }, duration * 1000);
+    }
+    
+    // Create initial particles
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => createHologramParticle(), i * 100);
+    }
+    
+    // Continuous particle generation
+    setInterval(createHologramParticle, 300);
+    
+    // Music-reactive hologram effect
+    function updateHologramWithMusic() {
+        if (!analyzer) return;
+        
+        const dataArray = new Uint8Array(analyzer.frequencyBinCount);
+        analyzer.getByteFrequencyData(dataArray);
+        
+        const bass = dataArray[0] / 255;
+        const mid = dataArray[Math.floor(dataArray.length / 3)] / 255;
+        const high = dataArray[Math.floor(dataArray.length * 2 / 3)] / 255;
+        
+        // React to music
+        hologramImage.style.transform = `
+            scale(${1 + bass * 0.05}) 
+            rotateX(${mid * 5}deg) 
+            rotateY(${high * 5}deg)
+        `;
+        
+        // Pulse with bass
+        hologramImage.style.filter = `
+            sepia(1) 
+            hue-rotate(${280 + bass * 40}deg) 
+            saturate(${3 + bass * 2}) 
+            brightness(${0.9 + bass * 0.2}) 
+            contrast(${1.2 + bass * 0.3})
+        `;
+        
+        requestAnimationFrame(updateHologramWithMusic);
+    }
+    
+    // Start music-reactive effects
+    if (analyzer) {
+        updateHologramWithMusic();
+    }
+    
+    // Interactive mouse effects
+    const hologram = document.getElementById('profileHologram');
+    hologram.addEventListener('mousemove', (e) => {
+        const rect = hologram.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        
+        // Create interactive ripple
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+            position: absolute;
+            left: ${x}%;
+            top: ${y}%;
+            width: 0;
+            height: 0;
+            border: 2px solid var(--cyber-blue);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10;
+        `;
+        
+        hologramContainer.appendChild(ripple);
+        
+        // Animate ripple
+        const animation = ripple.animate([
+            { width: '0px', height: '0px', opacity: 1 },
+            { width: '100px', height: '100px', opacity: 0 }
+        ], {
+            duration: 1000,
+            easing: 'ease-out'
+        });
+        
+        animation.onfinish = () => ripple.remove();
+        
+        // Distortion effect
+        hologramImage.style.transform += ` perspective(1000px) rotateY(${(x - 50) / 10}deg) rotateX(${(50 - y) / 10}deg)`;
+    });
+    
+    // Reset distortion on mouse leave
+    hologram.addEventListener('mouseleave', () => {
+        hologramImage.style.transform = 'scale(1) rotateX(0) rotateY(0)';
+    });
+}
+
+// Adicione esta chamada na função init após as outras inicializações:
+// initHologramEffects();
 
             // ================== PARTICLE SYSTEM ==================
             function createParticle(x, y, type = 'normal', color = null) {
