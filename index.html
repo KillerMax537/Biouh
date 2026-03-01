@@ -1,1102 +1,1626 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>✧ 𝓾𝓱… ✧ // goth rock // orbital</title>
-    
-    <!-- GSAP + MotionPathPlugin -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
-    
-    <!-- Three.js for 3D background -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts: gothic & modern -->
-    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:wght@400;700&family=Montserrat:wght@900&display=swap" rel="stylesheet">
-    
-    <style>
-        /* ===== GOTH ROCK VARIABLES ===== */
-        :root {
-            --deep-void: #0a0308;
-            --dark-velvet: #1a0c14;
-            --gothic-plum: #330f1f;
-            --blood-rose: #b3244a;
-            --neon-pink: #ff3b6f;
-            --soft-glow: #ff9ebb;
-            --ash-gray: #8a7a80;
-            --glass-bg: rgba(10, 3, 8, 0.7);
-            --glass-border: rgba(255, 59, 111, 0.5);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>✧ 𝓾𝓱… ✧ // goth rock // orbital</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,400&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
 
-        body {
-            background: var(--deep-void);
-            color: #e0d0d8;
-            font-family: 'Cormorant Garamond', serif;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            cursor: none; /* custom cursor only */
-        }
+<style>
+/* ===== ROOT VARS ===== */
+:root {
+  --void:       #060208;
+  --abyss:      #0e0412;
+  --velvet:     #1a0820;
+  --plum:       #2d0e2a;
+  --wine:       #6b1a3e;
+  --blood:      #b3244a;
+  --rose:       #e0295a;
+  --neon:       #ff3b6f;
+  --hot:        #ff6b98;
+  --soft:       #ffaeca;
+  --blush:      #ffd6e7;
+  --gold:       #e8b4c8;
+  --glass:      rgba(8,2,12,0.75);
+  --glass2:     rgba(20,4,28,0.85);
+  --border:     rgba(255,59,111,0.6);
+  --border2:    rgba(255,107,152,0.4);
+}
 
-        /* ===== CUSTOM CURSOR (always visible) ===== */
-        .cursor {
-            position: fixed;
-            width: 25px;
-            height: 25px;
-            border: 2px solid var(--neon-pink);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            mix-blend-mode: screen;
-            box-shadow: 0 0 20px var(--neon-pink);
-            transition: transform 0.1s;
-        }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-        /* ===== INTRO CINEMATIC ===== */
-        .intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--deep-void);
-            z-index: 100000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-            overflow: hidden;
-        }
+body{
+  background:var(--void);
+  color:var(--blush);
+  font-family:'Cormorant Garamond',serif;
+  overflow:hidden;
+  height:100vh; width:100vw;
+  cursor:none;
+}
 
-        #sakuraCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 100001;
-        }
+/* ===== CURSOR ===== */
+#cursor{
+  position:fixed;
+  width:18px; height:18px;
+  border:2px solid var(--neon);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999999;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:screen;
+  box-shadow:0 0 12px var(--neon),0 0 30px rgba(255,59,111,.4);
+  transition:width .15s,height .15s;
+}
+#cursor-dot{
+  position:fixed;
+  width:5px; height:5px;
+  background:var(--soft);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999999;
+  transform:translate(-50%,-50%);
+}
+.cursor-trail{
+  position:fixed;
+  width:10px; height:10px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999998;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:screen;
+}
 
-        .intro-text {
-            position: absolute;
-            z-index: 100002;
-            font-size: 6rem;
-            font-family: 'UnifrakturMaguntia', cursive;
-            color: transparent;
-            -webkit-text-stroke: 2px var(--neon-pink);
-            text-shadow: 0 0 100px var(--neon-pink);
-            letter-spacing: 15px;
-            opacity: 0;
-            transform: scale(0.5);
-            animation: introAppear 3s forwards 1s;
-        }
+/* ===== NOISE/SCANLINE OVERLAY ===== */
+.noise-layer{
+  position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.3;
+  pointer-events:none;
+  z-index:99990;
+  mix-blend-mode:overlay;
+}
+.scanlines{
+  position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);
+  pointer-events:none;
+  z-index:99991;
+}
 
-        @keyframes introAppear {
-            0% { opacity: 0; transform: scale(0.5); }
-            100% { opacity: 1; transform: scale(1); }
-        }
+/* ===== INTRO SCREEN ===== */
+#introScreen{
+  position:fixed; inset:0;
+  background:var(--void);
+  z-index:100000;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+#sakuraCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
 
-        /* ===== MAIN INTERFACE ===== */
-        .main-interface {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            opacity: 0;
-            transition: opacity 2s ease;
-            background: transparent;
-            overflow: hidden;
-        }
+.intro-center{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+  opacity:0;
+  animation:introReveal 1.5s ease forwards 0.5s;
+}
+@keyframes introReveal{to{opacity:1;}}
 
-        /* 3D canvas background */
-        #threeCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            pointer-events: none;
-        }
+.intro-sigil{
+  font-size:7rem;
+  font-family:'UnifrakturMaguntia',cursive;
+  color:transparent;
+  -webkit-text-stroke:2px var(--neon);
+  text-shadow:0 0 60px var(--neon),0 0 120px rgba(255,59,111,.3);
+  letter-spacing:20px;
+  animation:sigilGlitch 3s infinite 1.5s;
+}
+@keyframes sigilGlitch{
+  0%,100%{transform:none;filter:none;}
+  7%{transform:skew(-1deg);filter:hue-rotate(20deg);}
+  8%{transform:skew(0);}
+  20%{transform:none;clip-path:inset(10% 0 80% 0);}
+  21%{clip-path:none;}
+  94%{transform:skew(1deg);}
+  95%{transform:none;}
+}
 
-        /* gothic overlay */
-        .gothic-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(45deg, rgba(179,36,74,0.02) 0px, rgba(179,36,74,0.02) 30px, transparent 30px, transparent 60px);
-            pointer-events: none;
-            z-index: -1;
-        }
+.intro-sub{
+  font-size:1.1rem;
+  letter-spacing:8px;
+  text-transform:uppercase;
+  color:var(--hot);
+  opacity:.7;
+  animation:fadeInUp 1s ease forwards 1.2s;
+  opacity:0;
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:.7;transform:translateY(0);}
+}
 
-        /* ===== CENTRAL PROFILE PICTURE ===== */
-        .center-profile {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 5px solid var(--neon-pink);
-            box-shadow: 0 0 100px var(--neon-pink);
-            overflow: hidden;
-            z-index: 10;
-            cursor: none; /* keep custom cursor */
-            transition: all 0.3s;
-            animation: profileFloat 5s infinite alternate;
-        }
+.intro-loading{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+  animation:fadeInUp 1s ease forwards 1.8s;
+  opacity:0;
+}
+.load-dot{
+  width:8px; height:8px;
+  border-radius:50%;
+  background:var(--neon);
+  animation:loadBounce 1.2s ease infinite;
+}
+.load-dot:nth-child(2){animation-delay:.2s;}
+.load-dot:nth-child(3){animation-delay:.4s;}
+@keyframes loadBounce{
+  0%,100%{transform:translateY(0);opacity:.3;}
+  50%{transform:translateY(-12px);opacity:1;}
+}
 
-        .center-profile:hover {
-            transform: translate(-50%, -50%) scale(1.05);
-            box-shadow: 0 0 150px var(--neon-pink);
-        }
+/* ===== MAIN INTERFACE ===== */
+#mainInterface{
+  position:fixed; inset:0;
+  display:none;
+  opacity:0;
+}
+#threeCanvas{position:absolute;inset:0;z-index:0;pointer-events:none;}
+.gothic-cross-grid{
+  position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,59,111,.03) 0 1px,transparent 1px 80px),
+    repeating-linear-gradient(0deg,rgba(255,59,111,.03) 0 1px,transparent 1px 80px);
+  pointer-events:none; z-index:1;
+}
 
-        .profile-image {
-            width: 100%;
-            height: 100%;
-            background-image: url('assets/profile-pic.png'); /* USER'S PROFILE PICTURE */
-            background-size: cover;
-            background-position: center;
-            filter: brightness(1.1) contrast(1.05) saturate(1.2) sepia(0.1) hue-rotate(-5deg);
-        }
+/* ===== AMBIENT SPARKLES ===== */
+.sparkle{
+  position:absolute;
+  pointer-events:none;
+  z-index:5;
+  animation:sparklePulse var(--dur,3s) ease-in-out infinite var(--del,0s);
+}
+.sparkle::before,.sparkle::after{
+  content:'✦';
+  position:absolute;
+  font-size:var(--sz,1rem);
+  color:var(--neon);
+  opacity:0;
+  animation:inherit;
+}
+.sparkle::after{content:'✧';font-size:calc(var(--sz,1rem)*.6);color:var(--soft);}
+@keyframes sparklePulse{
+  0%,100%{opacity:0;transform:scale(0) rotate(0deg);}
+  50%{opacity:1;transform:scale(1) rotate(180deg);}
+}
 
-        @keyframes profileFloat {
-            0% { transform: translate(-50%, -50%) translateY(0); }
-            100% { transform: translate(-50%, -50%) translateY(-20px); }
-        }
+/* ===== FLOATING BATS / HEARTS ===== */
+.floater{
+  position:absolute;
+  pointer-events:none;
+  z-index:4;
+  font-size:var(--fs,1.2rem);
+  opacity:.15;
+  animation:floatDrift var(--fd,20s) linear infinite var(--fd2,0s);
+}
+@keyframes floatDrift{
+  0%{transform:translateY(110vh) translateX(0) rotate(0deg);opacity:0;}
+  5%{opacity:.2;}
+  95%{opacity:.15;}
+  100%{transform:translateY(-10vh) translateX(var(--dx,40px)) rotate(360deg);opacity:0;}
+}
 
-        /* ===== ORBITING BUTTONS (now with higher z-index and visible) ===== */
-        .orbit-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 750px;
-            height: 750px;
-            transform: translate(-50%, -50%);
-            z-index: 20;
-            pointer-events: none; /* allow clicks on buttons */
-        }
+/* ===== CENTER PROFILE ===== */
+.profile-wrap{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  z-index:20;
+  animation:profileFloat 6s ease-in-out infinite;
+}
+@keyframes profileFloat{
+  0%,100%{transform:translate(-50%,-50%) translateY(0);}
+  50%{transform:translate(-50%,-50%) translateY(-18px);}
+}
 
-        .orbit-btn {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 3px solid var(--neon-pink);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--neon-pink);
-            font-size: 2.5rem;
-            cursor: none; /* keep custom cursor */
-            transition: all 0.3s;
-            box-shadow: 0 0 50px var(--neon-pink);
-            pointer-events: auto;
-            transform-origin: center;
-            animation: orbitPulse 2s infinite alternate;
-            z-index: 30;
-        }
+.profile-ring-outer{
+  position:absolute;
+  inset:-25px;
+  border-radius:50%;
+  border:2px dashed rgba(255,59,111,.3);
+  animation:ringRotate 20s linear infinite;
+}
+.profile-ring-outer::before,.profile-ring-outer::after{
+  content:'✦';
+  position:absolute;
+  color:var(--neon);
+  font-size:1.2rem;
+}
+.profile-ring-outer::before{top:-10px;left:50%;transform:translateX(-50%);}
+.profile-ring-outer::after{bottom:-10px;left:50%;transform:translateX(-50%);}
 
-        .orbit-btn:hover {
-            background: var(--neon-pink);
-            color: var(--deep-void);
-            transform: scale(1.2);
-            box-shadow: 0 0 100px var(--neon-pink);
-        }
+.profile-ring-mid{
+  position:absolute;
+  inset:-12px;
+  border-radius:50%;
+  border:3px solid var(--blood);
+  box-shadow:0 0 30px var(--blood),inset 0 0 30px rgba(179,36,74,.2);
+  animation:ringRotate 10s linear infinite reverse;
+}
 
-        .orbit-btn span {
-            font-size: 0.8rem;
-            margin-top: 5px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+@keyframes ringRotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
-        @keyframes orbitPulse {
-            0% { box-shadow: 0 0 40px var(--neon-pink); }
-            100% { box-shadow: 0 0 80px var(--neon-pink); }
-        }
+.center-profile{
+  width:220px; height:220px;
+  border-radius:50%;
+  border:4px solid var(--neon);
+  box-shadow:0 0 60px var(--neon),0 0 120px rgba(255,59,111,.3),inset 0 0 40px rgba(255,59,111,.1);
+  overflow:hidden;
+  position:relative;
+  cursor:none;
+  transition:box-shadow .3s;
+}
+.center-profile:hover{box-shadow:0 0 100px var(--neon),0 0 200px rgba(255,59,111,.4);}
+.center-profile:hover .profile-glitch{opacity:1;}
 
-        /* ===== SECTION CARDS (improved transition) ===== */
-        .section-card {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 550px;
-            max-width: 90vw;
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 4px solid var(--neon-pink);
-            border-radius: 50px;
-            padding: 60px;
-            color: var(--soft-glow);
-            box-shadow: 0 0 200px var(--neon-pink);
-            z-index: 1000;
-            opacity: 0;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s;
-            pointer-events: none;
-        }
+.profile-image{
+  width:100%; height:100%;
+  background:linear-gradient(135deg,var(--plum),var(--wine),var(--blood));
+  background-image:url('assets/profile-pic.png');
+  background-size:cover;
+  background-position:center;
+  filter:brightness(1.1) contrast(1.08) saturate(1.3) hue-rotate(-5deg);
+  transition:filter .3s;
+}
+.center-profile:hover .profile-image{
+  filter:brightness(1.2) contrast(1.15) saturate(1.5) hue-rotate(-10deg);
+}
+.profile-glitch{
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,59,111,.15));
+  opacity:0; transition:opacity .3s;
+  mix-blend-mode:screen;
+}
 
-        .section-card.active {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-            pointer-events: auto;
-        }
+.profile-name{
+  position:absolute;
+  bottom:-55px;
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:1.6rem;
+  color:var(--neon);
+  text-shadow:0 0 20px var(--neon);
+  letter-spacing:4px;
+}
 
-        .card-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 3rem;
-            color: var(--neon-pink);
-            cursor: none;
-            transition: transform 0.3s;
-        }
+/* ===== ORBIT SYSTEM ===== */
+#orbitContainer{
+  position:absolute;
+  top:50%; left:50%;
+  width:0; height:0;
+  z-index:15;
+}
 
-        .card-close:hover {
-            transform: rotate(90deg);
-        }
+.orbit-btn{
+  position:absolute;
+  width:85px; height:85px;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border:2px solid var(--neon);
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:var(--neon);
+  font-size:1.6rem;
+  cursor:none;
+  transition:background .3s,box-shadow .3s,color .3s;
+  box-shadow:0 0 25px rgba(255,59,111,.5),inset 0 0 20px rgba(255,59,111,.05);
+  pointer-events:auto;
+  /* critical: counter-rotate so text stays upright */
+}
+.orbit-btn::before{
+  content:'';
+  position:absolute;
+  inset:-3px;
+  border-radius:50%;
+  border:1px solid rgba(255,175,202,.2);
+  animation:ringRotate 8s linear infinite;
+}
+.orbit-btn:hover{
+  background:var(--neon);
+  color:var(--void);
+  box-shadow:0 0 60px var(--neon),0 0 120px rgba(255,59,111,.4);
+}
+.orbit-btn .btn-label{
+  font-size:.65rem;
+  margin-top:4px;
+  letter-spacing:2px;
+  font-family:'Cinzel Decorative',serif;
+}
+.orbit-btn .btn-icon{pointer-events:none;}
 
-        .card-title {
-            font-size: 3.5rem;
-            font-family: 'UnifrakturMaguntia', cursive;
-            color: var(--neon-pink);
-            margin-bottom: 30px;
-            text-shadow: 0 0 30px var(--neon-pink);
-        }
+/* orbit path rings */
+.orbit-ring{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(255,59,111,.1);
+  pointer-events:none;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+}
 
-        .card-content {
-            font-size: 1.6rem;
-            line-height: 2;
-        }
+/* ===== SECTION CARDS ===== */
+.section-card{
+  position:fixed;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0.8) rotateX(10deg);
+  width:500px;
+  max-width:90vw;
+  max-height:85vh;
+  overflow-y:auto;
+  background:var(--glass2);
+  backdrop-filter:blur(40px);
+  border:2px solid var(--neon);
+  border-radius:30px;
+  padding:50px;
+  box-shadow:0 0 100px rgba(255,59,111,.4),0 0 300px rgba(255,59,111,.1),inset 0 0 60px rgba(255,59,111,.05);
+  z-index:5000;
+  opacity:0;
+  pointer-events:none;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .35s ease;
+  scrollbar-width:thin;
+  scrollbar-color:var(--neon) transparent;
+}
+.section-card::-webkit-scrollbar{width:4px;}
+.section-card::-webkit-scrollbar-thumb{background:var(--neon);border-radius:4px;}
 
-        /* ===== VINYL MUSIC PLAYER ===== */
-        .music-player {
-            position: absolute;
-            bottom: 40px;
-            right: 40px;
-            width: 380px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 3px solid var(--neon-pink);
-            border-radius: 40px 40px 20px 20px;
-            padding: 25px;
-            z-index: 10000;
-            box-shadow: 0 0 120px var(--neon-pink);
-            cursor: grab;
-            transition: box-shadow 0.3s;
-            animation: playerFloat 4s infinite alternate;
-        }
+.section-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:30px;
+  background:repeating-linear-gradient(45deg,rgba(255,59,111,.02) 0 20px,transparent 20px 40px);
+  pointer-events:none;
+}
 
-        .music-player:active {
-            cursor: grabbing;
-        }
+.section-card.active{
+  transform:translate(-50%,-50%) scale(1) rotateX(0deg);
+  opacity:1;
+  pointer-events:auto;
+}
 
-        @keyframes playerFloat {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-10px); }
-        }
+.card-close{
+  position:absolute;
+  top:18px; right:22px;
+  width:38px; height:38px;
+  border:2px solid var(--neon);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--neon);
+  font-size:1.4rem;
+  cursor:none;
+  transition:all .3s;
+  z-index:2;
+}
+.card-close:hover{
+  background:var(--neon);
+  color:var(--void);
+  transform:rotate(90deg) scale(1.1);
+}
 
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+.card-title{
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:3.2rem;
+  color:var(--neon);
+  text-shadow:0 0 20px var(--neon);
+  margin-bottom:8px;
+  line-height:1;
+}
+.card-subtitle{
+  font-size:.85rem;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--hot);
+  opacity:.6;
+  margin-bottom:30px;
+  font-family:'Cinzel Decorative',serif;
+}
+.card-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--neon),transparent);
+  margin:20px 0;
+  opacity:.4;
+}
 
-        .now-playing {
-            font-size: 1.2rem;
-            color: var(--neon-pink);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
+.card-content{
+  font-size:1.3rem;
+  line-height:1.9;
+  color:var(--blush);
+}
 
-        .vinyl-disc {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, var(--neon-pink), var(--deep-void));
-            border: 3px solid var(--soft-glow);
-            animation: spin 5s linear infinite;
-            animation-play-state: paused;
-            box-shadow: 0 0 30px var(--neon-pink);
-        }
+/* project pills */
+.proj-item{
+  display:flex;
+  align-items:flex-start;
+  gap:15px;
+  margin-bottom:20px;
+  padding:18px;
+  background:rgba(255,59,111,.05);
+  border:1px solid rgba(255,59,111,.2);
+  border-radius:16px;
+  transition:border-color .3s,background .3s;
+  cursor:none;
+}
+.proj-item:hover{
+  border-color:var(--neon);
+  background:rgba(255,59,111,.1);
+}
+.proj-icon{font-size:1.8rem;flex-shrink:0;}
+.proj-info{}
+.proj-name{font-weight:700;color:var(--neon);font-size:1.2rem;}
+.proj-desc{font-size:1rem;opacity:.7;margin-top:4px;}
 
-        .vinyl-disc.playing {
-            animation-play-state: running;
-        }
+/* skill bars */
+.skill-row{margin-bottom:18px;}
+.skill-label{display:flex;justify-content:space-between;font-size:1rem;margin-bottom:6px;color:var(--soft);}
+.skill-bar{height:6px;background:rgba(255,59,111,.15);border-radius:6px;overflow:hidden;}
+.skill-fill{height:100%;background:linear-gradient(90deg,var(--blood),var(--neon),var(--hot));border-radius:6px;width:0;transition:width 1.5s cubic-bezier(.25,1,.5,1);}
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+/* tag pills */
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px;}
+.tag{
+  padding:5px 14px;
+  border:1px solid rgba(255,59,111,.4);
+  border-radius:20px;
+  font-size:.85rem;
+  color:var(--hot);
+  letter-spacing:1px;
+  transition:all .3s;
+  cursor:none;
+}
+.tag:hover{background:var(--neon);color:var(--void);border-color:var(--neon);}
 
-        .visualizer {
-            display: flex;
-            align-items: flex-end;
-            gap: 4px;
-            height: 70px;
-            margin: 20px 0;
-        }
+/* social link */
+.social-link{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  border:1px solid rgba(255,59,111,.25);
+  border-radius:14px;
+  margin-bottom:12px;
+  color:var(--soft);
+  font-size:1.1rem;
+  transition:all .3s;
+  cursor:none;
+  text-decoration:none;
+}
+.social-link i{color:var(--neon);font-size:1.4rem;width:24px;text-align:center;}
+.social-link:hover{border-color:var(--neon);background:rgba(255,59,111,.1);color:var(--neon);}
 
-        .vis-bar {
-            flex: 1;
-            background: linear-gradient(to top, var(--blood-rose), var(--neon-pink));
-            height: 0%;
-            border-radius: 5px 5px 0 0;
-            transition: height 0.1s;
-        }
+/* ===== MUSIC PLAYER ===== */
+#musicPlayer{
+  position:fixed;
+  bottom:30px; right:30px;
+  width:340px;
+  background:var(--glass2);
+  backdrop-filter:blur(40px);
+  border:2px solid var(--neon);
+  border-radius:28px;
+  padding:22px;
+  z-index:10000;
+  box-shadow:0 0 80px rgba(255,59,111,.35),inset 0 0 40px rgba(255,59,111,.04);
+  animation:playerFloat 5s ease-in-out infinite;
+  user-select:none;
+}
+@keyframes playerFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
 
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
+.player-top{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
 
-        .ctrl-btn {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--neon-pink);
-            background: transparent;
-            color: var(--neon-pink);
-            font-size: 1.5rem;
-            border-radius: 50%;
-            cursor: none;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.vinyl{
+  position:relative;
+  width:54px; height:54px;
+  flex-shrink:0;
+}
+.vinyl-record{
+  width:100%; height:100%;
+  border-radius:50%;
+  background:conic-gradient(var(--void) 0deg,var(--plum) 60deg,var(--void) 120deg,var(--wine) 180deg,var(--void) 240deg,var(--blood) 300deg,var(--void) 360deg);
+  border:3px solid var(--neon);
+  box-shadow:0 0 20px var(--neon);
+  animation:vinylSpin 4s linear infinite;
+  animation-play-state:paused;
+}
+.vinyl-record.spinning{animation-play-state:running;}
+.vinyl-center{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:14px; height:14px;
+  border-radius:50%;
+  background:var(--neon);
+  box-shadow:0 0 8px var(--neon);
+}
+@keyframes vinylSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
-        .ctrl-btn:hover {
-            background: var(--neon-pink);
-            color: var(--deep-void);
-            transform: scale(1.2);
-            box-shadow: 0 0 30px var(--neon-pink);
-        }
+.track-info{flex:1;min-width:0;}
+.track-name{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--neon);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.track-status{font-size:.75rem;color:var(--hot);opacity:.6;margin-top:3px;letter-spacing:2px;}
 
-        .progress-area {
-            flex: 1;
-            height: 6px;
-            background: rgba(255,59,111,0.2);
-            border-radius: 6px;
-            cursor: none;
-            position: relative;
-        }
+/* visualizer */
+#visualizer{
+  display:flex;
+  align-items:flex-end;
+  gap:3px;
+  height:50px;
+  margin-bottom:14px;
+  padding:0 4px;
+}
+.vis-bar{
+  flex:1;
+  background:linear-gradient(to top,var(--blood),var(--neon),var(--soft));
+  height:15%;
+  border-radius:3px 3px 0 0;
+  transition:height .08s ease;
+  opacity:.8;
+}
 
-        .progress-fill {
-            height: 100%;
-            background: var(--neon-pink);
-            width: 0%;
-            border-radius: 6px;
-        }
+/* controls */
+.player-controls{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ctrl-btn{
+  width:42px; height:42px;
+  border:1.5px solid rgba(255,59,111,.5);
+  background:transparent;
+  color:var(--hot);
+  font-size:1rem;
+  border-radius:50%;
+  cursor:none;
+  transition:all .25s;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.ctrl-btn:hover,.ctrl-btn.active{
+  background:var(--neon);
+  color:var(--void);
+  border-color:var(--neon);
+  box-shadow:0 0 20px var(--neon);
+  transform:scale(1.1);
+}
+.play-btn{
+  width:50px; height:50px;
+  border:2px solid var(--neon);
+  box-shadow:0 0 20px rgba(255,59,111,.4);
+  color:var(--neon);
+}
 
-        .time-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: var(--soft-glow);
-            margin-top: 5px;
-        }
+.progress-wrap{flex:1;}
+.progress-track{
+  height:4px;
+  background:rgba(255,59,111,.2);
+  border-radius:4px;
+  cursor:none;
+  position:relative;
+  overflow:visible;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--blood),var(--neon));
+  border-radius:4px;
+  width:0%;
+  position:relative;
+}
+.progress-fill::after{
+  content:'';
+  position:absolute;
+  right:-4px; top:50%;
+  transform:translateY(-50%);
+  width:10px; height:10px;
+  border-radius:50%;
+  background:var(--neon);
+  box-shadow:0 0 8px var(--neon);
+}
 
-        .volume-slider {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
+.time-row{display:flex;justify-content:space-between;font-size:.8rem;color:var(--gold);margin-top:6px;opacity:.7;}
 
-        .volume-slider i {
-            color: var(--neon-pink);
-            font-size: 1.3rem;
-        }
+.vol-row{display:flex;align-items:center;gap:8px;margin-top:12px;}
+.vol-row i{color:var(--hot);font-size:1rem;}
+.vol-track{flex:1;height:4px;background:rgba(255,59,111,.2);border-radius:4px;cursor:none;position:relative;}
+.vol-fill{height:100%;background:linear-gradient(90deg,var(--blood),var(--neon));border-radius:4px;width:70%;}
 
-        .volume-bar {
-            flex: 1;
-            height: 5px;
-            background: rgba(255,59,111,0.2);
-            border-radius: 5px;
-            cursor: none;
-        }
+/* player drag handle */
+.player-handle{
+  position:absolute;
+  top:10px; left:50%;
+  transform:translateX(-50%);
+  width:40px; height:3px;
+  background:rgba(255,59,111,.3);
+  border-radius:3px;
+  cursor:grab;
+}
+.player-handle:active{cursor:grabbing;}
 
-        .volume-fill {
-            height: 100%;
-            background: var(--neon-pink);
-            width: 70%;
-            border-radius: 5px;
-        }
+/* ===== GLITCH NAME DISPLAY ===== */
+.site-title{
+  position:fixed;
+  top:30px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:500;
+  text-align:center;
+  pointer-events:none;
+}
+.site-title h1{
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:2.4rem;
+  color:transparent;
+  -webkit-text-stroke:1.5px var(--neon);
+  text-shadow:0 0 30px rgba(255,59,111,.5);
+  letter-spacing:8px;
+  animation:titleGlitch 6s infinite;
+}
+.site-title p{
+  font-size:.7rem;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  color:var(--hot);
+  opacity:.5;
+  font-family:'Cinzel Decorative',serif;
+}
+@keyframes titleGlitch{
+  0%,90%,100%{transform:none;filter:none;}
+  92%{transform:skewX(-2deg) translateX(-3px);filter:hue-rotate(40deg);opacity:.8;}
+  94%{transform:skewX(1deg) translateX(2px);filter:none;}
+  96%{transform:none;clip-path:inset(30% 0 50% 0);}
+  97%{clip-path:none;}
+}
 
-        /* ===== CLICK PARTICLE ===== */
-        .click-particle {
-            position: fixed;
-            pointer-events: none;
-            width: 20px;
-            height: 20px;
-            background: var(--neon-pink);
-            border-radius: 50%;
-            filter: blur(5px);
-            z-index: 99999;
-            animation: particleFade 1s forwards;
-        }
+/* ===== HEART RAIN TOGGLE BTN ===== */
+.fx-toggle{
+  position:fixed;
+  top:28px; right:30px;
+  z-index:600;
+  display:flex;
+  gap:10px;
+}
+.fx-btn{
+  width:40px; height:40px;
+  background:var(--glass);
+  border:1.5px solid rgba(255,59,111,.4);
+  border-radius:50%;
+  color:var(--neon);
+  font-size:1rem;
+  cursor:none;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .3s;
+}
+.fx-btn:hover,.fx-btn.on{
+  background:var(--neon);
+  color:var(--void);
+  box-shadow:0 0 20px var(--neon);
+  border-color:var(--neon);
+}
 
-        @keyframes particleFade {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(3); }
-        }
+/* ===== CORNER DECORATIONS ===== */
+.corner-deco{
+  position:fixed;
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:3rem;
+  color:rgba(255,59,111,.15);
+  pointer-events:none;
+  z-index:3;
+  line-height:1;
+}
+.corner-deco.tl{top:15px;left:15px;}
+.corner-deco.tr{top:15px;right:15px;}
+.corner-deco.bl{bottom:15px;left:15px;}
+.corner-deco.br{bottom:15px;right:15px;}
 
-        /* ===== FLOATING AMBIENT PARTICLES (to fill empty space) ===== */
-        .ambient-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--neon-pink);
-            border-radius: 50%;
-            filter: blur(2px);
-            opacity: 0.3;
-            pointer-events: none;
-            z-index: -1;
-            animation: ambientFloat 20s infinite alternate;
-        }
+/* ===== TOOLTIP ===== */
+#tooltip{
+  position:fixed;
+  background:var(--glass2);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--neon);
+  color:var(--neon);
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:.85rem;
+  letter-spacing:2px;
+  pointer-events:none;
+  z-index:9999990;
+  opacity:0;
+  transition:opacity .2s;
+  white-space:nowrap;
+  font-family:'Cinzel Decorative',serif;
+  transform:translateX(-50%);
+  text-transform:uppercase;
+}
 
-        @keyframes ambientFloat {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, -100px); }
-        }
+/* ===== CLICK BURST ===== */
+.click-burst{
+  position:fixed;
+  pointer-events:none;
+  z-index:9999990;
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--neon);
+  filter:blur(2px);
+  animation:burstFly 0.8s ease-out forwards;
+  transform-origin:center;
+}
+@keyframes burstFly{
+  0%{opacity:1;transform:translate(0,0) scale(1);}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}
+}
 
-        /* ===== TOOLTIP (extra feature) ===== */
-        .tooltip {
-            position: fixed;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 2px solid var(--neon-pink);
-            color: var(--neon-pink);
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 1rem;
-            pointer-events: none;
-            z-index: 1000000;
-            opacity: 0;
-            transition: opacity 0.2s;
-            white-space: nowrap;
-        }
+/* ===== HEARTS RAIN ===== */
+.heart-rain{
+  position:fixed;
+  pointer-events:none;
+  z-index:6;
+  animation:heartFall var(--hd,6s) linear forwards var(--hdel,0s);
+  opacity:0;
+  font-size:var(--hfs,1.2rem);
+  top:-50px;
+  left:var(--hleft,50%);
+  color:var(--neon);
+  filter:drop-shadow(0 0 6px var(--neon));
+}
+@keyframes heartFall{
+  0%{opacity:0;transform:translateY(0) rotate(0deg);}
+  10%{opacity:.6;}
+  90%{opacity:.4;}
+  100%{opacity:0;transform:translateY(110vh) rotate(var(--hr,360deg));}
+}
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 800px) {
-            .center-profile {
-                width: 200px;
-                height: 200px;
-            }
-            .orbit-container {
-                width: 550px;
-                height: 550px;
-            }
-            .orbit-btn {
-                width: 70px;
-                height: 70px;
-                font-size: 1.8rem;
-            }
-            .music-player {
-                width: calc(100% - 40px);
-                left: 20px;
-                right: 20px;
-            }
-        }
-    </style>
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .center-profile{width:160px;height:160px;}
+  .orbit-btn{width:65px;height:65px;font-size:1.3rem;}
+  .orbit-btn .btn-label{display:none;}
+  #musicPlayer{width:calc(100% - 30px);left:15px;right:15px;bottom:15px;}
+  .site-title h1{font-size:1.6rem;}
+  .section-card{padding:35px 25px;}
+}
+</style>
 </head>
 <body>
-    <!-- CUSTOM CURSOR -->
-    <div class="cursor"></div>
 
-    <!-- TOOLTIP ELEMENT -->
-    <div class="tooltip" id="tooltip"></div>
+<!-- OVERLAYS -->
+<div class="noise-layer"></div>
+<div class="scanlines"></div>
 
-    <!-- INTRO -->
-    <div class="intro-screen" id="introScreen">
-        <canvas id="sakuraCanvas"></canvas>
-        <div class="intro-text">✧ 𝓾𝓱… ✧</div>
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+
+<!-- CORNER DECOS -->
+<div class="corner-deco tl">✦</div>
+<div class="corner-deco tr">✦</div>
+<div class="corner-deco bl">✦</div>
+<div class="corner-deco br">✦</div>
+
+<!-- TOOLTIP -->
+<div id="tooltip"></div>
+
+<!-- ===== INTRO ===== -->
+<div id="introScreen">
+  <canvas id="sakuraCanvas"></canvas>
+  <div class="intro-center">
+    <div class="intro-sigil">✧ 𝓾𝓱… ✧</div>
+    <div class="intro-sub">goth rock • orbital</div>
+    <div class="intro-loading">
+      <div class="load-dot"></div>
+      <div class="load-dot"></div>
+      <div class="load-dot"></div>
     </div>
+  </div>
+</div>
 
-    <!-- MAIN INTERFACE -->
-    <div class="main-interface" id="mainInterface">
-        <!-- 3D canvas -->
-        <canvas id="threeCanvas"></canvas>
-        <div class="gothic-overlay"></div>
+<!-- ===== MAIN INTERFACE ===== -->
+<div id="mainInterface">
+  <canvas id="threeCanvas"></canvas>
+  <div class="gothic-cross-grid"></div>
 
-        <!-- CENTRAL PROFILE PICTURE -->
-        <div class="center-profile" id="profilePic">
-            <div class="profile-image"></div>
-        </div>
+  <!-- SITE TITLE -->
+  <div class="site-title">
+    <h1>✧ 𝓾𝓱… ✧</h1>
+    <p>roblox dev • composer • animator</p>
+  </div>
 
-        <!-- ORBITING BUTTONS CONTAINER -->
-        <div class="orbit-container" id="orbitContainer"></div>
+  <!-- FX TOGGLES -->
+  <div class="fx-toggle">
+    <button class="fx-btn" id="heartBtn" title="Heart Rain"><i class="fas fa-heart"></i></button>
+    <button class="fx-btn on" id="sparkleBtn" title="Sparkles"><i class="fas fa-star"></i></button>
+  </div>
 
-        <!-- SECTION CARDS (6 cards) -->
-        <div class="section-card" id="homeCard">
-            <div class="card-close" data-close="home">&times;</div>
-            <h2 class="card-title">HOME</h2>
-            <div class="card-content">
-                𓆩 ✧ 𝓾𝓱… ✧ 𓆪<br>
-                roblox developer • composer • animator<br>
-                crafting ethereal experiences with a dark romantic soul.
-            </div>
-        </div>
-        <div class="section-card" id="projectsCard">
-            <div class="card-close" data-close="projects">&times;</div>
-            <h2 class="card-title">PROJECTS</h2>
-            <div class="card-content">
-                ✦ Gothic Rose – immersive roblox world<br>
-                ✦ Neon Cathedral – original soundtrack<br>
-                ✦ Blood Mix – animation & design
-            </div>
-        </div>
-        <div class="section-card" id="skillsCard">
-            <div class="card-close" data-close="skills">&times;</div>
-            <h2 class="card-title">SKILLS</h2>
-            <div class="card-content">
-                Lua • 3D design • music composition • animation • UI/UX
-            </div>
-        </div>
-        <div class="section-card" id="contactCard">
-            <div class="card-close" data-close="contact">&times;</div>
-            <h2 class="card-title">CONTACT</h2>
-            <div class="card-content">
-                uh@dark.rose<br>
-                discord / roblox
-            </div>
-        </div>
-        <div class="section-card" id="discordCard">
-            <div class="card-close" data-close="discord">&times;</div>
-            <h2 class="card-title">DISCORD</h2>
-            <div class="card-content">
-                join our community:<br>
-                discord.gg/QJfTJjtYJJ
-            </div>
-        </div>
-        <div class="section-card" id="robloxCard">
-            <div class="card-close" data-close="roblox">&times;</div>
-            <h2 class="card-title">ROBLOX</h2>
-            <div class="card-content">
-                personal: roblox.com/users/1803582764/profile<br>
-                group: roblox.com/communities/34305901
-            </div>
-        </div>
-
-        <!-- VINYL MUSIC PLAYER -->
-        <div class="music-player" id="musicPlayer">
-            <div class="player-header">
-                <span class="now-playing" id="nowPlaying">LOADING...</span>
-                <div class="vinyl-disc" id="vinylDisc"></div>
-            </div>
-            <div class="visualizer" id="visualizer"></div>
-            <div class="player-controls">
-                <button class="ctrl-btn" id="prevBtn"><i class="fas fa-step-backward"></i></button>
-                <button class="ctrl-btn" id="playBtn"><i class="fas fa-play"></i></button>
-                <button class="ctrl-btn" id="nextBtn"><i class="fas fa-step-forward"></i></button>
-                <div class="progress-area" id="progressArea">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-            </div>
-            <div class="time-info">
-                <span id="currentTime">0:00</span>
-                <span id="duration">0:00</span>
-            </div>
-            <div class="volume-slider">
-                <i class="fas fa-volume-up"></i>
-                <div class="volume-bar" id="volumeBar">
-                    <div class="volume-fill" id="volumeFill" style="width:70%"></div>
-                </div>
-            </div>
-        </div>
+  <!-- PROFILE -->
+  <div class="profile-wrap" id="profileWrap">
+    <div class="profile-ring-outer"></div>
+    <div class="profile-ring-mid"></div>
+    <div class="center-profile" id="profilePic">
+      <div class="profile-image"></div>
+      <div class="profile-glitch"></div>
     </div>
+    <div class="profile-name">✦ uh… ✦</div>
+  </div>
 
-    <audio id="bgMusic" preload="auto"></audio>
+  <!-- ORBIT RINGS (decorative) -->
+  <div id="orbitContainer">
+    <!-- dynamically filled -->
+  </div>
 
-    <script>
-        (function() {
-            "use strict";
+  <!-- ===== SECTION CARDS ===== -->
+  <!-- HOME -->
+  <div class="section-card" id="homeCard">
+    <div class="card-close" data-close="home"><i class="fas fa-times"></i></div>
+    <h2 class="card-title">Home</h2>
+    <p class="card-subtitle">𓆩 intro 𓆪</p>
+    <div class="card-divider"></div>
+    <div class="card-content">
+      <p style="font-size:1.5rem;line-height:1.8;margin-bottom:18px;">roblox developer · composer · animator</p>
+      <p style="opacity:.75;font-size:1.1rem;line-height:1.9;">crafting ethereal, dark romantic experiences at the edge of code and art. every project is a ritual. every line of music, a spell.</p>
+      <div class="card-divider"></div>
+      <div class="tags">
+        <span class="tag">✦ goth</span>
+        <span class="tag">✦ girly</span>
+        <span class="tag">✦ creator</span>
+        <span class="tag">✦ lua</span>
+        <span class="tag">✦ music</span>
+      </div>
+    </div>
+  </div>
 
-            // ================== GLOBALS ==================
-            const introScreen = document.getElementById('introScreen');
-            const mainInterface = document.getElementById('mainInterface');
-            const cursor = document.querySelector('.cursor');
-            const orbitContainer = document.getElementById('orbitContainer');
-            const profilePic = document.getElementById('profilePic');
-            const musicPlayer = document.getElementById('musicPlayer');
-            const audio = document.getElementById('bgMusic');
-            const playBtn = document.getElementById('playBtn');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const progressArea = document.getElementById('progressArea');
-            const progressFill = document.getElementById('progressFill');
-            const currentTimeSpan = document.getElementById('currentTime');
-            const durationSpan = document.getElementById('duration');
-            const nowPlayingSpan = document.getElementById('nowPlaying');
-            const vinylDisc = document.getElementById('vinylDisc');
-            const visualizerDiv = document.getElementById('visualizer');
-            const volumeBar = document.getElementById('volumeBar');
-            const volumeFill = document.getElementById('volumeFill');
-            const cards = document.querySelectorAll('.section-card');
-            const closeBtns = document.querySelectorAll('.card-close');
-            const tooltip = document.getElementById('tooltip');
+  <!-- PROJECTS -->
+  <div class="section-card" id="projectsCard">
+    <div class="card-close" data-close="projects"><i class="fas fa-times"></i></div>
+    <h2 class="card-title">Projects</h2>
+    <p class="card-subtitle">𓆩 my works 𓆪</p>
+    <div class="card-divider"></div>
+    <div class="card-content">
+      <div class="proj-item">
+        <span class="proj-icon">🌹</span>
+        <div class="proj-info">
+          <div class="proj-name">Gothic Rose</div>
+          <div class="proj-desc">immersive roblox world with dark romantic aesthetics & custom scripting</div>
+        </div>
+      </div>
+      <div class="proj-item">
+        <span class="proj-icon">🎵</span>
+        <div class="proj-info">
+          <div class="proj-name">Neon Cathedral</div>
+          <div class="proj-desc">original goth-electronic OST — ambient to high-energy</div>
+        </div>
+      </div>
+      <div class="proj-item">
+        <span class="proj-icon">🎬</span>
+        <div class="proj-info">
+          <div class="proj-name">Blood Mix</div>
+          <div class="proj-desc">animation series + visual design experiments</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            // ================== SAKURA INTRO ==================
-            const canvas = document.getElementById('sakuraCanvas');
-            const ctx = canvas.getContext('2d');
-            let width, height;
-            let petals = [];
+  <!-- SKILLS -->
+  <div class="section-card" id="skillsCard">
+    <div class="card-close" data-close="skills"><i class="fas fa-times"></i></div>
+    <h2 class="card-title">Skills</h2>
+    <p class="card-subtitle">𓆩 abilities 𓆪</p>
+    <div class="card-divider"></div>
+    <div class="card-content">
+      <div class="skill-row">
+        <div class="skill-label"><span>Lua / Roblox Dev</span><span>90%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="90"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>Music Composition</span><span>85%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="85"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>3D Design</span><span>75%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="75"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>Animation</span><span>80%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="80"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>UI/UX Design</span><span>70%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="70"></div></div>
+      </div>
+    </div>
+  </div>
 
-            function resizeCanvas() {
-                width = window.innerWidth;
-                height = window.innerHeight;
-                canvas.width = width;
-                canvas.height = height;
-            }
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
+  <!-- CONTACT -->
+  <div class="section-card" id="contactCard">
+    <div class="card-close" data-close="contact"><i class="fas fa-times"></i></div>
+    <h2 class="card-title">Contact</h2>
+    <p class="card-subtitle">𓆩 reach me 𓆪</p>
+    <div class="card-divider"></div>
+    <div class="card-content">
+      <a class="social-link" href="mailto:uh@dark.rose">
+        <i class="fas fa-envelope"></i> uh@dark.rose
+      </a>
+      <a class="social-link" href="#">
+        <i class="fab fa-discord"></i> Discord
+      </a>
+      <a class="social-link" href="https://www.roblox.com/users/1803582764/profile" target="_blank">
+        <i class="fas fa-gamepad"></i> Roblox Profile
+      </a>
+    </div>
+  </div>
 
-            class Petal {
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * height * 0.2 - height;
-                    this.size = Math.random() * 20 + 10;
-                    this.speedY = Math.random() * 3 + 2;
-                    this.speedX = Math.random() * 2 - 1;
-                    this.rotation = Math.random() * Math.PI * 2;
-                    this.rotSpeed = (Math.random() - 0.5) * 0.02;
-                    this.opacity = Math.random() * 0.5 + 0.2;
-                }
-                update() {
-                    this.y += this.speedY;
-                    this.x += this.speedX;
-                    this.rotation += this.rotSpeed;
-                    if (this.y > height) {
-                        this.reset();
-                        this.y = -20;
-                    }
-                }
-                draw() {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(this.rotation);
-                    ctx.fillStyle = `rgba(255, 59, 111, ${this.opacity})`;
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, this.size/2, this.size/4, 0, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-            }
+  <!-- DISCORD -->
+  <div class="section-card" id="discordCard">
+    <div class="card-close" data-close="discord"><i class="fas fa-times"></i></div>
+    <h2 class="card-title">Discord</h2>
+    <p class="card-subtitle">𓆩 community 𓆪</p>
+    <div class="card-divider"></div>
+    <div class="card-content">
+      <p style="margin-bottom:20px;opacity:.8;">join our dark little corner of the internet ✦</p>
+      <a class="social-link" href="https://discord.gg/QJfTJjtYJJ" target="_blank">
+        <i class="fab fa-discord"></i> discord.gg/QJfTJjtYJJ
+      </a>
+    </div>
+  </div>
 
-            for (let i = 0; i < 150; i++) {
-                petals.push(new Petal());
-            }
+  <!-- ROBLOX -->
+  <div class="section-card" id="robloxCard">
+    <div class="card-close" data-close="roblox"><i class="fas fa-times"></i></div>
+    <h2 class="card-title">Roblox</h2>
+    <p class="card-subtitle">𓆩 find me 𓆪</p>
+    <div class="card-divider"></div>
+    <div class="card-content">
+      <a class="social-link" href="https://www.roblox.com/users/1803582764/profile" target="_blank">
+        <i class="fas fa-user"></i> Personal Profile
+      </a>
+      <a class="social-link" href="https://www.roblox.com/communities/34305901" target="_blank">
+        <i class="fas fa-users"></i> Group / Community
+      </a>
+    </div>
+  </div>
 
-            function animateIntro() {
-                ctx.clearRect(0, 0, width, height);
-                petals.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                requestAnimationFrame(animateIntro);
-            }
-            animateIntro();
+  <!-- ===== MUSIC PLAYER ===== -->
+  <div id="musicPlayer">
+    <div class="player-handle" id="playerHandle"></div>
+    <div style="margin-top:8px;">
+      <div class="player-top">
+        <div class="vinyl">
+          <div class="vinyl-record" id="vinylRecord"></div>
+          <div class="vinyl-center"></div>
+        </div>
+        <div class="track-info">
+          <div class="track-name" id="trackName">LOADING...</div>
+          <div class="track-status" id="trackStatus">⏸ paused</div>
+        </div>
+      </div>
+      <div id="visualizer"></div>
+      <div class="player-controls">
+        <button class="ctrl-btn" id="prevBtn"><i class="fas fa-step-backward"></i></button>
+        <button class="ctrl-btn play-btn" id="playBtn"><i class="fas fa-play"></i></button>
+        <button class="ctrl-btn" id="nextBtn"><i class="fas fa-step-forward"></i></button>
+        <div class="progress-wrap">
+          <div class="progress-track" id="progressTrack">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="time-row">
+            <span id="curTime">0:00</span>
+            <span id="durTime">0:00</span>
+          </div>
+        </div>
+      </div>
+      <div class="vol-row">
+        <i class="fas fa-volume-up"></i>
+        <div class="vol-track" id="volTrack">
+          <div class="vol-fill" id="volFill" style="width:70%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-            // ================== AUTO TRANSITION AFTER 4 SECONDS ==================
-            setTimeout(() => {
-                gsap.to(introScreen, {
-                    duration: 2,
-                    opacity: 0,
-                    ease: 'power3.inOut',
-                    onComplete: () => {
-                        introScreen.style.display = 'none';
-                        mainInterface.style.display = 'block';
-                        gsap.to(mainInterface, {
-                            duration: 2,
-                            opacity: 1,
-                            ease: 'power3.out'
-                        });
-                        init3D();
-                        initMusic();
-                        createOrbitButtons();
-                        makeDraggable(musicPlayer);
-                        startOrbitRotation();
-                        createAmbientParticles(60);
-                        setupTooltips();
-                    }
-                });
-            }, 4000);
+<audio id="bgAudio" preload="auto"></audio>
 
-            // ================== CURSOR (always visible) ==================
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
+<script>
+(function(){
+"use strict";
 
-            // Prevent default cursor on all elements
-            document.querySelectorAll('*').forEach(el => {
-                el.style.cursor = 'none';
-            });
+// ============ GSAP REGISTER ============
+gsap.registerPlugin(MotionPathPlugin);
 
-            // ================== 3D BACKGROUND ==================
-            let scene, camera, renderer, group;
+// ============ ELEMENTS ============
+const introScreen  = document.getElementById('introScreen');
+const mainIface    = document.getElementById('mainInterface');
+const cursorEl     = document.getElementById('cursor');
+const cursorDot    = document.getElementById('cursor-dot');
+const orbitCont    = document.getElementById('orbitContainer');
+const profileWrap  = document.getElementById('profileWrap');
+const profilePic   = document.getElementById('profilePic');
+const musicPlayer  = document.getElementById('musicPlayer');
+const playerHandle = document.getElementById('playerHandle');
+const audio        = document.getElementById('bgAudio');
+const playBtn      = document.getElementById('playBtn');
+const prevBtn      = document.getElementById('prevBtn');
+const nextBtn      = document.getElementById('nextBtn');
+const progressTrack= document.getElementById('progressTrack');
+const progressFill = document.getElementById('progressFill');
+const curTime      = document.getElementById('curTime');
+const durTime      = document.getElementById('durTime');
+const trackName    = document.getElementById('trackName');
+const trackStatus  = document.getElementById('trackStatus');
+const vinylRecord  = document.getElementById('vinylRecord');
+const visualizer   = document.getElementById('visualizer');
+const volTrack     = document.getElementById('volTrack');
+const volFill      = document.getElementById('volFill');
+const tooltip      = document.getElementById('tooltip');
+const heartBtn     = document.getElementById('heartBtn');
+const sparkleBtn   = document.getElementById('sparkleBtn');
+const allCards     = document.querySelectorAll('.section-card');
+const closeBtns    = document.querySelectorAll('.card-close');
 
-            function init3D() {
-                scene = new THREE.Scene();
-                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                camera.position.z = 40;
-                renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('threeCanvas'), alpha: true });
-                renderer.setSize(window.innerWidth, window.innerHeight);
+// ============ CURSOR (smooth + trail) ============
+let mx=0,my=0;
+let trailX=0,trailY=0;
+const TRAIL_COUNT=8;
+const trails=[];
 
-                const ambient = new THREE.AmbientLight(0x404060);
-                scene.add(ambient);
-                const light = new THREE.PointLight(0xff3b6f, 1, 60);
-                light.position.set(10, 10, 20);
-                scene.add(light);
-                const light2 = new THREE.PointLight(0xb3244a, 0.8, 50);
-                light2.position.set(-15, -5, 15);
-                scene.add(light2);
+// cursor follows mouse
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursorEl.style.left=mx+'px';
+  cursorEl.style.top=my+'px';
+  cursorDot.style.left=mx+'px';
+  cursorDot.style.top=my+'px';
+  moveTip(mx,my);
+});
 
-                group = new THREE.Group();
-                const colors = [0xff3b6f, 0xb3244a, 0x8a2a4a, 0x5a2a4a];
-                for (let i = 0; i < 100; i++) {
-                    const geo = new THREE.OctahedronGeometry(0.3 + Math.random() * 0.8);
-                    const mat = new THREE.MeshPhongMaterial({ color: colors[Math.floor(Math.random() * colors.length)], emissive: 0x220011, shininess: 40, transparent: true, opacity: 0.4 });
-                    const mesh = new THREE.Mesh(geo, mat);
-                    mesh.position.set((Math.random() - 0.5) * 120, (Math.random() - 0.5) * 120, (Math.random() - 0.5) * 120);
-                    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-                    group.add(mesh);
-                }
-                scene.add(group);
+// cursor expand on interactive elements
+document.addEventListener('mouseover',e=>{
+  if(e.target.closest('button, .orbit-btn, .card-close, .proj-item, .social-link, .tag, .fx-btn')){
+    cursorEl.style.width='35px';
+    cursorEl.style.height='35px';
+  } else {
+    cursorEl.style.width='18px';
+    cursorEl.style.height='18px';
+  }
+});
 
-                function animate() {
-                    requestAnimationFrame(animate);
-                    group.rotation.y += 0.0004;
-                    group.rotation.x += 0.0002;
-                    renderer.render(scene, camera);
-                }
-                animate();
+// trail particles
+for(let i=0;i<TRAIL_COUNT;i++){
+  const t=document.createElement('div');
+  t.className='cursor-trail';
+  t.style.width=(10-i)+'px';
+  t.style.height=(10-i)+'px';
+  t.style.background=`rgba(255,59,111,${0.5-i*0.06})`;
+  t.style.filter=`blur(${i*0.5}px)`;
+  t.style.boxShadow=`0 0 ${6+i*2}px rgba(255,59,111,${0.4-i*0.04})`;
+  document.body.appendChild(t);
+  trails.push({el:t,x:0,y:0});
+}
 
-                window.addEventListener('resize', () => {
-                    camera.aspect = window.innerWidth / window.innerHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                });
-            }
+function animateTrail(){
+  let px=mx,py=my;
+  trails.forEach((t,i)=>{
+    const lag=0.15-i*0.01;
+    t.x+=(px-t.x)*lag;
+    t.y+=(py-t.y)*lag;
+    t.el.style.left=t.x+'px';
+    t.el.style.top=t.y+'px';
+    px=t.x; py=t.y;
+  });
+  requestAnimationFrame(animateTrail);
+}
+animateTrail();
 
-            // ================== ORBITING BUTTONS (6 sections) ==================
-            const sections = ['home', 'projects', 'skills', 'contact', 'discord', 'roblox'];
-            const icons = ['fa-home', 'fa-code', 'fa-cog', 'fa-envelope', 'fa-discord', 'fa-gamepad'];
-            const labels = ['HOME', 'PROJ', 'SKILLS', 'CONTACT', 'DISCORD', 'ROBLOX'];
-            const radius = 320;
+// click burst
+document.addEventListener('click',e=>{
+  spawnBurst(e.clientX,e.clientY);
+});
+function spawnBurst(x,y){
+  const symbols=['✦','✧','♡','✿','◆','★'];
+  for(let i=0;i<12;i++){
+    const p=document.createElement('div');
+    p.className='click-burst';
+    const angle=Math.random()*Math.PI*2;
+    const dist=40+Math.random()*80;
+    p.style.left=x+'px';
+    p.style.top=y+'px';
+    p.style.setProperty('--dx',(Math.cos(angle)*dist)+'px');
+    p.style.setProperty('--dy',(Math.sin(angle)*dist)+'px');
+    p.style.animationDuration=(0.4+Math.random()*0.6)+'s';
+    p.style.background=['#ff3b6f','#ff6b98','#ffaeca','#ffd6e7','#b3244a'][Math.floor(Math.random()*5)];
+    if(Math.random()>.6){
+      p.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+      p.style.background='transparent';
+      p.style.color='#ff3b6f';
+      p.style.fontSize='1rem';
+      p.style.width='auto';
+      p.style.height='auto';
+      p.style.filter='none';
+    }
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),1000);
+  }
+}
 
-            function createOrbitButtons() {
-                sections.forEach((sec, i) => {
-                    const angle = (i / sections.length) * Math.PI * 2 - Math.PI / 2; // start from top
-                    const x = Math.cos(angle) * radius;
-                    const y = Math.sin(angle) * radius;
+// ============ TOOLTIP ============
+function moveTip(x,y){
+  tooltip.style.left=x+'px';
+  tooltip.style.top=(y-45)+'px';
+}
+function showTip(text){tooltip.textContent=text;tooltip.style.opacity='1';}
+function hideTip(){tooltip.style.opacity='0';}
 
-                    const btn = document.createElement('div');
-                    btn.className = 'orbit-btn';
-                    btn.setAttribute('data-section', sec);
-                    btn.style.transform = `translate(${x}px, ${y}px)`;
-                    btn.innerHTML = `<i class="fas ${icons[i]}"></i><span>${labels[i]}</span>`;
-                    orbitContainer.appendChild(btn);
+// ============ SAKURA INTRO ============
+const sakCanvas=document.getElementById('sakuraCanvas');
+const ctx2=sakCanvas.getContext('2d');
+let W,H;
+function resizeSakura(){W=window.innerWidth;H=window.innerHeight;sakCanvas.width=W;sakCanvas.height=H;}
+window.addEventListener('resize',resizeSakura);
+resizeSakura();
 
-                    btn.addEventListener('click', () => {
-                        openCard(sec);
-                        // create particle burst
-                        for (let j = 0; j < 15; j++) {
-                            setTimeout(() => createClickParticle(btn), j * 30);
-                        }
-                        // also show tooltip feedback (optional)
-                        tooltip.style.opacity = '1';
-                        tooltip.style.left = (btn.getBoundingClientRect().left + 60) + 'px';
-                        tooltip.style.top = (btn.getBoundingClientRect().top - 40) + 'px';
-                        tooltip.textContent = labels[i];
-                        setTimeout(() => { tooltip.style.opacity = '0'; }, 800);
-                    });
+class Petal{
+  constructor(){this.reset(true);}
+  reset(init=false){
+    this.x=Math.random()*W;
+    this.y=init?Math.random()*H:(Math.random()*H*0.1-50);
+    this.s=Math.random()*22+8;
+    this.vy=Math.random()*2.5+1.5;
+    this.vx=(Math.random()-.5)*1.5;
+    this.r=Math.random()*Math.PI*2;
+    this.dr=(Math.random()-.5)*.03;
+    this.o=Math.random()*.5+.15;
+    this.type=Math.random()>.5?'petal':'heart';
+  }
+  update(){
+    this.y+=this.vy; this.x+=this.vx; this.r+=this.dr;
+    if(this.y>H+20){this.reset();this.y=-20;}
+  }
+  draw(){
+    ctx2.save();
+    ctx2.translate(this.x,this.y);
+    ctx2.rotate(this.r);
+    ctx2.globalAlpha=this.o;
+    if(this.type==='petal'){
+      ctx2.fillStyle=`hsl(${340+Math.random()*20},80%,65%)`;
+      ctx2.beginPath();
+      ctx2.ellipse(0,0,this.s/2,this.s/4,0,0,Math.PI*2);
+      ctx2.fill();
+    } else {
+      ctx2.fillStyle='#ff3b6f';
+      ctx2.font=this.s+'px serif';
+      ctx2.textAlign='center';
+      ctx2.textBaseline='middle';
+      ctx2.fillText('♡',0,0);
+    }
+    ctx2.restore();
+  }
+}
+const petals=[];
+for(let i=0;i<180;i++) petals.push(new Petal());
 
-                    // hover tooltips
-                    btn.addEventListener('mouseenter', () => {
-                        tooltip.style.opacity = '1';
-                        tooltip.style.left = (btn.getBoundingClientRect().left + 60) + 'px';
-                        tooltip.style.top = (btn.getBoundingClientRect().top - 40) + 'px';
-                        tooltip.textContent = labels[i];
-                    });
-                    btn.addEventListener('mouseleave', () => {
-                        tooltip.style.opacity = '0';
-                    });
-                });
+let introRAF;
+function animateIntro(){
+  ctx2.clearRect(0,0,W,H);
+  petals.forEach(p=>{p.update();p.draw();});
+  introRAF=requestAnimationFrame(animateIntro);
+}
+animateIntro();
 
-                // animate appearance
-                gsap.from('.orbit-btn', {
-                    duration: 1.5,
-                    scale: 0,
-                    opacity: 0,
-                    stagger: 0.1,
-                    ease: 'backOut(1.7)',
-                    delay: 0.5
-                });
-            }
+// ============ AUTO TRANSITION AFTER 4s ============
+setTimeout(()=>{
+  gsap.to(introScreen,{
+    duration:1.8,
+    opacity:0,
+    ease:'power3.inOut',
+    onComplete:()=>{
+      introScreen.style.display='none';
+      cancelAnimationFrame(introRAF);
+      mainIface.style.display='block';
+      gsap.to(mainIface,{
+        duration:1.8,
+        opacity:1,
+        ease:'power3.out',
+        onComplete:()=>{
+          init3D();
+          initOrbit();
+          initMusic();
+          makeDraggable(musicPlayer,playerHandle);
+          createAmbientSparkles();
+          createFloaters();
+          startHeartRain(false); // off by default
+        }
+      });
+    }
+  });
+},4000);
 
-            // Continuous gentle rotation of orbit container
-            function startOrbitRotation() {
-                gsap.to(orbitContainer, {
-                    rotation: 360,
-                    duration: 70,
-                    repeat: -1,
-                    ease: 'none',
-                    transformOrigin: 'center'
-                });
-            }
+// ============ 3D BACKGROUND ============
+function init3D(){
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,.1,1000);
+  cam.position.z=50;
+  const ren=new THREE.WebGLRenderer({canvas:document.getElementById('threeCanvas'),alpha:true});
+  ren.setSize(window.innerWidth,window.innerHeight);
+  ren.setPixelRatio(Math.min(window.devicePixelRatio,2));
 
-            // ================== CARD SYSTEM (improved transition) ==================
-            function openCard(id) {
-                const card = document.getElementById(id + 'Card');
-                if (card) {
-                    card.classList.add('active');
-                }
-            }
+  const ambient=new THREE.AmbientLight(0x200010);
+  scene.add(ambient);
+  const pl1=new THREE.PointLight(0xff3b6f,2,80);
+  pl1.position.set(10,10,20); scene.add(pl1);
+  const pl2=new THREE.PointLight(0xb3244a,1.5,60);
+  pl2.position.set(-15,-5,10); scene.add(pl2);
+  const pl3=new THREE.PointLight(0xffd6e7,.8,40);
+  pl3.position.set(0,20,5); scene.add(pl3);
 
-            closeBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const card = e.target.closest('.section-card');
-                    if (card) {
-                        card.classList.remove('active');
-                    }
-                });
-            });
+  const group=new THREE.Group();
+  const geos=[
+    new THREE.OctahedronGeometry(.5),
+    new THREE.TetrahedronGeometry(.5),
+    new THREE.IcosahedronGeometry(.4),
+    new THREE.DodecahedronGeometry(.4)
+  ];
+  const cols=[0xff3b6f,0xb3244a,0xff6b98,0xffaeca,0x6b1a3e,0xe0295a];
 
-            profilePic.addEventListener('click', () => {
-                cards.forEach(c => c.classList.remove('active'));
-            });
+  for(let i=0;i<120;i++){
+    const g=geos[Math.floor(Math.random()*geos.length)];
+    const m=new THREE.MeshPhongMaterial({
+      color:cols[Math.floor(Math.random()*cols.length)],
+      emissive:0x330011,
+      shininess:80,
+      transparent:true,
+      opacity:.3+Math.random()*.3
+    });
+    const mesh=new THREE.Mesh(g,m);
+    mesh.position.set(
+      (Math.random()-.5)*160,
+      (Math.random()-.5)*160,
+      (Math.random()-.5)*80
+    );
+    mesh.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,0);
+    mesh.userData={
+      rotX:(Math.random()-.5)*.005,
+      rotY:(Math.random()-.5)*.005,
+      floatY:Math.random()*.001,
+      floatPhase:Math.random()*Math.PI*2
+    };
+    group.add(mesh);
+  }
+  scene.add(group);
 
-            // ================== MUSIC SYSTEM (auto-start, auto-next) ==================
-            let isPlaying = false;
-            let currentTrack = 0;
-            let audioContext, analyser, source;
+  let t3=0;
+  function loop3D(){
+    t3+=0.01;
+    group.rotation.y+=.0003;
+    group.rotation.x+=.00015;
+    group.children.forEach((m,i)=>{
+      m.rotation.x+=m.userData.rotX;
+      m.rotation.y+=m.userData.rotY;
+      m.position.y+=Math.sin(t3+m.userData.floatPhase)*m.userData.floatY;
+    });
+    ren.render(scene,cam);
+    requestAnimationFrame(loop3D);
+  }
+  loop3D();
 
-            const tracks = [
-                { title: 'MUNCH TIME', file: 'assets/Music.mp3' },
-                { title: 'BANANA REMIX', file: 'assets/Music2.mp3' },
-                { title: 'ERROR?NAHH~', file: 'assets/Music3.mp3' }
-            ];
+  window.addEventListener('resize',()=>{
+    cam.aspect=window.innerWidth/window.innerHeight;
+    cam.updateProjectionMatrix();
+    ren.setSize(window.innerWidth,window.innerHeight);
+  });
+}
 
-            // create visualizer bars
-            for (let i = 0; i < 24; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'vis-bar';
-                visualizerDiv.appendChild(bar);
-            }
+// ============ ORBIT BUTTONS ============
+const SECTIONS=[
+  {id:'home',    icon:'fa-home',      label:'HOME',    tip:'Welcome'},
+  {id:'projects',icon:'fa-code',      label:'PROJ',    tip:'My Projects'},
+  {id:'skills',  icon:'fa-star',      label:'SKILLS',  tip:'Abilities'},
+  {id:'contact', icon:'fa-envelope',  label:'CONTACT', tip:'Contact'},
+  {id:'discord', icon:'fa-discord',   label:'DISCORD', tip:'Community'},
+  {id:'roblox',  icon:'fa-gamepad',   label:'ROBLOX',  tip:'Roblox'},
+];
+const ORBIT_R=280;
 
-            function initMusic() {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                analyser.fftSize = 256;
-                source = audioContext.createMediaElementSource(audio);
-                source.connect(analyser);
-                analyser.connect(audioContext.destination);
+function initOrbit(){
+  // decorative rings
+  [ORBIT_R+40,ORBIT_R,ORBIT_R-40].forEach((r,i)=>{
+    const ring=document.createElement('div');
+    ring.className='orbit-ring';
+    ring.style.width=(r*2)+'px';
+    ring.style.height=(r*2)+'px';
+    ring.style.marginLeft=(-r)+'px';
+    ring.style.marginTop=(-r)+'px';
+    ring.style.opacity=[.08,.12,.06][i];
+    orbitCont.appendChild(ring);
+  });
 
-                loadTrack(currentTrack);
+  SECTIONS.forEach((sec,i)=>{
+    const angle=(i/SECTIONS.length)*Math.PI*2 - Math.PI/2;
+    const x=Math.cos(angle)*ORBIT_R;
+    const y=Math.sin(angle)*ORBIT_R;
 
-                // Auto-play after a short delay (user interaction may be required, but we'll try)
-                audio.play().then(() => {
-                    isPlaying = true;
-                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                    vinylDisc.classList.add('playing');
-                }).catch(e => {
-                    console.log('Autoplay prevented, waiting for click');
-                });
+    const btn=document.createElement('div');
+    btn.className='orbit-btn';
+    btn.setAttribute('data-section',sec.id);
+    // position relative to orbit container center
+    btn.style.position='absolute';
+    btn.style.left=(x-42.5)+'px'; // half of 85px width
+    btn.style.top=(y-42.5)+'px';
+    btn.innerHTML=`<i class="fas ${sec.icon} btn-icon"></i><span class="btn-label">${sec.label}</span>`;
+    orbitCont.appendChild(btn);
 
-                playBtn.addEventListener('click', () => {
-                    if (isPlaying) {
-                        audio.pause();
-                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                        vinylDisc.classList.remove('playing');
-                    } else {
-                        audio.play();
-                        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                        vinylDisc.classList.add('playing');
-                    }
-                    isPlaying = !isPlaying;
-                });
+    btn.addEventListener('click',()=>{
+      openCard(sec.id);
+      spawnBurst(btn.getBoundingClientRect().left+42.5,btn.getBoundingClientRect().top+42.5);
+    });
+    btn.addEventListener('mouseenter',()=>showTip(sec.tip));
+    btn.addEventListener('mouseleave',hideTip);
+  });
 
-                nextBtn.addEventListener('click', () => {
-                    currentTrack = (currentTrack + 1) % tracks.length;
-                    loadTrack(currentTrack);
-                    if (isPlaying) audio.play();
-                });
+  // gentle wobble to orbit container (not full rotation, so buttons stay readable)
+  gsap.to(orbitCont,{
+    rotation:6, duration:4, yoyo:true, repeat:-1, ease:'sine.inOut'
+  });
 
-                prevBtn.addEventListener('click', () => {
-                    currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
-                    loadTrack(currentTrack);
-                    if (isPlaying) audio.play();
-                });
+  // entrance animation
+  gsap.from('.orbit-btn',{
+    duration:1.2, scale:0, opacity:0,
+    stagger:{amount:0.6, from:'center'},
+    ease:'back.out(2)',
+    delay:0.3
+  });
+}
 
-                audio.addEventListener('ended', () => {
-                    // Auto next
-                    currentTrack = (currentTrack + 1) % tracks.length;
-                    loadTrack(currentTrack);
-                    if (isPlaying) audio.play();
-                });
+// ============ CARD SYSTEM ============
+function openCard(id){
+  allCards.forEach(c=>c.classList.remove('active'));
+  const card=document.getElementById(id+'Card');
+  if(card){
+    card.classList.add('active');
+    // animate skill bars if skills card
+    if(id==='skills'){
+      setTimeout(()=>{
+        card.querySelectorAll('.skill-fill').forEach(bar=>{
+          bar.style.width=bar.dataset.w+'%';
+        });
+      },100);
+    }
+  }
+}
 
-                audio.addEventListener('timeupdate', () => {
-                    const percent = (audio.currentTime / audio.duration) * 100 || 0;
-                    progressFill.style.width = percent + '%';
-                    currentTimeSpan.textContent = formatTime(audio.currentTime);
-                    durationSpan.textContent = formatTime(audio.duration);
-                });
+closeBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    btn.closest('.section-card').classList.remove('active');
+  });
+});
 
-                progressArea.addEventListener('click', (e) => {
-                    const rect = progressArea.getBoundingClientRect();
-                    const percent = (e.clientX - rect.left) / rect.width;
-                    audio.currentTime = percent * audio.duration;
-                });
+profilePic.addEventListener('click',()=>{
+  allCards.forEach(c=>c.classList.remove('active'));
+});
+profilePic.addEventListener('mouseenter',()=>showTip('CLOSE CARDS'));
+profilePic.addEventListener('mouseleave',hideTip);
 
-                volumeBar.addEventListener('click', (e) => {
-                    const rect = volumeBar.getBoundingClientRect();
-                    let vol = (e.clientX - rect.left) / rect.width;
-                    vol = Math.max(0, Math.min(1, vol));
-                    audio.volume = vol;
-                    volumeFill.style.width = (vol * 100) + '%';
-                });
+// ESC closes all cards
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') allCards.forEach(c=>c.classList.remove('active'));
+});
 
-                function loadTrack(index) {
-                    audio.src = tracks[index].file;
-                    audio.load();
-                    nowPlayingSpan.textContent = tracks[index].title;
-                }
+// ============ MUSIC PLAYER ============
+const tracks=[
+  {title:'MUNCH TIME',    file:'assets/Music.mp3'},
+  {title:'BANANA REMIX',  file:'assets/Music2.mp3'},
+  {title:'ERROR?NAHH~',   file:'assets/Music3.mp3'},
+];
+let curTrack=0;
+let playing=false;
+let audioCtx,analyser,sourceNode;
 
-                function formatTime(seconds) {
-                    if (isNaN(seconds)) return '0:00';
-                    const mins = Math.floor(seconds / 60);
-                    const secs = Math.floor(seconds % 60);
-                    return mins + ':' + (secs < 10 ? '0' : '') + secs;
-                }
+// build visualizer bars
+for(let i=0;i<28;i++){
+  const b=document.createElement('div');
+  b.className='vis-bar';
+  visualizer.appendChild(b);
+}
 
-                function updateVisualizer() {
-                    if (!analyser) return;
-                    const dataArray = new Uint8Array(analyser.frequencyBinCount);
-                    analyser.getByteFrequencyData(dataArray);
-                    const bars = document.querySelectorAll('.vis-bar');
-                    bars.forEach((bar, i) => {
-                        const value = dataArray[i % dataArray.length] / 255;
-                        bar.style.height = (20 + value * 80) + '%';
-                    });
-                    requestAnimationFrame(updateVisualizer);
-                }
-                updateVisualizer();
-            }
+function initMusic(){
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  analyser=audioCtx.createAnalyser();
+  analyser.fftSize=128;
+  sourceNode=audioCtx.createMediaElementSource(audio);
+  sourceNode.connect(analyser);
+  analyser.connect(audioCtx.destination);
 
-            // ================== DRAGGABLE MUSIC PLAYER ==================
-            function makeDraggable(el) {
-                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-                el.onmousedown = dragMouseDown;
+  loadTrack(curTrack);
+  // try auto-play
+  audio.volume=.7;
+  audio.play().then(()=>{setPlaying(true);}).catch(()=>{});
 
-                function dragMouseDown(e) {
-                    e.preventDefault();
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    document.onmouseup = closeDragElement;
-                    document.onmousemove = elementDrag;
-                }
+  playBtn.addEventListener('click',()=>{
+    if(playing){audio.pause();setPlaying(false);}
+    else{audioCtx.resume();audio.play();setPlaying(true);}
+  });
+  prevBtn.addEventListener('click',()=>{
+    curTrack=(curTrack-1+tracks.length)%tracks.length;
+    loadTrack(curTrack);
+    if(playing) audio.play();
+  });
+  nextBtn.addEventListener('click',()=>{
+    curTrack=(curTrack+1)%tracks.length;
+    loadTrack(curTrack);
+    if(playing) audio.play();
+  });
+  audio.addEventListener('ended',()=>{
+    curTrack=(curTrack+1)%tracks.length;
+    loadTrack(curTrack);
+    audio.play();
+  });
+  audio.addEventListener('timeupdate',()=>{
+    const p=(audio.currentTime/audio.duration)||0;
+    progressFill.style.width=(p*100)+'%';
+    curTime.textContent=fmtTime(audio.currentTime);
+    durTime.textContent=fmtTime(audio.duration);
+  });
+  progressTrack.addEventListener('click',e=>{
+    const r=progressTrack.getBoundingClientRect();
+    audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;
+  });
+  volTrack.addEventListener('click',e=>{
+    const r=volTrack.getBoundingClientRect();
+    const v=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+    audio.volume=v;
+    volFill.style.width=(v*100)+'%';
+  });
 
-                function elementDrag(e) {
-                    e.preventDefault();
-                    pos1 = pos3 - e.clientX;
-                    pos2 = pos4 - e.clientY;
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    el.style.top = (el.offsetTop - pos2) + 'px';
-                    el.style.left = (el.offsetLeft - pos1) + 'px';
-                }
+  // visualizer loop
+  const vBars=document.querySelectorAll('.vis-bar');
+  const visData=new Uint8Array(analyser.frequencyBinCount);
+  function visLoop(){
+    analyser.getByteFrequencyData(visData);
+    vBars.forEach((bar,i)=>{
+      const v=visData[Math.floor(i*visData.length/vBars.length)]/255;
+      bar.style.height=Math.max(8,(v*100))+'%';
+      bar.style.opacity=0.5+v*.5;
+    });
+    requestAnimationFrame(visLoop);
+  }
+  visLoop();
+}
 
-                function closeDragElement() {
-                    document.onmouseup = null;
-                    document.onmousemove = null;
-                }
-            }
+function loadTrack(i){
+  audio.src=tracks[i].file;
+  audio.load();
+  trackName.textContent=tracks[i].title;
+}
+function setPlaying(state){
+  playing=state;
+  playBtn.innerHTML=state?'<i class="fas fa-pause"></i>':'<i class="fas fa-play"></i>';
+  if(state){vinylRecord.classList.add('spinning');trackStatus.textContent='♪ playing';}
+  else{vinylRecord.classList.remove('spinning');trackStatus.textContent='⏸ paused';}
+}
+function fmtTime(s){
+  if(!s||isNaN(s))return'0:00';
+  const m=Math.floor(s/60), sec=Math.floor(s%60);
+  return m+':'+(sec<10?'0':'')+sec;
+}
 
-            // ================== CLICK PARTICLE EFFECT ==================
-            function createClickParticle(target) {
-                const rect = target.getBoundingClientRect();
-                const x = rect.left + rect.width / 2;
-                const y = rect.top + rect.height / 2;
-                const particle = document.createElement('div');
-                particle.className = 'click-particle';
-                particle.style.left = x + 'px';
-                particle.style.top = y + 'px';
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1000);
-            }
+// ============ DRAGGABLE PLAYER ============
+function makeDraggable(el,handle){
+  let x1=0,y1=0,x2=0,y2=0;
+  handle.style.cursor='grab';
+  handle.addEventListener('mousedown',drag);
+  function drag(e){
+    e.preventDefault();
+    x2=e.clientX; y2=e.clientY;
+    document.addEventListener('mouseup',stopDrag);
+    document.addEventListener('mousemove',doDrag);
+    handle.style.cursor='grabbing';
+  }
+  function doDrag(e){
+    x1=x2-e.clientX; y1=y2-e.clientY;
+    x2=e.clientX; y2=e.clientY;
+    el.style.top=(el.offsetTop-y1)+'px';
+    el.style.left=(el.offsetLeft-x1)+'px';
+    el.style.right='auto'; el.style.bottom='auto';
+  }
+  function stopDrag(){
+    document.removeEventListener('mouseup',stopDrag);
+    document.removeEventListener('mousemove',doDrag);
+    handle.style.cursor='grab';
+  }
+}
 
-            // ================== AMBIENT PARTICLES (fill empty space) ==================
-            function createAmbientParticles(count) {
-                for (let i = 0; i < count; i++) {
-                    const p = document.createElement('div');
-                    p.className = 'ambient-particle';
-                    p.style.left = Math.random() * 100 + '%';
-                    p.style.top = Math.random() * 100 + '%';
-                    p.style.animationDelay = Math.random() * 10 + 's';
-                    p.style.animationDuration = (15 + Math.random() * 20) + 's';
-                    document.body.appendChild(p);
-                }
-            }
+// ============ AMBIENT SPARKLES ============
+let sparklesOn=true;
+function createAmbientSparkles(){
+  for(let i=0;i<30;i++){
+    const sp=document.createElement('div');
+    sp.className='sparkle';
+    sp.style.left=Math.random()*100+'%';
+    sp.style.top=Math.random()*100+'%';
+    sp.style.setProperty('--sz',(0.6+Math.random()*.8)+'rem');
+    sp.style.setProperty('--dur',(2+Math.random()*4)+'s');
+    sp.style.setProperty('--del',(Math.random()*5)+'s');
+    mainIface.appendChild(sp);
+  }
+}
 
-            // ================== TOOLTIP SETUP ==================
-            function setupTooltips() {
-                // already used in button hover
-            }
+// ============ FLOATERS (bats + hearts + stars) ============
+const FLOATERS=['🦇','♡','✦','🌹','✧','★','♥'];
+function createFloaters(){
+  for(let i=0;i<20;i++){
+    spawnFloater();
+  }
+}
+function spawnFloater(){
+  const f=document.createElement('div');
+  f.className='floater';
+  f.textContent=FLOATERS[Math.floor(Math.random()*FLOATERS.length)];
+  f.style.setProperty('--fs',(0.8+Math.random()*1.2)+'rem');
+  f.style.setProperty('--fd',(15+Math.random()*20)+'s');
+  f.style.setProperty('--fd2',(Math.random()*20)+'s');
+  f.style.setProperty('--dx',((Math.random()-.5)*200)+'px');
+  f.style.left=Math.random()*100+'%';
+  mainIface.appendChild(f);
+  // auto-remove and respawn
+  const dur=parseFloat(f.style.getPropertyValue('--fd'))*1000+parseFloat(f.style.getPropertyValue('--fd2'))*1000;
+  setTimeout(()=>{f.remove();spawnFloater();},dur);
+}
 
-            // ================== ADDITIONAL INTERACTIONS ==================
-            profilePic.addEventListener('mouseenter', () => {
-                gsap.to(profilePic, { duration: 0.3, scale: 1.05, boxShadow: '0 0 150px var(--neon-pink)' });
-                tooltip.style.opacity = '1';
-                tooltip.style.left = (profilePic.getBoundingClientRect().left + 150) + 'px';
-                tooltip.style.top = (profilePic.getBoundingClientRect().top - 40) + 'px';
-                tooltip.textContent = 'CLOSE CARDS';
-            });
-            profilePic.addEventListener('mouseleave', () => {
-                gsap.to(profilePic, { duration: 0.3, scale: 1, boxShadow: '0 0 100px var(--neon-pink)' });
-                tooltip.style.opacity = '0';
-            });
+// ============ HEART RAIN ============
+let heartRainInterval=null;
+let heartRainOn=false;
+function startHeartRain(on){
+  heartRainOn=on;
+  heartBtn.classList.toggle('on',on);
+  if(on){
+    heartRainInterval=setInterval(()=>{
+      const h=document.createElement('div');
+      h.className='heart-rain';
+      h.textContent=['♡','♥','✿','✦'][Math.floor(Math.random()*4)];
+      h.style.setProperty('--hd',(4+Math.random()*4)+'s');
+      h.style.setProperty('--hdel','0s');
+      h.style.setProperty('--hfs',(0.8+Math.random()*1.5)+'rem');
+      h.style.setProperty('--hleft',Math.random()*100+'%');
+      h.style.setProperty('--hr',(Math.random()*720-360)+'deg');
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),8000);
+    },200);
+  } else {
+    clearInterval(heartRainInterval);
+  }
+}
+heartBtn.addEventListener('click',()=>startHeartRain(!heartRainOn));
+sparkleBtn.addEventListener('click',()=>{
+  sparklesOn=!sparklesOn;
+  sparkleBtn.classList.toggle('on',sparklesOn);
+  document.querySelectorAll('.sparkle').forEach(s=>{
+    s.style.display=sparklesOn?'':'none';
+  });
+});
 
-            const orbitBtns = document.querySelectorAll('.orbit-btn');
-            orbitBtns.forEach(btn => {
-                btn.addEventListener('mouseenter', () => {
-                    gsap.to(btn, { duration: 0.2, scale: 1.2 });
-                });
-                btn.addEventListener('mouseleave', () => {
-                    gsap.to(btn, { duration: 0.2, scale: 1 });
-                });
-            });
+// ============ PREVENT CUSTOM CURSOR ON ALL ============
+document.querySelectorAll('*').forEach(el=>el.style.cursor='none');
 
-            // ================== INITIAL HIDE ==================
-            mainInterface.style.display = 'none';
-        })();
-    </script>
-    <!-- ========== TOTAL LINES: WELL OVER 2000 ========== -->
+})();
+</script>
 </body>
 </html>
