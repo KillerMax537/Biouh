@@ -543,12 +543,6 @@ mysticEye.addEventListener('click', function(e) {
       );
     }
     
-    // Play sound effect (opcional)
-    const sound = new Audio();
-    sound.src = ""; // Removed: external third-party audio URL (security risk — no integrity check)
-    sound.volume = 0.3;
-    sound.play();
-    
     // Show revelation
     setTimeout(() => {
       eyeRevelation.classList.add('active');
