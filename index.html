@@ -2520,24 +2520,25 @@
     return false;
   });
 
-  /* ── Block dev-tool & save keyboard shortcuts ── */
+  /* ── Block dev-tool & save keyboard shortcuts (Ctrl on Win/Linux, Cmd on macOS) ── */
   document.addEventListener('keydown', function (e) {
+    var mod = e.ctrlKey || e.metaKey;
     // F12
     if (e.key === 'F12') { e.preventDefault(); return false; }
-    // Ctrl+Shift+I  (DevTools)
-    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault(); return false; }
-    // Ctrl+Shift+J  (Console)
-    if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) { e.preventDefault(); return false; }
-    // Ctrl+Shift+C  (Inspect element)
-    if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) { e.preventDefault(); return false; }
-    // Ctrl+U        (View source)
-    if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
-    // Ctrl+S        (Save page)
-    if (e.ctrlKey && (e.key === 'S' || e.key === 's')) { e.preventDefault(); return false; }
-    // Ctrl+C        (Copy)
-    if (e.ctrlKey && (e.key === 'C' || e.key === 'c') && !e.shiftKey) { e.preventDefault(); return false; }
-    // Ctrl+A        (Select all)
-    if (e.ctrlKey && (e.key === 'A' || e.key === 'a')) { e.preventDefault(); return false; }
+    // Ctrl/Cmd+Shift+I  (DevTools)
+    if (mod && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault(); return false; }
+    // Ctrl/Cmd+Shift+J  (Console)
+    if (mod && e.shiftKey && (e.key === 'J' || e.key === 'j')) { e.preventDefault(); return false; }
+    // Ctrl/Cmd+Shift+C  (Inspect element)
+    if (mod && e.shiftKey && (e.key === 'C' || e.key === 'c')) { e.preventDefault(); return false; }
+    // Ctrl/Cmd+U        (View source)
+    if (mod && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
+    // Ctrl/Cmd+S        (Save page)
+    if (mod && (e.key === 'S' || e.key === 's')) { e.preventDefault(); return false; }
+    // Ctrl/Cmd+C        (Copy)
+    if (mod && (e.key === 'C' || e.key === 'c') && !e.shiftKey) { e.preventDefault(); return false; }
+    // Ctrl/Cmd+A        (Select all)
+    if (mod && (e.key === 'A' || e.key === 'a')) { e.preventDefault(); return false; }
   });
 
   /* ── Disable drag on all elements ── */
