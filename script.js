@@ -543,12 +543,6 @@ mysticEye.addEventListener('click', function(e) {
       );
     }
     
-    // Play sound effect (opcional)
-    const sound = new Audio();
-    sound.src = "https://assets.mixkit.co/sfx/preview/mixkit-magical-sparkle-902.mp3";
-    sound.volume = 0.3;
-    sound.play();
-    
     // Show revelation
     setTimeout(() => {
       eyeRevelation.classList.add('active');
