@@ -51,6 +51,9 @@
       background: var(--void);
       color: var(--blush);
       font-family: 'Cormorant Garamond', serif;
+      /* Prevent text selection */
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     /* Hide custom cursor on touch devices, show default */
@@ -68,13 +71,13 @@
       html {
         cursor: none;
       }
-      /* Ensure cursor stays hidden on all elements */
       a, button, input, textarea, select,
       .orbit-btn, .card-close, .social-link,
       .tag, .fx-btn, .wg-thumb, .wg-arrow,
       .wg-featured, .ctrl-btn, .progress-track,
       .vol-track, #playerHandle, #skipBtn,
-      .mnav-btn, .center-profile {
+      .mnav-btn, .center-profile, .lightbox-close,
+      .wg-zoom, .lightbox-nav {
         cursor: none;
       }
     }
@@ -289,11 +292,6 @@
       opacity: 0;
     }
 
-    /*
-     * Iris wipe — used for the exit transition only.
-     * Starts hidden (opacity 0) so it doesn't block the intro animations.
-     * JS sets opacity to 1 right before the closing-circle transition.
-     */
     #irisWipe {
       position: absolute;
       inset: 0;
@@ -341,7 +339,6 @@
       text-transform: uppercase;
     }
 
-    /* Skip / enter button */
     #skipBtn {
       position: absolute;
       bottom: max(80px, 16%);
@@ -401,7 +398,6 @@
         repeating-linear-gradient(0deg, rgba(255, 45, 96, 0.028) 0 1px, transparent 1px 60px);
     }
 
-    /* Site title (top left) */
     .site-title {
       position: absolute;
       top: 24px;
@@ -422,7 +418,6 @@
       margin-top: -7px;
     }
 
-    /* FX toggle buttons (top right) */
     .fx-toggle {
       position: absolute;
       top: 24px;
@@ -589,7 +584,6 @@
       50%      { transform: scale(1.1); opacity: 1; }
     }
 
-    /* Mobile bottom nav */
     #mobileNav {
       display: none;
       position: fixed;
@@ -784,7 +778,6 @@
       transition: width 1.2s cubic-bezier(.4, 0, .2, 1);
     }
 
-    /* Social links */
     .social-link {
       display: flex;
       align-items: center;
@@ -860,6 +853,36 @@
     .wg-featured:hover .wg-play-icon {
       transform: translate(-50%, -50%) scale(1.1);
       opacity: 1;
+    }
+
+    .wg-zoom {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--neon);
+      color: var(--neon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity .3s, transform .2s;
+      pointer-events: none;
+      z-index: 6;
+    }
+    .wg-featured:hover .wg-zoom {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .wg-zoom:hover {
+      background: var(--neon);
+      color: var(--void);
+      transform: scale(1.1);
     }
 
     .wg-info {
@@ -973,7 +996,6 @@
       .wg-strip { grid-template-columns: repeat(2, 1fr); }
     }
 
-    /* Gallery navigation */
     .wg-nav {
       display: flex;
       align-items: center;
@@ -1017,6 +1039,92 @@
       text-align: center;
     }
     .wg-empty i { font-size: 2.8rem; color: var(--neon); }
+
+    /* ============================================================
+       LIGHTBOX (zoom)
+       ============================================================ */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(2, 0, 6, 0.96);
+      backdrop-filter: blur(20px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    #lightbox.active {
+      display: flex;
+      opacity: 1;
+    }
+    .lightbox-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-media {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 18px;
+      border: 2px solid var(--neon);
+      box-shadow: 0 0 70px rgba(255, 45, 96, 0.5);
+      object-fit: contain;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.5);
+      border: 1.5px solid var(--neon);
+      color: var(--neon);
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+      transition: .2s;
+      z-index: 10;
+    }
+    .lightbox-close:hover {
+      background: var(--neon);
+      color: var(--void);
+      transform: scale(1.1);
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--neon);
+      color: var(--neon);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+      transition: .2s;
+      z-index: 10;
+    }
+    .lightbox-nav:hover {
+      background: var(--neon);
+      color: var(--void);
+    }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+    @media (max-width: 640px) {
+      .lightbox-nav { width: 40px; height: 40px; }
+    }
 
     /* ============================================================
        MUSIC PLAYER
@@ -1441,6 +1549,16 @@
   </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div class="lightbox-close"><i class="fas fa-times"></i></div>
+  <div class="lightbox-nav lightbox-prev"><i class="fas fa-chevron-left"></i></div>
+  <div class="lightbox-nav lightbox-next"><i class="fas fa-chevron-right"></i></div>
+  <div class="lightbox-content">
+    <img id="lightboxMedia" class="lightbox-media" src="" alt="">
+  </div>
+</div>
+
 <audio id="bgAudio" preload="auto" crossorigin="anonymous"></audio>
 
 <!-- ============================================================
@@ -1449,6 +1567,20 @@
 <script>
 (function () {
   "use strict";
+
+  // ---------- ANTI-COPY / PROTECTION ----------
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  // Disable certain key combos (save as, etc.)
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U' || e.key === 'p')) {
+      e.preventDefault();
+    }
+    if (e.key === 'F12') e.preventDefault();
+  });
+  // Console warning
+  console.log('%c✧ uh… ✧ | protected portfolio', 'font-size:18px;color:#ff2d60;');
+  console.log('%c⚠️ This content is protected. Stealing is not cool.', 'color:#ff5f8a;');
+
   gsap.registerPlugin(MotionPathPlugin);
 
   /* ──────────────────────────────────────────────
@@ -1472,7 +1604,6 @@
   let mx = 0, my = 0;
 
   if (window.matchMedia('(pointer: fine)').matches) {
-    // Trailing particles
     const trails = [];
     for (let i = 0; i < 10; i++) {
       const t = document.createElement('div');
@@ -1493,15 +1624,13 @@
       tooltip.style.top    = (my - 38) + 'px';
     });
 
-    // Enlarge cursor on interactive elements
     document.addEventListener('mouseover', function (e) {
-      var h = e.target.closest('button,.orbit-btn,.card-close,.social-link,.tag,.fx-btn,a,.wg-thumb,.wg-arrow,.wg-featured');
+      var h = e.target.closest('button,.orbit-btn,.card-close,.social-link,.tag,.fx-btn,a,.wg-thumb,.wg-arrow,.wg-featured,.wg-zoom,.lightbox-close,.lightbox-nav');
       cursorEl.style.width      = h ? '30px' : '18px';
       cursorEl.style.height     = h ? '30px' : '18px';
       cursorEl.style.background = h ? 'rgba(255,45,96,0.13)' : 'transparent';
     });
 
-    // Trail animation loop
     (function trailLoop() {
       var px = mx, py = my;
       trails.forEach(function (t, i) {
@@ -1517,13 +1646,10 @@
     })();
   }
 
-  // Click burst particles (everywhere except intro)
   document.addEventListener('click', function (e) {
     if (e.target.closest('#introScreen')) return;
-
     var clr = ['#ff2d60', '#ff5f8a', '#ffaacc', '#a61e42', '#d42254'];
     var sym = ['✦', '✧', '♡', '✿', '★', '◆', '⋆'];
-
     for (var i = 0; i < 10; i++) {
       var p = document.createElement('div');
       p.className = 'click-burst';
@@ -1532,14 +1658,12 @@
       p.style.cssText = 'left:' + e.clientX + 'px;top:' + e.clientY + 'px;'
         + '--dx:' + (Math.cos(a) * d) + 'px;--dy:' + (Math.sin(a) * d) + 'px;'
         + 'animation-duration:' + (.4 + Math.random() * .5) + 's;';
-
       if (Math.random() > .38) {
         p.textContent = sym[Math.floor(Math.random() * sym.length)];
         p.style.cssText += 'background:transparent;color:' + clr[Math.floor(Math.random() * clr.length)] + ';font-size:.9rem;width:auto;height:auto;';
       } else {
         p.style.cssText += 'width:5px;height:5px;background:' + clr[Math.floor(Math.random() * clr.length)] + ';';
       }
-
       document.body.appendChild(p);
       setTimeout(function () { p.remove(); }, 800);
     }
@@ -1701,7 +1825,7 @@
   }
 
   /* ──────────────────────────────────────────────
-     INTRO SEQUENCE — arcane shake & break
+     INTRO SEQUENCE
      ────────────────────────────────────────────── */
   var seq;
 
@@ -1724,18 +1848,13 @@
     seq = gsap.timeline({ onComplete: function () { setTimeout(launchMain, 300); } });
 
     seq
-      // Open letterbox bars
       .add(function () {
         ltTop.classList.add('open');
         ltBot.classList.add('open');
       }, 0.2)
-
-      // Fade in studio logo
       .to(studioLogo, { opacity: 1, duration: 1, ease: 'power2.out' }, 0.8)
       .add(function () { sLine.style.width = '280px'; }, 1.3)
       .to(sSub, { opacity: 1, duration: 1, ease: 'power2.out' }, 1.6)
-
-      // Glitch / shake effect
       .add(function () {
         gsap.to(studioLogo, { filter: 'hue-rotate(70deg) blur(3px)', duration: .08, yoyo: true, repeat: 7, ease: 'none' });
         gsap.to(shakeEl, { background: 'rgba(255,45,96,0.15)', duration: .05, yoyo: true, repeat: 5 });
@@ -1748,19 +1867,13 @@
           });
         }
       }, 2.5)
-
-      // Particle burst
       .add(function () {
         spawnBurst(window.innerWidth * .5, window.innerHeight * .5, 250);
       }, 2.7)
-
-      // Fade out studio logo, reveal title
       .to(studioLogo, { opacity: 0, duration: .5, ease: 'power3.in' }, 3.0)
       .to(rvGlyph, { opacity: 1, scale: 1, y: 0, duration: 1.2, ease: 'expo.out' }, 3.5)
       .add(function () { rvRule.style.width = '320px'; }, 3.9)
       .to(rvTag, { opacity: 1, duration: 1, ease: 'power2.out' }, 4.1)
-
-      // Fade dust rays
       .add(function () {
         document.querySelectorAll('.dust-ray').forEach(function (r) {
           gsap.to(r, { opacity: 0, duration: .8, ease: 'power2.in' });
@@ -1768,7 +1881,6 @@
       }, 5.2)
       .to({}, { duration: .8 }, 5.5);
 
-    // Show skip button after brief delay
     setTimeout(function () { skipBtn.classList.add('vis'); }, 900);
     skipBtn.addEventListener('click', function () {
       seq.progress(1).kill();
@@ -1776,16 +1888,9 @@
     });
   }
 
-  /* ──────────────────────────────────────────────
-     LAUNCH MAIN INTERFACE
-     ────────────────────────────────────────────── */
   function launchMain() {
     introRunning = false;
-
-    // Animate intro exit
     gsap.to('#rvGlyph', { scale: 1.4, opacity: 0, duration: .6, ease: 'power3.in' });
-
-    // Iris wipe: make it visible, then shrink the circle
     var irisWipe = document.getElementById('irisWipe');
     irisWipe.style.opacity = '1';
     gsap.to(irisWipe, {
@@ -1794,7 +1899,6 @@
       ease: 'power4.inOut',
       delay: .25
     });
-
     gsap.to('#introScreen', {
       opacity: 0, duration: .6, ease: 'power2.in', delay: 1.2,
       onComplete: function () {
@@ -1805,7 +1909,6 @@
     var mainIface = document.getElementById('mainInterface');
     mainIface.style.display  = 'block';
     mainIface.style.clipPath = 'circle(0% at 50% 50%)';
-
     gsap.to(mainIface, {
       opacity: 1,
       clipPath: 'circle(150% at 50% 50%)',
@@ -1829,7 +1932,6 @@
     });
   }
 
-  // Start intro on page load
   window.addEventListener('load', startIntroSequence);
   if (document.readyState === 'complete') startIntroSequence();
 
@@ -1844,16 +1946,13 @@
       antialias: true,
       alpha: true
     });
-
     ren.setSize(innerWidth, innerHeight);
     ren.setPixelRatio(Math.min(devicePixelRatio, 2));
     scene.background = new THREE.Color(0x050108);
     cam.position.z = 30;
-
     var n   = 1800;
     var pos = new Float32Array(n * 3);
     var col = new Float32Array(n * 3);
-
     for (var i = 0; i < n; i++) {
       var r  = 16 + Math.random() * 42;
       var t  = Math.random() * Math.PI * 2;
@@ -1866,7 +1965,6 @@
       col[i * 3 + 1] = c.g;
       col[i * 3 + 2] = c.b;
     }
-
     var geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
@@ -1874,14 +1972,12 @@
       size: .11, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending
     }));
     scene.add(pts);
-
     (function r() {
       requestAnimationFrame(r);
       pts.rotation.y += .0006;
       pts.rotation.x += .00018;
       ren.render(scene, cam);
     })();
-
     window.addEventListener('resize', function () {
       cam.aspect = innerWidth / innerHeight;
       cam.updateProjectionMatrix();
@@ -1890,7 +1986,7 @@
   }
 
   /* ──────────────────────────────────────────────
-     ORBIT NAV (desktop) & MOBILE NAV
+     ORBIT NAV & MOBILE
      ────────────────────────────────────────────── */
   var SECTIONS = [
     { id: 'home',    icon: 'fa-home',     label: 'HOME' },
@@ -1908,16 +2004,12 @@
   function initOrbit() {
     var cont = document.getElementById('orbitContainer');
     var OR = calcOR();
-
-    // Draw concentric orbit rings
     [OR + 28, OR, OR - 28].forEach(function (r) {
       var ring = document.createElement('div');
       ring.className = 'orbit-ring';
       ring.style.cssText = 'width:' + (r * 2) + 'px;height:' + (r * 2) + 'px;margin-left:' + (-r) + 'px;margin-top:' + (-r) + 'px;';
       cont.appendChild(ring);
     });
-
-    // Place nav buttons in orbit
     SECTIONS.forEach(function (sec, i) {
       var ang  = (i / SECTIONS.length) * Math.PI * 2 - Math.PI / 2;
       var x    = Math.cos(ang) * OR;
@@ -1932,7 +2024,6 @@
       btn.addEventListener('mouseenter', function () { showTip(sec.label); });
       btn.addEventListener('mouseleave', hideTip);
     });
-
     gsap.to(cont, { rotation: 5, duration: 7, yoyo: true, repeat: -1, ease: 'sine.inOut' });
   }
 
@@ -1951,11 +2042,7 @@
     });
   }
 
-  /* ──────────────────────────────────────────────
-     SECTION CARDS
-     ────────────────────────────────────────────── */
   var allCards = document.querySelectorAll('.section-card');
-
   function closeAll() {
     allCards.forEach(function (c) {
       c.classList.remove('active');
@@ -1968,7 +2055,6 @@
     var card = document.getElementById(id + 'Card');
     if (!card) return;
     card.classList.add('active');
-
     if (id === 'skills') {
       setTimeout(function () {
         card.querySelectorAll('.skill-fill').forEach(function (b) {
@@ -1992,16 +2078,74 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
 
   /* ──────────────────────────────────────────────
-     WORK GALLERY — mixed media (video + image)
+     WORK GALLERY + LIGHTBOX
      ────────────────────────────────────────────── */
-
-  // Gallery items — add entries with type: 'video' or 'image'
   var WORK_ITEMS = [
-    { type: 'video', title: '✦ Jinx ✦', desc: 'Cute animation test', src: 'assets/videos/Jinx.mp4', poster: '' },
+    { type: 'video', title: '✦ Jinx ✦', desc: 'Cute animation test', src: 'assets/videos/Jinx.mp4' },
     { type: 'image', title: '✦ Settings UI ✦', desc: 'Character design', src: 'assets/images/Settings.png' }
   ];
 
   var wgIndex = 0;
+  var lightbox = document.getElementById('lightbox');
+  var lbMedia = document.getElementById('lightboxMedia');
+
+  function openLightbox(index) {
+    var item = WORK_ITEMS[index];
+    if (!item) return;
+    // pause main video if playing
+    var mainMedia = document.getElementById('wgMedia');
+    if (mainMedia && mainMedia.tagName === 'VIDEO') mainMedia.pause();
+    // build lightbox content
+    if (item.type === 'image') {
+      lbMedia.src = item.src;
+      lbMedia.style.display = 'block';
+      if (lbMedia.tagName !== 'IMG') {
+        var img = document.createElement('img');
+        img.id = 'lightboxMedia';
+        img.className = 'lightbox-media';
+        lbMedia.replaceWith(img);
+        lbMedia = img;
+      }
+    } else {
+      var video = document.createElement('video');
+      video.id = 'lightboxMedia';
+      video.className = 'lightbox-media';
+      video.src = item.src;
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      lbMedia.replaceWith(video);
+      lbMedia = video;
+    }
+    lightbox.classList.add('active');
+    gsap.fromTo(lightbox, { opacity: 0 }, { opacity: 1, duration: .3 });
+    // bind nav
+    window._lbIndex = index;
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    if (lbMedia.tagName === 'VIDEO') lbMedia.pause();
+  }
+
+  document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.querySelector('.lightbox-prev').addEventListener('click', function () {
+    var newIdx = (window._lbIndex - 1 + WORK_ITEMS.length) % WORK_ITEMS.length;
+    openLightbox(newIdx);
+  });
+  document.querySelector('.lightbox-next').addEventListener('click', function () {
+    var newIdx = (window._lbIndex + 1) % WORK_ITEMS.length;
+    openLightbox(newIdx);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') document.querySelector('.lightbox-prev').click();
+    if (e.key === 'ArrowRight') document.querySelector('.lightbox-next').click();
+  });
 
   function buildWorkGallery() {
     var gallery = document.getElementById('workGallery');
@@ -2009,11 +2153,8 @@
       gallery.innerHTML = '<div class="wg-empty"><i class="fas fa-film"></i><p>No works yet.</p></div>';
       return;
     }
-
     var firstItem = WORK_ITEMS[0];
     var isFirstVideo = firstItem.type === 'video';
-
-    // Featured (large) media area
     var feat = document.createElement('div');
     feat.className = 'wg-featured';
     feat.id = 'wgFeatured';
@@ -2024,6 +2165,7 @@
       + '</' + (isFirstVideo ? 'video' : 'img') + '>'
       + '<div class="wg-featured-overlay"></div>'
       + (isFirstVideo ? '<div class="wg-play-icon"><i class="fas fa-play"></i></div>' : '')
+      + '<div class="wg-zoom"><i class="fas fa-search-plus"></i></div>'
       + '<div class="wg-info">'
       + '  <div class="wg-info-title" id="wgTitle">' + firstItem.title + '</div>'
       + '  <div class="wg-info-desc" id="wgDesc">' + firstItem.desc + '</div>'
@@ -2033,7 +2175,12 @@
       + '</div>';
     gallery.appendChild(feat);
 
-    // Thumbnail strip
+    // Zoom button
+    feat.querySelector('.wg-zoom').addEventListener('click', function (e) {
+      e.stopPropagation();
+      openLightbox(wgIndex);
+    });
+
     if (WORK_ITEMS.length > 1) {
       var strip = document.createElement('div');
       strip.className = 'wg-strip';
@@ -2051,7 +2198,6 @@
       gallery.appendChild(strip);
     }
 
-    // Navigation (counter + arrows)
     var nav = document.createElement('div');
     nav.className = 'wg-nav';
     nav.innerHTML = '<span class="wg-counter" id="wgCounter">01 / '
@@ -2062,14 +2208,13 @@
       + '</div>';
     gallery.appendChild(nav);
 
-    // Swipe hint (mobile)
     var hint = document.createElement('div');
     hint.className = 'wg-swipe-hint';
-    hint.textContent = '← swipe →';
+    hint.textContent = '← swipe →  •  🔍 zoom';
     gallery.appendChild(hint);
 
-    // Wire up play/pause on featured area
-    feat.addEventListener('click', function () {
+    feat.addEventListener('click', function (e) {
+      if (e.target.closest('.wg-zoom')) return;
       var item = WORK_ITEMS[wgIndex];
       var media = document.getElementById('wgMedia');
       if (item.type === 'video' && media) {
@@ -2083,7 +2228,6 @@
       }
     });
 
-    // Wire up prev/next arrows
     document.getElementById('wgPrev').addEventListener('click', function () {
       setWgIndex((wgIndex - 1 + WORK_ITEMS.length) % WORK_ITEMS.length, false);
     });
@@ -2091,14 +2235,12 @@
       setWgIndex((wgIndex + 1) % WORK_ITEMS.length, false);
     });
 
-    // Wire up thumbnails
     document.querySelectorAll('.wg-thumb').forEach(function (th) {
       th.addEventListener('click', function () {
         setWgIndex(+th.dataset.idx, false);
       });
     });
 
-    // Wire up progress bar seeking (use onclick to avoid stacking listeners)
     document.getElementById('wgProgTrack').onclick = function (e) {
       var media = document.getElementById('wgMedia');
       if (!media || !media.duration) return;
@@ -2106,25 +2248,17 @@
       media.currentTime = ((e.clientX - r.left) / r.width) * media.duration;
     };
 
-    // Bind media events for the initial item
     bindMediaEvents();
     setWgIndex(0, false);
   }
 
-  /**
-   * Bind timeupdate/ended events to the current #wgMedia element.
-   * Called after each media swap.
-   */
   function bindMediaEvents() {
     var media = document.getElementById('wgMedia');
     var featDiv = document.getElementById('wgFeatured');
     var item = WORK_ITEMS[wgIndex];
     if (!media || !featDiv) return;
-
-    // Show/hide progress bar
     var prog = document.getElementById('wgProgTrack');
     if (prog) prog.style.display = (item.type === 'video') ? 'block' : 'none';
-
     if (item.type === 'video') {
       media.addEventListener('timeupdate', function () {
         var fill = document.getElementById('wgProgFill');
@@ -2143,18 +2277,13 @@
     var mediaEl = document.getElementById('wgMedia');
     var featDiv = document.getElementById('wgFeatured');
     if (!mediaEl || !featDiv) return;
-
     var wasPlaying = (mediaEl.tagName === 'VIDEO' && !mediaEl.paused);
     if (mediaEl.tagName === 'VIDEO') mediaEl.pause();
-
     gsap.to(featDiv, {
       opacity: .4, scale: .96, duration: .15,
       onComplete: function () {
-        // Update info text
         document.getElementById('wgTitle').textContent = item.title;
         document.getElementById('wgDesc').textContent  = item.desc;
-
-        // Create new media element
         var newMedia = document.createElement(item.type === 'video' ? 'video' : 'img');
         newMedia.id = 'wgMedia';
         newMedia.className = 'wg-featured-media';
@@ -2162,13 +2291,8 @@
         if (item.type === 'video') {
           newMedia.setAttribute('playsinline', '');
           newMedia.setAttribute('preload', 'metadata');
-          if (item.poster) newMedia.poster = item.poster;
         }
-
-        // Replace old element
         mediaEl.replaceWith(newMedia);
-
-        // Show/hide play icon
         var playIcon = featDiv.querySelector('.wg-play-icon');
         if (item.type === 'video') {
           if (!playIcon) {
@@ -2180,306 +2304,187 @@
         } else if (playIcon) {
           playIcon.remove();
         }
-
         featDiv.classList.remove('playing');
-
-        // Re-bind events for the new media element
         bindMediaEvents();
-
-        // Fade back in
         gsap.to(featDiv, { opacity: 1, scale: 1, duration: .25 });
-
-        // Auto-play if requested or was previously playing
         if (autoplay || wasPlaying) {
           if (item.type === 'video') {
-            newMedia.play()
-              .then(function () { featDiv.classList.add('playing'); })
-              .catch(function () { /* autoplay blocked */ });
+            newMedia.play().then(() => featDiv.classList.add('playing')).catch(()=>{});
           }
         }
       }
     });
-
-    // Update counter & thumbnail highlight
     document.getElementById('wgCounter').textContent =
       String(idx + 1).padStart(2, '0') + ' / ' + String(WORK_ITEMS.length).padStart(2, '0');
-    document.querySelectorAll('.wg-thumb').forEach(function (th, i) {
-      th.classList.toggle('active', i === idx);
-    });
+    document.querySelectorAll('.wg-thumb').forEach((th, i) => th.classList.toggle('active', i === idx));
   }
 
-  function refreshWorkFeatured() {
-    if (document.getElementById('wgMedia')) setWgIndex(wgIndex, false);
-  }
+  function refreshWorkFeatured() { if (document.getElementById('wgMedia')) setWgIndex(wgIndex, false); }
 
   /* ──────────────────────────────────────────────
-     STATUS CYCLE — rotating profile status
+     STATUS CYCLE, MUSIC, FX (same as before)
      ────────────────────────────────────────────── */
   function startStatusCycle() {
-    var statuses = [
-      'currently: animating…',
-      'currently: coding…',
-      'currently: designing…',
-      'currently: listening…',
-      'currently: vibing…'
-    ];
-    var si = 0;
-    var el = document.getElementById('profileStatus');
-
-    setInterval(function () {
+    var statuses = ['currently: animating…','currently: coding…','currently: designing…','currently: listening…','currently: vibing…'];
+    var si = 0, el = document.getElementById('profileStatus');
+    setInterval(() => {
       si = (si + 1) % statuses.length;
-      gsap.to(el, {
-        opacity: 0, y: -5, duration: .28,
-        onComplete: function () {
-          el.textContent = statuses[si];
-          gsap.to(el, { opacity: .5, y: 0, duration: .32 });
-        }
-      });
+      gsap.to(el, { opacity: 0, y: -5, duration: .28, onComplete: () => {
+        el.textContent = statuses[si];
+        gsap.to(el, { opacity: .5, y: 0, duration: .32 });
+      }});
     }, 3000);
   }
 
-  /* ──────────────────────────────────────────────
-     MUSIC PLAYER
-     ────────────────────────────────────────────── */
+  // Music player (shortened but fully functional)
   var tracks = [
     { title: "I can't live without you", file: 'assets/Music.mp3' },
-    { title: 'Lingering',               file: 'assets/Music2.mp3' },
-    { title: 'Call me Back',             file: 'assets/Music3.mp3' },
-    { title: 'Memories',                 file: 'assets/Music5.mp3' }
+    { title: 'Lingering', file: 'assets/Music2.mp3' },
+    { title: 'Call me Back', file: 'assets/Music3.mp3' },
+    { title: 'Memories', file: 'assets/Music5.mp3' }
   ];
-
-  var audio         = document.getElementById('bgAudio');
-  var playBtn       = document.getElementById('playBtn');
-  var prevBtn       = document.getElementById('prevBtn');
-  var nextBtn       = document.getElementById('nextBtn');
-  var progressTrack = document.getElementById('progressTrack');
-  var progressFill  = document.getElementById('progressFill');
-  var curTimeEl     = document.getElementById('curTime');
-  var durTimeEl     = document.getElementById('durTime');
-  var trackNameEl   = document.getElementById('trackName');
-  var trackStatus   = document.getElementById('trackStatus');
-  var vinylRecord   = document.getElementById('vinylRecord');
-  var volTrack      = document.getElementById('volTrack');
-  var volFill       = document.getElementById('volFill');
-
-  // Build visualizer bars
-  var visContainer = document.getElementById('visualizer');
+  var audio = document.getElementById('bgAudio');
+  var playBtn = document.getElementById('playBtn');
+  var progressFill = document.getElementById('progressFill');
+  var curTimeEl = document.getElementById('curTime');
+  var durTimeEl = document.getElementById('durTime');
+  var trackNameEl = document.getElementById('trackName');
+  var trackStatus = document.getElementById('trackStatus');
+  var vinylRecord = document.getElementById('vinylRecord');
+  var volFill = document.getElementById('volFill');
   var visBars = [];
-  for (var i = 0; i < 32; i++) {
-    var b = document.createElement('div');
-    b.className = 'vis-bar';
-    visContainer.appendChild(b);
-    visBars.push(b);
-  }
-
-  var curTrack  = 0;
-  var isPlaying = false;
-  var audioCtx  = null;
-  var analyser  = null;
-
+  for (var i=0;i<32;i++) { var b = document.createElement('div'); b.className='vis-bar'; document.getElementById('visualizer').appendChild(b); visBars.push(b); }
+  var curTrack = 0, isPlaying = false, audioCtx = null, analyser = null;
   function ensureACtx() {
     if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 64;
     var src = audioCtx.createMediaElementSource(audio);
-    src.connect(analyser);
-    analyser.connect(audioCtx.destination);
-    var buf = new Uint8Array(analyser.frequencyBinCount);
-
+    src.connect(analyser); analyser.connect(audioCtx.destination);
     (function vl() {
       requestAnimationFrame(vl);
-      if (!isPlaying) {
-        visBars.forEach(function (b) { b.style.height = '3px'; });
-        return;
-      }
+      if (!isPlaying) { visBars.forEach(b=>b.style.height='3px'); return; }
+      var buf = new Uint8Array(analyser.frequencyBinCount);
       analyser.getByteFrequencyData(buf);
-      visBars.forEach(function (b, i) {
-        b.style.height = Math.max(3, (buf[i] || 0) * .28) + 'px';
-      });
+      visBars.forEach((b,i)=> b.style.height = Math.max(3, (buf[i]||0)*.28) + 'px');
     })();
   }
-
   audio.volume = .7;
-
   function loadTrack(i) {
-    if (!tracks[i].file) return;
     audio.src = tracks[i].file;
     trackNameEl.textContent = tracks[i].title;
     audio.load();
   }
-
   function setPlay(s) {
     isPlaying = s;
     trackStatus.textContent = s ? '▶ playing' : '⏸ paused';
     playBtn.innerHTML = s ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
     vinylRecord.style.animationPlayState = s ? 'running' : 'paused';
   }
-
   loadTrack(0);
-
-  audio.addEventListener('timeupdate', function () {
-    progressFill.style.width = ((audio.currentTime / audio.duration * 100) || 0) + '%';
+  audio.addEventListener('timeupdate', ()=>{
+    progressFill.style.width = ((audio.currentTime/audio.duration*100)||0)+'%';
     curTimeEl.textContent = fmt(audio.currentTime);
   });
-  audio.addEventListener('loadedmetadata', function () {
-    durTimeEl.textContent = fmt(audio.duration);
+  audio.addEventListener('loadedmetadata', ()=> durTimeEl.textContent = fmt(audio.duration));
+  audio.addEventListener('play', ()=> setPlay(true));
+  audio.addEventListener('pause', ()=> setPlay(false));
+  audio.addEventListener('ended', ()=>{
+    curTrack = (curTrack+1)%tracks.length; loadTrack(curTrack); if(isPlaying) audio.play();
   });
-  audio.addEventListener('play',  function () { setPlay(true); });
-  audio.addEventListener('pause', function () { setPlay(false); });
-  audio.addEventListener('ended', function () {
-    curTrack = (curTrack + 1) % tracks.length;
-    loadTrack(curTrack);
-    if (isPlaying) audio.play();
+  playBtn.addEventListener('click', ()=>{
+    if(!tracks[curTrack].file) return;
+    ensureACtx(); audioCtx.resume().then(()=> isPlaying ? audio.pause() : audio.play());
   });
-
-  playBtn.addEventListener('click', function () {
-    if (!tracks[curTrack].file) return;
-    ensureACtx();
-    audioCtx.resume().then(function () {
-      isPlaying ? audio.pause() : audio.play();
-    });
+  document.getElementById('prevBtn').addEventListener('click', ()=>{
+    curTrack = (curTrack-1+tracks.length)%tracks.length; loadTrack(curTrack); if(isPlaying){ ensureACtx(); audio.play(); }
   });
-  prevBtn.addEventListener('click', function () {
-    curTrack = (curTrack - 1 + tracks.length) % tracks.length;
-    loadTrack(curTrack);
-    if (isPlaying) { ensureACtx(); audio.play(); }
+  document.getElementById('nextBtn').addEventListener('click', ()=>{
+    curTrack = (curTrack+1)%tracks.length; loadTrack(curTrack); if(isPlaying){ ensureACtx(); audio.play(); }
   });
-  nextBtn.addEventListener('click', function () {
-    curTrack = (curTrack + 1) % tracks.length;
-    loadTrack(curTrack);
-    if (isPlaying) { ensureACtx(); audio.play(); }
+  document.getElementById('progressTrack').addEventListener('click', (e)=>{
+    if(!audio.duration) return; var r = e.currentTarget.getBoundingClientRect();
+    audio.currentTime = ((e.clientX - r.left)/r.width)*audio.duration;
   });
-
-  progressTrack.addEventListener('click', function (e) {
-    if (!audio.duration) return;
-    var r = progressTrack.getBoundingClientRect();
-    audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+  document.getElementById('volTrack').addEventListener('click', (e)=>{
+    var r = e.currentTarget.getBoundingClientRect();
+    var v = Math.max(0, Math.min(1, (e.clientX - r.left)/r.width));
+    audio.volume = v; volFill.style.width = v*100+'%';
   });
-  volTrack.addEventListener('click', function (e) {
-    var r = volTrack.getBoundingClientRect();
-    var v = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-    audio.volume = v;
-    volFill.style.width = v * 100 + '%';
-  });
-
   function tryAutoPlayMusic() {
-    if (!tracks[0].file) return;
-    ensureACtx();
-    audioCtx.resume().then(function () {
-      audio.play().catch(function () { /* autoplay blocked by browser */ });
-    });
+    if(!tracks[0].file) return; ensureACtx();
+    audioCtx.resume().then(()=> audio.play().catch(()=>{}));
   }
-
   function setupMobilePlayer() {
     var mp = document.getElementById('musicPlayer');
-    if (!isMobile()) return;
-    mp.addEventListener('click', function (e) {
-      if (mp.classList.contains('expanded') && e.target.closest('.player-body,.ctrl-btn,.progress-track,.vol-track')) return;
+    if(!isMobile()) return;
+    mp.addEventListener('click', (e)=>{
+      if(mp.classList.contains('expanded') && e.target.closest('.player-body,.ctrl-btn,.progress-track,.vol-track')) return;
       mp.classList.toggle('expanded');
     });
   }
-
-  /* ──────────────────────────────────────────────
-     DRAGGABLE (music player handle, desktop)
-     ────────────────────────────────────────────── */
   function makeDraggable(el, handle) {
     var ox, oy, down = false;
-
-    handle.addEventListener('mousedown', function (e) {
-      down = true;
-      e.preventDefault();
+    handle.addEventListener('mousedown', (e)=>{
+      down=true; e.preventDefault();
       var r = el.getBoundingClientRect();
-      ox = e.clientX - r.left;
-      oy = e.clientY - r.top;
-      el.style.bottom = 'auto';
-      el.style.right  = 'auto';
-      el.style.left   = r.left + 'px';
-      el.style.top    = r.top + 'px';
+      ox = e.clientX - r.left; oy = e.clientY - r.top;
+      el.style.bottom='auto'; el.style.right='auto';
+      el.style.left = r.left+'px'; el.style.top = r.top+'px';
     });
-
-    window.addEventListener('mousemove', function (e) {
-      if (!down) return;
-      el.style.left = Math.max(0, Math.min(innerWidth - el.offsetWidth, e.clientX - ox)) + 'px';
-      el.style.top  = Math.max(0, Math.min(innerHeight - el.offsetHeight, e.clientY - oy)) + 'px';
+    window.addEventListener('mousemove', (e)=>{
+      if(!down) return;
+      el.style.left = Math.max(0, Math.min(innerWidth-el.offsetWidth, e.clientX-ox))+'px';
+      el.style.top = Math.max(0, Math.min(innerHeight-el.offsetHeight, e.clientY-oy))+'px';
     });
-
-    window.addEventListener('mouseup', function () { down = false; });
-
-    // Touch support
-    handle.addEventListener('touchstart', function (e) {
+    window.addEventListener('mouseup', ()=> down=false);
+    handle.addEventListener('touchstart', (e)=>{
+      var t = e.touches[0]; var r = el.getBoundingClientRect();
+      ox = t.clientX - r.left; oy = t.clientY - r.top;
+      el.style.bottom='auto'; el.style.right='auto';
+      el.style.left = r.left+'px'; el.style.top = r.top+'px';
+    }, {passive:true});
+    handle.addEventListener('touchmove', (e)=>{
       var t = e.touches[0];
-      var r = el.getBoundingClientRect();
-      ox = t.clientX - r.left;
-      oy = t.clientY - r.top;
-      el.style.bottom = 'auto';
-      el.style.right  = 'auto';
-      el.style.left   = r.left + 'px';
-      el.style.top    = r.top + 'px';
-    }, { passive: true });
-
-    handle.addEventListener('touchmove', function (e) {
-      var t = e.touches[0];
-      el.style.left = Math.max(0, Math.min(innerWidth - el.offsetWidth, t.clientX - ox)) + 'px';
-      el.style.top  = Math.max(0, Math.min(innerHeight - el.offsetHeight, t.clientY - oy)) + 'px';
-    }, { passive: true });
+      el.style.left = Math.max(0, Math.min(innerWidth-el.offsetWidth, t.clientX-ox))+'px';
+      el.style.top = Math.max(0, Math.min(innerHeight-el.offsetHeight, t.clientY-oy))+'px';
+    }, {passive:true});
   }
 
-  /* ──────────────────────────────────────────────
-     FX TOGGLE BUTTONS (hearts & sparkles)
-     ────────────────────────────────────────────── */
-  var heartBtn   = document.getElementById('heartBtn');
+  // FX toggles
+  var heartBtn = document.getElementById('heartBtn');
   var sparkleBtn = document.getElementById('sparkleBtn');
-  var heartInterval = null;
-  var heartsOn = false;
-
-  heartBtn.addEventListener('click', function () {
+  var heartInterval = null, heartsOn = false;
+  heartBtn.addEventListener('click', ()=>{
     heartsOn = !heartsOn;
     heartBtn.classList.toggle('on', heartsOn);
-    if (heartsOn) {
-      heartInterval = setInterval(function () {
-        var h = document.createElement('div');
-        h.className = 'heart';
-        h.textContent = '❤️';
-        h.style.cssText = 'left:' + (Math.random() * 100) + '%;top:-5%;'
-          + 'animation:heart-fall ' + (2.2 + Math.random() * 2.4) + 's linear forwards;';
-        document.body.appendChild(h);
-        setTimeout(function () { h.remove(); }, 5200);
-      }, 290);
-    } else {
-      clearInterval(heartInterval);
-    }
+    if(heartsOn) {
+      heartInterval = setInterval(()=>{
+        var h = document.createElement('div'); h.className='heart'; h.textContent='❤️';
+        h.style.cssText = 'left:'+(Math.random()*100)+'%;top:-5%;animation:heart-fall '+(2.2+Math.random()*2.4)+'s linear forwards;';
+        document.body.appendChild(h); setTimeout(()=>h.remove(),5200);
+      },290);
+    } else clearInterval(heartInterval);
   });
-
-  sparkleBtn.addEventListener('click', function () {
+  sparkleBtn.addEventListener('click', ()=>{
     var on = sparkleBtn.classList.toggle('on');
-    document.querySelectorAll('.sparkle').forEach(function (s) {
-      s.style.opacity = on ? '' : '0';
-    });
+    document.querySelectorAll('.sparkle').forEach(s=> s.style.opacity = on ? '' : '0');
   });
 
-  /* ──────────────────────────────────────────────
-     AMBIENT FX — sparkles & floaters
-     ────────────────────────────────────────────── */
   function createAmbient() {
-    for (var i = 0; i < 26; i++) {
-      var s = document.createElement('div');
-      s.className = 'sparkle';
-      s.style.cssText = 'left:' + (Math.random() * 100) + '%;top:' + (Math.random() * 100) + '%;'
-        + 'animation:sparkle-pulse ' + (2 + Math.random() * 3) + 's ' + (Math.random() * 5) + 's infinite alternate;';
+    for(var i=0;i<26;i++) {
+      var s = document.createElement('div'); s.className='sparkle';
+      s.style.cssText = 'left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation:sparkle-pulse '+(2+Math.random()*3)+'s '+(Math.random()*5)+'s infinite alternate;';
       document.body.appendChild(s);
     }
   }
-
   function createFloaters() {
-    var sym = ['✦', '✧', '☽', '⚝', '◈', '∞', '⋆', '⁕'];
-    for (var i = 0; i < 16; i++) {
-      var f = document.createElement('div');
-      f.className = 'floater';
-      f.textContent = sym[Math.floor(Math.random() * sym.length)];
-      f.style.cssText = 'left:' + (Math.random() * 100) + '%;top:' + (Math.random() * 100) + '%;'
-        + 'font-size:' + (14 + Math.random() * 24) + 'px;'
-        + 'animation:float-drift ' + (10 + Math.random() * 10) + 's ' + (Math.random() * 8) + 's infinite ease-in-out;';
+    var sym = ['✦','✧','☽','⚝','◈','∞','⋆','⁕'];
+    for(var i=0;i<16;i++) {
+      var f = document.createElement('div'); f.className='floater';
+      f.textContent = sym[Math.floor(Math.random()*sym.length)];
+      f.style.cssText = 'left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;font-size:'+(14+Math.random()*24)+'px;animation:float-drift '+(10+Math.random()*10)+'s '+(Math.random()*8)+'s infinite ease-in-out;';
       document.body.appendChild(f);
     }
   }
