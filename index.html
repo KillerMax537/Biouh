@@ -18,26 +18,26 @@
       --bg-light: #1a050a;
       --card-bg: rgba(26, 5, 10, 0.5);
       --sidebar-bg: rgba(18, 3, 7, 0.75);
-      
+
       --text: #ffe6ed;
       --text-dim: #ffb3c6;
-      
+
       --accent: #ff1493;
       --accent2: #ff5e7e;
       --accent3: #ff8da1;
-      
+
       --glass: rgba(255, 94, 126, 0.05);
       --glass-border: rgba(255, 94, 126, 0.2);
       --glow: 0 0 15px rgba(255, 94, 126, 0.3), inset 0 0 10px rgba(255, 20, 147, 0.1);
       --glow-strong: 0 0 20px rgba(255, 20, 147, 0.6);
-      
+
       --mono: 'JetBrains Mono', monospace;
       --cursive: 'Dancing Script', cursive;
       --sans: 'Quicksand', sans-serif;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+
     html, body {
       width: 100%; height: 100%; overflow: hidden;
       background: var(--bg); color: var(--text);
@@ -53,7 +53,7 @@
     /* ═════ CUSTOM CURSOR & TRAILS ═════ */
     @media(pointer:fine) {
       html { cursor: none; }
-      a, button, input, .nav-item, .social-link, .tag, .fx-btn, .wg-thumb, .wg-arrow, .wg-featured, .wg-zoom, .lightbox-close, .lightbox-nav, .cmd-item, .ctrl-btn, .top-btn, .mnav-btn { cursor: none; }
+      a, button, input, .nav-item, .social-link, .tag, .fx-btn, .wg-thumb, .wg-arrow, .wg-featured, .wg-zoom, .lightbox-close, .lightbox-nav, .cmd-item, .ctrl-btn, .top-btn, .mnav-btn, .filter-chip, .copy-btn, .wg-expand-btn { cursor: none; }
     }
 
     #cursor {
@@ -78,6 +78,12 @@
     @keyframes burstFly {
       0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
       100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.5); }
+    }
+
+    .cursor-trail-dot {
+      position: fixed; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--accent2); pointer-events: none; z-index: 9999995;
+      box-shadow: 0 0 6px var(--accent2); transform: translate(-50%, -50%);
     }
 
     /* ═════ ANTI-DEVTOOLS WARNING ═════ */
@@ -108,6 +114,10 @@
     #mainInterface {
       position: fixed; inset: 0; display: none; opacity: 0; display: flex;
     }
+    body.rainbow-mode #mainInterface { animation: rainbowHue 3s linear infinite; }
+    @keyframes rainbowHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+    body.party-mode #mainInterface { animation: partyPulse 0.9s ease-in-out infinite; }
+    @keyframes partyPulse { 0%, 100% { filter: saturate(1); } 50% { filter: saturate(1.7) brightness(1.12); } }
 
     /* SIDEBAR */
     #sidebar {
@@ -117,11 +127,11 @@
       box-shadow: 5px 0 30px rgba(0,0,0,0.5); transition: width 0.3s;
     }
     @media(max-width:768px) { #sidebar { display: none; } #mobileNav { display: flex !important; } }
-    
+
     .sidebar-header { padding: 0 24px 20px; border-bottom: 1px solid var(--glass-border); text-align: center; }
     .sidebar-logo h1 { font-family: var(--cursive); font-size: 2.8rem; color: #fff; text-shadow: var(--glow-strong); }
     .sidebar-logo .sub { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 4px; color: var(--accent3); text-transform: uppercase; margin-top: 5px; }
-    
+
     .sidebar-profile { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 20px; }
     .sidebar-pfp {
       width: 70px; height: 70px; border-radius: 50%;
@@ -148,7 +158,7 @@
     .nav-item:hover, .nav-item.active { color: #fff; border-color: var(--glass-border); text-shadow: 0 0 10px #fff; }
     .nav-item:hover::before, .nav-item.active::before { width: 100%; }
     .nav-item:hover i, .nav-item.active i { color: var(--accent); transform: scale(1.2); text-shadow: var(--glow-strong); }
-    
+
     .sidebar-footer { padding: 20px 24px 0; border-top: 1px solid var(--glass-border); display: flex; justify-content: center; gap: 15px; }
     .top-btn {
       width: 38px; height: 38px; border-radius: 50%; background: var(--card-bg);
@@ -167,21 +177,24 @@
     .content-pane.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
     @media(max-width:768px) { .content-pane { padding: 30px 20px 100px; } }
 
-    .pane-title { font-family: var(--cursive); font-size: 3.5rem; color: #fff; text-shadow: var(--glow-strong); margin-bottom: 5px; }
+    .pane-title { font-family: var(--cursive); font-size: 3.5rem; color: #fff; text-shadow: var(--glow-strong); margin-bottom: 5px; min-height: 1.2em; }
     .pane-subtitle { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 4px; color: var(--accent3); text-transform: uppercase; margin-bottom: 30px; }
-    
+
     .glass-card {
       background: var(--card-bg); border: 1px solid var(--glass-border);
       border-radius: 20px; padding: 30px; box-shadow: var(--glow);
-      backdrop-filter: blur(10px); margin-bottom: 20px; transition: 0.3s;
+      backdrop-filter: blur(10px); margin-bottom: 20px; transition: box-shadow 0.3s, border-color 0.3s;
+      transform-style: preserve-3d; will-change: transform;
     }
-    .glass-card:hover { border-color: var(--accent2); transform: translateY(-2px); box-shadow: var(--glow-strong); }
+    .glass-card:hover { border-color: var(--accent2); box-shadow: var(--glow-strong); }
 
     .stat-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
     .stat-box {
       flex: 1; min-width: 80px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
       border-radius: 15px; padding: 15px; text-align: center;
     }
+    .stat-box.floaty { animation: floaty 3s ease-in-out infinite; }
+    @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
     .stat-num { font-family: var(--cursive); font-size: 2rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
     .stat-label { font-family: var(--mono); font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
 
@@ -202,13 +215,34 @@
       display: flex; align-items: center; gap: 15px; padding: 15px 20px;
       border: 1px solid var(--glass-border); border-radius: 15px;
       background: rgba(0,0,0,0.3); color: var(--text); text-decoration: none;
-      font-family: var(--mono); font-size: 0.8rem; transition: 0.3s; margin-bottom: 12px;
+      font-family: var(--mono); font-size: 0.8rem; transition: 0.3s;
     }
     .social-link i { color: var(--accent2); font-size: 1.2rem; transition: 0.3s; }
     .social-link:hover { border-color: var(--accent); background: rgba(255,20,147,0.1); transform: translateX(10px); box-shadow: var(--glow); }
     .social-link:hover i { color: var(--accent); text-shadow: var(--glow-strong); transform: scale(1.2); }
 
+    .social-link-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .social-link-row .social-link { flex: 1; margin-bottom: 0; }
+    .links-section-title { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent3); margin: 22px 0 10px; opacity: 0.75; }
+    .links-section-title:first-child { margin-top: 0; }
+
+    .copy-btn {
+      width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%;
+      background: transparent; border: 1px solid var(--glass-border); color: var(--accent2);
+      font-size: 0.7rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;
+    }
+    .copy-btn:hover { background: var(--accent2); color: #fff; box-shadow: var(--glow-strong); }
+
     /* WORK GALLERY */
+    .tag-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .filter-chip {
+      padding: 6px 14px; border: 1px solid var(--glass-border); border-radius: 30px;
+      font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
+      background: rgba(0,0,0,0.3); transition: 0.3s; letter-spacing: 1px; text-transform: lowercase;
+    }
+    .filter-chip:hover { border-color: var(--accent2); color: #fff; }
+    .filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: var(--glow); }
+
     .wg-featured {
       position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 20px;
       overflow: hidden; border: 1px solid var(--accent2); box-shadow: var(--glow-strong);
@@ -216,7 +250,7 @@
     }
     .wg-featured-media { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; opacity: 0.8; }
     .wg-featured:hover .wg-featured-media { opacity: 1; transform: scale(1.02); }
-    
+
     .wg-play-icon {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 20, 147, 0.8);
@@ -225,13 +259,29 @@
       transition: 0.3s;
     }
     .wg-featured.playing .wg-play-icon { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
-    
+
+    .wg-expand-btn {
+      position: absolute; top: 15px; right: 15px; width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(0,0,0,0.55); border: 1px solid var(--accent2); color: #fff;
+      display: flex; align-items: center; justify-content: center; z-index: 5; transition: 0.3s;
+    }
+    .wg-expand-btn:hover { background: var(--accent); box-shadow: var(--glow-strong); }
+
     .wg-info {
       position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;
       background: linear-gradient(to top, rgba(13,2,5,0.9), transparent); pointer-events: none;
     }
     .wg-info-title { font-family: var(--cursive); font-size: 1.5rem; color: #fff; text-shadow: 0 0 10px var(--accent); }
     .wg-info-desc { font-family: var(--mono); font-size: 0.7rem; color: var(--accent3); }
+
+    .work-placeholder {
+      width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px; text-align: center; padding: 30px;
+      background: linear-gradient(135deg, rgba(255,20,147,0.18), rgba(13,2,5,0.92));
+      color: var(--accent3);
+    }
+    .work-placeholder i { font-size: 2.2rem; color: var(--accent2); }
+    .work-placeholder .wp-tag { font-family: var(--mono); font-size: 0.6rem; opacity: 0.6; letter-spacing: 1px; text-transform: uppercase; }
 
     .wg-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .wg-thumb {
@@ -240,7 +290,7 @@
     }
     .wg-thumb.active { border-color: var(--accent); opacity: 1; box-shadow: var(--glow); transform: translateY(-3px); }
     .wg-thumb-media { width: 100%; height: 100%; object-fit: cover; }
-    
+
     .wg-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
     .wg-counter { font-family: var(--mono); font-size: 0.7rem; color: var(--accent3); letter-spacing: 2px; }
     .wg-arrows { display: flex; gap: 10px; }
@@ -264,8 +314,17 @@
       position: fixed; bottom: 30px; right: 30px; z-index: 200; width: 300px;
       background: var(--sidebar-bg); backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px;
-      box-shadow: var(--glow); transition: 0.4s;
+      box-shadow: var(--glow); transition: width 0.4s ease;
     }
+    #musicPlayer.collapsed { width: 76px; padding: 16px; }
+    #musicPlayer.collapsed .track-info,
+    #musicPlayer.collapsed #visualizer,
+    #musicPlayer.collapsed .progress-wrap,
+    #musicPlayer.collapsed #prevBtn,
+    #musicPlayer.collapsed #nextBtn { display: none; }
+    #musicPlayer.collapsed .player-top { margin-bottom: 0; }
+    #musicPlayer.collapsed .player-controls { justify-content: center; }
+
     .player-top { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
     .vinyl-record {
       width: 50px; height: 50px; border-radius: 50%;
@@ -277,16 +336,17 @@
     .track-info { flex: 1; overflow: hidden; }
     .track-name { font-family: var(--sans); font-size: 0.85rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .track-status { font-family: var(--mono); font-size: 0.5rem; color: var(--accent3); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-    
+    .minimize-btn { margin-left: auto; }
+
     #visualizer { display: flex; gap: 3px; height: 20px; align-items: flex-end; margin-bottom: 15px; }
     .vis-bar { flex: 1; background: var(--accent2); border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.1s ease; box-shadow: 0 0 5px var(--accent); }
-    
+
     .player-controls { display: flex; align-items: center; gap: 10px; }
-    .ctrl-btn { width: 30px; height: 30px; border-radius: 50%; background: transparent; border: 1px solid var(--accent2); color: var(--accent2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; transition: 0.3s; }
+    .ctrl-btn { width: 30px; height: 30px; border-radius: 50%; background: transparent; border: 1px solid var(--accent2); color: var(--accent2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; transition: 0.3s; flex-shrink: 0; }
     .play-btn { width: 40px; height: 40px; font-size: 1rem; border-color: var(--accent); color: var(--accent); }
     .ctrl-btn:hover { background: var(--accent2); color: #fff; box-shadow: var(--glow-strong); }
     .play-btn:hover { background: var(--accent); border-color: #fff; }
-    
+
     .progress-wrap { flex: 1; display: flex; flex-direction: column; gap: 5px; }
     .progress-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; position: relative; }
     .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--accent); border-radius: 2px; box-shadow: 0 0 8px var(--accent); }
@@ -309,6 +369,7 @@
     .cmd-item { display: flex; align-items: center; gap: 15px; padding: 12px 20px; font-family: var(--sans); font-size: 0.8rem; color: var(--text-dim); transition: 0.2s; }
     .cmd-item i { color: var(--accent2); width: 20px; text-align: center; }
     .cmd-item:hover, .cmd-item.selected { background: rgba(255,20,147,0.15); color: #fff; border-left: 3px solid var(--accent); }
+    .cmd-empty { padding: 20px; font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); text-align: center; opacity: 0.6; }
 
     /* MOBILE NAV */
     #mobileNav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; background: var(--sidebar-bg); backdrop-filter: blur(20px); border-top: 1px solid var(--accent); justify-content: space-around; padding: 10px 5px max(10px, env(safe-area-inset-bottom)); }
@@ -316,6 +377,22 @@
     .mnav-btn i { font-size: 1.2rem; }
     .mnav-btn span { font-family: var(--mono); font-size: 0.5rem; text-transform: uppercase; }
     .mnav-btn.active { color: var(--accent); background: rgba(255,20,147,0.1); box-shadow: inset 0 0 10px rgba(255,20,147,0.2); }
+
+    /* ACHIEVEMENT PILL */
+    .achievement-pill {
+      position: fixed; top: 20px; right: 20px; z-index: 400;
+      background: var(--sidebar-bg); border: 1px solid var(--accent2); border-radius: 30px;
+      padding: 8px 16px; font-family: var(--mono); font-size: 0.65rem; color: var(--accent3);
+      opacity: 0; transform: translateY(-10px); pointer-events: none;
+      box-shadow: var(--glow); display: flex; align-items: center; gap: 6px; transition: 0.3s;
+    }
+    .achievement-pill.show { opacity: 1; transform: translateY(0); }
+    @media(max-width:768px) { .achievement-pill { top: 10px; right: 10px; font-size: 0.55rem; padding: 6px 12px; } }
+
+    /* TOASTS */
+    #toastContainer { position: fixed; bottom: 30px; left: 30px; z-index: 9999990; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+    .toast { background: var(--sidebar-bg); border: 1px solid var(--accent2); border-radius: 12px; padding: 10px 18px; font-family: var(--mono); font-size: 0.7rem; color: var(--text); box-shadow: var(--glow); max-width: 260px; }
+    @media(max-width:768px) { #toastContainer { bottom: 95px; left: 15px; right: 15px; } .toast { max-width: none; text-align: center; } }
 
   </style>
 </head>
@@ -327,6 +404,12 @@
   <!-- CURSOR -->
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
+
+  <!-- ACHIEVEMENT PILL (secrets found) -->
+  <div class="achievement-pill" id="achievementPill"><i class="fas fa-star"></i> <span id="achievementText">0/4 secrets</span></div>
+
+  <!-- TOASTS -->
+  <div id="toastContainer"></div>
 
   <!-- ANTI-DEVTOOLS -->
   <div id="devtoolsWarning">
@@ -348,7 +431,7 @@
 
   <!-- MAIN INTERFACE -->
   <div id="mainInterface">
-    
+
     <!-- SIDEBAR -->
     <div id="sidebar">
       <div class="sidebar-header">
@@ -357,18 +440,16 @@
           <div class="sub">dev ⋆ animator ⋆ designer</div>
         </div>
         <div class="sidebar-profile">
-          <div class="sidebar-pfp"></div>
+          <div class="sidebar-pfp" id="sidebarPfp"></div>
           <div class="sidebar-status" id="profileStatus">currently: dreaming ✧</div>
         </div>
       </div>
-      
+
       <div class="nav-items" id="navItems">
         <button class="nav-item active" data-id="home"><i class="fas fa-heart"></i> about()</button>
         <button class="nav-item" data-id="skills"><i class="fas fa-star"></i> skills[]</button>
         <button class="nav-item" data-id="work"><i class="fas fa-gem"></i> work{}</button>
-        <button class="nav-item" data-id="contact"><i class="fas fa-envelope"></i> contact()</button>
-        <button class="nav-item" data-id="discord"><i class="fab fa-discord"></i> discord()</button>
-        <button class="nav-item" data-id="roblox"><i class="fas fa-gamepad"></i> roblox()</button>
+        <button class="nav-item" data-id="links"><i class="fas fa-link"></i> links()</button>
       </div>
 
       <div class="sidebar-footer">
@@ -379,14 +460,14 @@
 
     <!-- CONTENT PANES -->
     <div id="contentArea">
-      
+
       <!-- HOME -->
       <div class="content-pane active" id="pane-home">
         <h2 class="pane-title">about() ✦</h2>
         <p class="pane-subtitle">whoami ✧</p>
-        
+
         <div class="stat-row">
-          <div class="stat-box"><div class="stat-num">12+</div><div class="stat-label">Projects</div></div>
+          <div class="stat-box"><div class="stat-num">8+</div><div class="stat-label">Projects</div></div>
           <div class="stat-box"><div class="stat-num">2.4k</div><div class="stat-label">Commits</div></div>
           <div class="stat-box"><div class="stat-num">99.9%</div><div class="stat-label">Uptime</div></div>
           <div class="stat-box"><div class="stat-num">2+</div><div class="stat-label">Years</div></div>
@@ -405,18 +486,20 @@
             <span class="tag">composer ⋆</span>
           </div>
         </div>
+
+        <p style="font-family: var(--mono); font-size: 0.55rem; opacity: 0.35; letter-spacing: 1px;">// psst — there are secrets hidden around this site ✧</p>
       </div>
 
       <!-- SKILLS -->
       <div class="content-pane" id="pane-skills">
         <h2 class="pane-title">skills[] ✦</h2>
         <p class="pane-subtitle">tech stack ✧</p>
-        
+
         <div class="glass-card">
-          <div class="skill-row"><div class="skill-label"><span>Lua / Roblox Dev</span><span>92%</span></div><div class="skill-bar"><div class="skill-fill" data-w="92"></div></div></div>
-          <div class="skill-row"><div class="skill-label"><span>Animation (Blender)</span><span>88%</span></div><div class="skill-bar"><div class="skill-fill" data-w="88"></div></div></div>
-          <div class="skill-row"><div class="skill-label"><span>UI / UX Design</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" data-w="85"></div></div></div>
-          <div class="skill-row"><div class="skill-label"><span>Composer</span><span>65%</span></div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+          <div class="skill-row"><div class="skill-label"><span>Lua / Roblox Dev</span><span class="skill-pct">92%</span></div><div class="skill-bar"><div class="skill-fill" data-w="92"></div></div></div>
+          <div class="skill-row"><div class="skill-label"><span>Animation (Blender)</span><span class="skill-pct">88%</span></div><div class="skill-bar"><div class="skill-fill" data-w="88"></div></div></div>
+          <div class="skill-row"><div class="skill-label"><span>UI / UX Design</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" data-w="85"></div></div></div>
+          <div class="skill-row"><div class="skill-label"><span>Composer</span><span class="skill-pct">65%</span></div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
           <p style="margin-top:20px; opacity:0.5; font-family:var(--mono); font-size:0.6rem;">// always learning more ∘</p>
         </div>
       </div>
@@ -425,7 +508,9 @@
       <div class="content-pane" id="pane-work">
         <h2 class="pane-title">work{} ✦</h2>
         <p class="pane-subtitle">gallery ✧</p>
-        
+
+        <div class="tag-filter-row" id="wgFilters"></div>
+
         <div id="workGallery">
           <div class="wg-featured" id="wgFeatured"></div>
           <div class="wg-strip" id="wgStrip"></div>
@@ -439,33 +524,26 @@
         </div>
       </div>
 
-      <!-- CONTACT -->
-      <div class="content-pane" id="pane-contact">
-        <h2 class="pane-title">contact() ✦</h2>
-        <p class="pane-subtitle">reach me ✧</p>
+      <!-- LINKS (contact + discord + roblox, merged) -->
+      <div class="content-pane" id="pane-links">
+        <h2 class="pane-title">links() ✦</h2>
+        <p class="pane-subtitle">reach me / find me ✧</p>
         <div class="glass-card">
-          <a class="social-link" href="#"><i class="fab fa-discord"></i> Discord: @Uh._._.</a>
-          <a class="social-link" href="https://www.roblox.com/users/1803582764/profile" target="_blank"><i class="fas fa-gamepad"></i> Roblox Profile</a>
-        </div>
-      </div>
+          <div class="links-section-title">contact</div>
+          <div class="social-link-row">
+            <a class="social-link" href="https://discord.gg/QJfTJjtYJJ" target="_blank"><i class="fab fa-discord"></i> discord.gg/QJfTJjtYJJ</a>
+            <button class="copy-btn" data-copy="https://discord.gg/QJfTJjtYJJ" title="Copy link"><i class="fas fa-copy"></i></button>
+          </div>
 
-      <!-- DISCORD -->
-      <div class="content-pane" id="pane-discord">
-        <h2 class="pane-title">discord() ✦</h2>
-        <p class="pane-subtitle">my server ✧</p>
-        <div class="glass-card">
-          <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-dim);">Cute vibes, good people. Come hang. ♡</p>
-          <a class="social-link" href="https://discord.gg/QJfTJjtYJJ" target="_blank"><i class="fab fa-discord"></i> discord.gg/QJfTJjtYJJ</a>
-        </div>
-      </div>
-
-      <!-- ROBLOX -->
-      <div class="content-pane" id="pane-roblox">
-        <h2 class="pane-title">roblox() ✦</h2>
-        <p class="pane-subtitle">my places ✧</p>
-        <div class="glass-card">
-          <a class="social-link" href="https://www.roblox.com/users/1803582764/profile" target="_blank"><i class="fas fa-user"></i> Profile</a>
-          <a class="social-link" href="https://www.roblox.com/communities/34305901" target="_blank"><i class="fas fa-users"></i> Group / Community</a>
+          <div class="links-section-title">roblox</div>
+          <div class="social-link-row">
+            <a class="social-link" href="https://www.roblox.com/users/1803582764/profile" target="_blank"><i class="fas fa-user"></i> Profile</a>
+            <button class="copy-btn" data-copy="https://www.roblox.com/users/1803582764/profile" title="Copy link"><i class="fas fa-copy"></i></button>
+          </div>
+          <div class="social-link-row">
+            <a class="social-link" href="https://www.roblox.com/communities/34305901" target="_blank"><i class="fas fa-users"></i> Group / Community</a>
+            <button class="copy-btn" data-copy="https://www.roblox.com/communities/34305901" title="Copy link"><i class="fas fa-copy"></i></button>
+          </div>
         </div>
       </div>
 
@@ -479,6 +557,7 @@
           <div class="track-name" id="trackName">— no track —</div>
           <div class="track-status" id="trackStatus">⏸ paused</div>
         </div>
+        <button class="ctrl-btn minimize-btn" id="minimizeBtn" title="Minimize player"><i class="fas fa-minus"></i></button>
       </div>
       <div id="visualizer"></div>
       <div class="player-controls">
@@ -525,6 +604,12 @@
     (function() {
       'use strict';
 
+      console.log('%c✦ hey, nice job peeking backstage ✦', 'color:#ff5e7e;font-size:14px;font-family:monospace;');
+
+      const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let currentPane = 'home';
+      let lightboxOpen = false;
+
       // ═════ SECURITY & ANTI-TAMPER ═════
       const devWarn = document.getElementById('devtoolsWarning');
       document.addEventListener('contextmenu', e => e.preventDefault());
@@ -545,12 +630,118 @@
         }
       }, 1000);
 
+      // ═════ TOASTS ═════
+      function showToast(msg) {
+        const c = document.getElementById('toastContainer');
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = msg;
+        c.appendChild(t);
+        gsap.fromTo(t, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3 });
+        setTimeout(() => {
+          gsap.to(t, { opacity: 0, x: -20, duration: 0.3, onComplete: () => t.remove() });
+        }, 3000);
+      }
+
+      // ═════ CONFETTI (DOM-based, no canvas libs needed) ═════
+      function confettiBurst(x, y, count) {
+        if (REDUCED_MOTION) return;
+        const colors = ['#ff1493', '#ff5e7e', '#ff8da1', '#ffffff'];
+        for (let i = 0; i < count; i++) {
+          const p = document.createElement('div');
+          p.style.position = 'fixed';
+          p.style.left = x + 'px';
+          p.style.top = y + 'px';
+          p.style.width = '6px';
+          p.style.height = '6px';
+          p.style.background = colors[i % colors.length];
+          p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+          p.style.pointerEvents = 'none';
+          p.style.zIndex = 9999997;
+          document.body.appendChild(p);
+          const angle = Math.random() * Math.PI * 2;
+          const dist = 80 + Math.random() * 160;
+          const dx = Math.cos(angle) * dist;
+          const dy = Math.sin(angle) * dist + 100;
+          const rot = Math.random() * 720 - 360;
+          gsap.to(p, { x: dx, y: dy, rotation: rot, opacity: 0, duration: 1 + Math.random() * 0.6, ease: 'power2.out', onComplete: () => p.remove() });
+        }
+      }
+
+      // ═════ EASTER EGG / ACHIEVEMENT TRACKING (session-only) ═════
+      const TOTAL_SECRETS = 4;
+      const secretsFound = new Set();
+      function updateAchievementPill() {
+        document.getElementById('achievementText').textContent = `${secretsFound.size}/${TOTAL_SECRETS} secrets`;
+        document.getElementById('achievementPill').classList.add('show');
+      }
+      function unlockSecret(id) {
+        if (secretsFound.has(id)) return;
+        secretsFound.add(id);
+        updateAchievementPill();
+        if (secretsFound.size === TOTAL_SECRETS) {
+          setTimeout(() => showToast('✦ all secrets found — you really are curious ✦'), 700);
+        }
+      }
+
+      // Secret 1: Konami code
+      const konamiSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      let konamiPos = 0;
+      document.addEventListener('keydown', e => {
+        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        if (key === konamiSeq[konamiPos]) {
+          konamiPos++;
+          if (konamiPos === konamiSeq.length) {
+            konamiPos = 0;
+            unlockSecret('konami');
+            if (!REDUCED_MOTION) {
+              document.body.classList.toggle('rainbow-mode');
+              confettiBurst(window.innerWidth / 2, window.innerHeight / 3, 40);
+            }
+            showToast('✦ konami code — rainbow mode ✦');
+          }
+        } else {
+          konamiPos = (key === konamiSeq[0]) ? 1 : 0;
+        }
+      });
+
+      // Secret 2: click the sidebar pfp rapidly
+      let pfpClicks = 0, pfpClickTimer = null;
+      const sidebarPfp = document.getElementById('sidebarPfp');
+      sidebarPfp.addEventListener('click', () => {
+        pfpClicks++;
+        clearTimeout(pfpClickTimer);
+        pfpClickTimer = setTimeout(() => { pfpClicks = 0; }, 1500);
+        if (pfpClicks >= 7) {
+          pfpClicks = 0;
+          const r = sidebarPfp.getBoundingClientRect();
+          confettiBurst(r.left + r.width / 2, r.top + r.height / 2, 20);
+          showToast('✧ you found a secret ✧');
+          unlockSecret('pfp');
+          statuses.push('currently: caught snooping ♡');
+        }
+      });
+
+      // Secret 3: double-click empty background
+      document.addEventListener('dblclick', e => {
+        if (e.target.closest('button, a, input, .nav-item, .mnav-btn, .glass-card, .wg-featured, .wg-thumb')) return;
+        confettiBurst(e.clientX, e.clientY, 20);
+        unlockSecret('dblclick');
+      });
+
+      // Secret 4: type "party" into the command palette — see hiddenCommands below
+
       // ═════ FAST CANVAS 2D BACKGROUND (NO LAG) ═════
       const canvas = document.getElementById('bgCanvas');
       const ctx = canvas.getContext('2d', { alpha: false });
       let width, height;
       const symbols = ['✦', '♡', '✧', '⋆', '∘'];
       const particles = [];
+
+      // AS VARIÁVEIS FORAM MOVIDAS PARA CÁ (Antes do drawBg)
+      let mx = window.innerWidth/2, my = window.innerHeight/2;
+      let rx = mx, ry = my;
+      let lastTrailTime = 0;
 
       function resize() {
         width = canvas.width = window.innerWidth;
@@ -559,7 +750,6 @@
       window.addEventListener('resize', resize);
       resize();
 
-      // Create lightweight particles
       for(let i=0; i<60; i++) {
         particles.push({
           x: Math.random() * width,
@@ -574,21 +764,30 @@
       }
 
       function drawBg() {
-        // Draw deep gradient background
         const grad = ctx.createLinearGradient(0, 0, 0, height);
         grad.addColorStop(0, '#0d0205');
         grad.addColorStop(1, '#1a050a');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
 
-        // Draw symbols
         particles.forEach(p => {
           p.y -= p.speedY;
           p.x += p.speedX;
+
+          if (!REDUCED_MOTION && window.matchMedia('(pointer:fine)').matches) {
+            const dx = p.x - mx, dy = p.y - my;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist > 0 && dist < 80) {
+              const force = (80 - dist) / 80;
+              p.x += (dx / dist) * force * 1.5;
+              p.y += (dy / dist) * force * 1.5;
+            }
+          }
+
           p.opacity += Math.sin(Date.now() * p.pulse) * 0.005;
           if (p.opacity < 0.05) p.opacity = 0.05;
           if (p.opacity > 0.6) p.opacity = 0.6;
-          
+
           if (p.y < -20) {
             p.y = height + 20;
             p.x = Math.random() * width;
@@ -605,17 +804,27 @@
       // ═════ CUSTOM CURSOR & EFFECTS ═════
       const cursor = document.getElementById('cursor');
       const cursorRing = document.getElementById('cursor-ring');
-      let mx = window.innerWidth/2, my = window.innerHeight/2;
-      let rx = mx, ry = my;
 
       if (window.matchMedia('(pointer:fine)').matches) {
         document.addEventListener('mousemove', e => {
           mx = e.clientX; my = e.clientY;
           cursor.style.left = mx + 'px';
           cursor.style.top = my + 'px';
+
+          if (!REDUCED_MOTION) {
+            const now = Date.now();
+            if (now - lastTrailTime > 55) {
+              lastTrailTime = now;
+              const d = document.createElement('div');
+              d.className = 'cursor-trail-dot';
+              d.style.left = mx + 'px';
+              d.style.top = my + 'px';
+              document.body.appendChild(d);
+              gsap.to(d, { opacity: 0, scale: 0.3, duration: 0.6, onComplete: () => d.remove() });
+            }
+          }
         });
-        
-        // Smooth ring follow
+
         gsap.ticker.add(() => {
           rx += (mx - rx) * 0.2;
           ry += (my - ry) * 0.2;
@@ -630,7 +839,6 @@
         });
 
         document.addEventListener('click', e => {
-          // Burst effect
           for (let i = 0; i < 5; i++) {
             const p = document.createElement('div');
             p.className = 'click-burst';
@@ -652,7 +860,7 @@
       const introTitle = document.getElementById('introTitle');
       const introProgress = document.getElementById('introProgress');
       const progressPercent = document.getElementById('progressPercent');
-      
+
       let progress = 0;
       const progInt = setInterval(() => {
         progress += Math.random() * 8 + 2;
@@ -667,17 +875,16 @@
 
       function revealIntro() {
         gsap.to('#loaderGrp', { opacity: 0, y: 20, duration: 0.4 });
-        
-        // Animate title letters
+
         const spans = introTitle.querySelectorAll('span');
         gsap.to(introTitle, { opacity: 1, scale: 1, duration: 0.5 });
-        gsap.fromTo(spans, 
-          { y: 30, opacity: 0 }, 
+        gsap.fromTo(spans,
+          { y: 30, opacity: 0 },
           { y: 0, opacity: 1, stagger: 0.1, ease: "back.out(2)", duration: 0.6 }
         );
 
         setTimeout(() => {
-          gsap.to(introScreen, { 
+          gsap.to(introScreen, {
             opacity: 0, duration: 0.8, ease: "power2.inOut",
             onComplete: () => {
               introScreen.style.display = 'none';
@@ -691,21 +898,24 @@
         const main = document.getElementById('mainInterface');
         main.style.display = 'flex';
         gsap.to(main, { opacity: 1, duration: 0.8 });
-        
-        // Initialize systems
-        buildWorkGallery();
+
+        document.querySelectorAll('.pane-title').forEach(el => { el.dataset.original = el.textContent; });
+
+        renderFilterChips();
+        buildWorkGallery('all');
         setupCmdPalette();
         tryAutoPlayMusic();
-        
-        // Animate initial skill bars
-        setTimeout(() => {
-          document.querySelectorAll('#pane-skills .skill-fill').forEach(b => {
-            b.style.width = b.dataset.w + '%';
-          });
-        }, 500);
+        initTilt();
 
-        // Status updater
-        const statuses = ['currently: dreaming ✧', 'currently: animating ♡', 'currently: scripting ✦', 'currently: in studio ⋆'];
+        if (!REDUCED_MOTION) {
+          document.querySelectorAll('.stat-box').forEach((b, i) => {
+            b.classList.add('floaty');
+            b.style.animationDelay = (i * 0.3) + 's';
+          });
+        }
+
+        setTimeout(animateSkillBars, 500);
+
         let sIdx = 0;
         setInterval(() => {
           sIdx = (sIdx + 1) % statuses.length;
@@ -717,23 +927,77 @@
         }, 4000);
       }
 
+      const statuses = ['currently: dreaming ✧', 'currently: animating ♡', 'currently: scripting ✦', 'currently: in studio ⋆'];
+
+      // ═════ SKILL BARS (width + count-up) ═════
+      function animateSkillBars() {
+        document.querySelectorAll('#pane-skills .skill-fill').forEach(b => {
+          const target = parseInt(b.dataset.w, 10);
+          b.style.width = target + '%';
+          const row = b.closest('.skill-row');
+          const pctEl = row ? row.querySelector('.skill-pct') : null;
+          if (!pctEl) return;
+          if (REDUCED_MOTION) { pctEl.textContent = target + '%'; return; }
+          const start = performance.now();
+          const dur = 1200;
+          function tick(now) {
+            const t = Math.min((now - start) / dur, 1);
+            pctEl.textContent = Math.floor(t * target) + '%';
+            if (t < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+
+      // ═════ CARD TILT (desktop only) ═════
+      function initTilt() {
+        if (REDUCED_MOTION || !window.matchMedia('(pointer:fine)').matches) return;
+        document.querySelectorAll('.glass-card').forEach(card => {
+          card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            gsap.to(card, { rotateX: py * -6, rotateY: px * 6, transformPerspective: 600, duration: 0.3, ease: 'power1.out' });
+          });
+          card.addEventListener('mouseleave', () => {
+            gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.5, ease: 'power2.out' });
+          });
+        });
+      }
+
+      // ═════ TEXT SCRAMBLE ═════
+      function scrambleText(el, finalText) {
+        if (REDUCED_MOTION || !finalText) { el.textContent = finalText || el.textContent; return; }
+        const chars = '✦✧⋆∘♡ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        clearInterval(el._scrambleInt);
+        let iter = 0;
+        el._scrambleInt = setInterval(() => {
+          el.textContent = finalText.split('').map((c, i) => {
+            if (c === ' ') return ' ';
+            if (i < iter) return finalText[i];
+            return chars[Math.floor(Math.random() * chars.length)];
+          }).join('');
+          iter += 1;
+          if (iter >= finalText.length) {
+            clearInterval(el._scrambleInt);
+            el.textContent = finalText;
+          }
+        }, 30);
+      }
+
       // ═════ NAVIGATION LOGIC ═════
       function activatePane(id) {
+        currentPane = id;
         document.querySelectorAll('.nav-item, .mnav-btn').forEach(b => {
-          b.classList.remove('active');
-          if (b.dataset.id === id) b.classList.add('active');
-          // Mobile routing link logic
-          if (id === 'contact' || id === 'discord' || id === 'roblox') {
-            if (b.dataset.id === 'links') b.classList.add('active');
-          }
+          b.classList.toggle('active', b.dataset.id === id);
         });
-        
+
         document.querySelectorAll('.content-pane').forEach(p => {
           if (p.id === 'pane-' + id) {
             p.classList.add('active');
-            if(id === 'skills') {
-              setTimeout(() => p.querySelectorAll('.skill-fill').forEach(b => b.style.width = b.dataset.w + '%'), 100);
-            }
+            const titleEl = p.querySelector('.pane-title');
+            if (titleEl) scrambleText(titleEl, titleEl.dataset.original);
+            if (id === 'skills') setTimeout(animateSkillBars, 100);
           } else {
             p.classList.remove('active');
           }
@@ -741,119 +1005,221 @@
       }
 
       document.querySelectorAll('.nav-item, .mnav-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          let target = btn.dataset.id;
-          if (target === 'links') target = 'contact'; // mobile redirect
-          activatePane(target);
-        });
+        btn.addEventListener('click', () => activatePane(btn.dataset.id));
       });
 
-      // ═════ WORK GALLERY (ORIGINAL ASSETS) ═════
+      // ═════ WORK GALLERY ═════
+      // Add new work here — type: 'image' | 'video' | 'placeholder' (use 'placeholder' until you have real media).
+      // Fields: title, desc, tags (used for filter chips + icon), type, src, poster (video thumbnail image, optional), link (optional external url).
       const WORK_ITEMS = [
-        { type: 'video', title: 'Jinx ✦', desc: 'cute animation test', src: 'assets/videos/Jinx.mp4' },
-        { type: 'image', title: 'Settings UI', desc: 'soft pastel design', src: 'assets/images/Settings.png' }
+        { title: 'Jinx ✦', desc: 'cute animation test', tags: ['animation', 'blender'], type: 'video', src: 'assets/videos/Jinx.mp4' },
+        { title: 'Settings UI', desc: 'soft pastel design', tags: ['ui', 'design'], type: 'image', src: 'assets/images/Settings.png' },
+        { title: 'Donation Jar Tycoon', desc: 'F-key placement, ProximityPrompt donation UI, DataStore persistence, and a group-membership skin system.', tags: ['systems', 'tycoon', 'datastore'], type: 'placeholder' },
+        { title: 'Emote System', desc: 'Synced emote wheel with neon glow UI, server-driven sound replication, and a pluggable effects framework.', tags: ['systems', 'ui', 'vfx'], type: 'placeholder' },
+        { title: 'FPS Movement & Weapons', desc: 'Modular first-person controller — crouch/slide states, recoil, and weapon-equip logic.', tags: ['combat', 'systems'], type: 'placeholder' },
+        { title: 'Horse Riding Game', desc: 'Three-tier gait system, stamina/sprint, material-based footsteps, and a smooth-follow camera.', tags: ['movement', 'camera'], type: 'placeholder' },
+        { title: 'SmokeVoxels', desc: 'BFS flood-fill voxel smoke system with pluggable reactions — dispersion, ignition, toxic.', tags: ['vfx', 'systems'], type: 'placeholder' },
+        { title: 'Day/Night Weather Cycle', desc: 'HSV sky interpolation, dynamic storms, shooting stars, and camera-anchored weather particles.', tags: ['vfx', 'systems'], type: 'placeholder' }
       ];
+
+      let filteredItems = [];
       let wgIndex = 0;
       const wgFeatured = document.getElementById('wgFeatured');
       const wgStrip = document.getElementById('wgStrip');
       const lightbox = document.getElementById('lightbox');
       const lbContent = document.getElementById('lightboxContent');
 
-      function buildWorkGallery() {
-        if (!WORK_ITEMS.length) return;
-        
-        // Build Thumbnails
-        WORK_ITEMS.forEach((item, i) => {
+      function tagIcon(tag) {
+        const map = { animation: 'fa-film', ui: 'fa-palette', design: 'fa-palette', systems: 'fa-cubes', datastore: 'fa-database', tycoon: 'fa-coins', vfx: 'fa-wand-magic-sparkles', combat: 'fa-crosshairs', movement: 'fa-horse', camera: 'fa-video' };
+        return map[tag] || 'fa-cube';
+      }
+
+      function renderFilterChips() {
+        const tagSet = new Set(['all']);
+        WORK_ITEMS.forEach(item => item.tags.forEach(t => tagSet.add(t)));
+        const row = document.getElementById('wgFilters');
+        row.innerHTML = '';
+        [...tagSet].forEach(tag => {
+          const chip = document.createElement('button');
+          chip.className = 'filter-chip' + (tag === 'all' ? ' active' : '');
+          chip.textContent = tag === 'all' ? 'all ✦' : tag;
+          chip.addEventListener('click', () => {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            buildWorkGallery(tag);
+          });
+          row.appendChild(chip);
+        });
+      }
+
+      function buildWorkGallery(filterTag) {
+        filteredItems = filterTag === 'all' ? WORK_ITEMS.slice() : WORK_ITEMS.filter(it => it.tags.includes(filterTag));
+        wgStrip.innerHTML = '';
+
+        if (!filteredItems.length) {
+          wgFeatured.innerHTML = '<div class="work-placeholder"><i class="fas fa-ghost"></i><div>nothing here yet ✧</div></div>';
+          document.getElementById('wgCounter').textContent = '00 / 00';
+          return;
+        }
+
+        filteredItems.forEach((item, i) => {
           const th = document.createElement('div');
           th.className = 'wg-thumb';
           th.dataset.idx = i;
-          const media = document.createElement(item.type === 'video' ? 'video' : 'img');
-          media.className = 'wg-thumb-media';
-          media.src = item.src;
-          if(item.type === 'video') { media.muted = true; media.preload = 'metadata'; }
-          th.appendChild(media);
+
+          if (item.type === 'placeholder') {
+            th.innerHTML = `<div class="wg-thumb-media" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(255,20,147,0.25), rgba(0,0,0,0.6));"><i class="fas ${tagIcon(item.tags[0])}" style="color:var(--accent2);font-size:1.2rem;"></i></div>`;
+          } else {
+            const media = document.createElement(item.type === 'video' ? 'video' : 'img');
+            media.className = 'wg-thumb-media';
+            if (item.type === 'video') {
+              media.muted = true;
+              media.preload = 'metadata';
+              if (item.poster) media.setAttribute('poster', item.poster);
+            }
+            media.src = item.src;
+            media.onerror = () => {
+              th.innerHTML = `<div class="wg-thumb-media" style="display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);"><i class="fas ${tagIcon(item.tags[0])}" style="color:var(--accent2);"></i></div>`;
+            };
+            th.appendChild(media);
+          }
+
           th.addEventListener('click', () => setWgIndex(i, false));
           wgStrip.appendChild(th);
         });
 
-        // Controls
-        document.getElementById('wgPrev').addEventListener('click', () => setWgIndex((wgIndex - 1 + WORK_ITEMS.length) % WORK_ITEMS.length, false));
-        document.getElementById('wgNext').addEventListener('click', () => setWgIndex((wgIndex + 1) % WORK_ITEMS.length, false));
-        
         setWgIndex(0, false);
       }
 
       function setWgIndex(idx, autoplay) {
+        if (!filteredItems.length) return;
         wgIndex = idx;
-        const item = WORK_ITEMS[idx];
+        const item = filteredItems[idx];
         wgFeatured.innerHTML = '';
         wgFeatured.classList.remove('playing');
+        wgFeatured.onclick = null;
 
-        const media = document.createElement(item.type === 'video' ? 'video' : 'img');
-        media.className = 'wg-featured-media';
-        media.id = 'wgMedia';
-        media.src = item.src;
-        
-        if (item.type === 'video') {
-          media.playsInline = true;
-          if(autoplay) { media.autoplay = true; media.muted = false; wgFeatured.classList.add('playing'); } 
-          else { media.muted = true; }
+        if (item.type === 'placeholder') {
+          const ph = document.createElement('div');
+          ph.className = 'work-placeholder';
+          ph.innerHTML = `<i class="fas ${tagIcon(item.tags[0])}"></i><div style="font-family:var(--cursive);font-size:1.6rem;color:#fff;">${item.title}</div><div style="font-family:var(--mono);font-size:0.75rem;max-width:80%;line-height:1.6;">${item.desc}</div><div class="wp-tag">media coming soon ✧</div>`;
+          wgFeatured.appendChild(ph);
+        } else {
+          const media = document.createElement(item.type === 'video' ? 'video' : 'img');
+          media.className = 'wg-featured-media';
+          media.id = 'wgMedia';
+
+          if (item.type === 'video') {
+            media.playsInline = true;
+            if (item.poster) media.setAttribute('poster', item.poster);
+            if (autoplay) { media.autoplay = true; media.muted = false; wgFeatured.classList.add('playing'); }
+            else media.muted = true;
+          }
+          media.src = item.src;
+          media.onerror = () => {
+            wgFeatured.innerHTML = `<div class="work-placeholder"><i class="fas fa-triangle-exclamation"></i><div style="font-family:var(--cursive);font-size:1.6rem;color:#fff;">${item.title}</div><div class="wp-tag">media not found — check the file path ✧</div></div>`;
+          };
+
+          const playIcon = document.createElement('div');
+          playIcon.className = 'wg-play-icon';
+          playIcon.innerHTML = '<i class="fas fa-play"></i>';
+
+          const info = document.createElement('div');
+          info.className = 'wg-info';
+          info.innerHTML = `<div class="wg-info-title">${item.title}</div><div class="wg-info-desc">${item.desc}</div>`;
+
+          const expandBtn = document.createElement('button');
+          expandBtn.className = 'wg-expand-btn';
+          expandBtn.innerHTML = '<i class="fas fa-expand"></i>';
+          expandBtn.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(wgIndex); });
+
+          wgFeatured.appendChild(media);
+          if (item.type === 'video') wgFeatured.appendChild(playIcon);
+          wgFeatured.appendChild(info);
+          wgFeatured.appendChild(expandBtn);
+
+          if (item.type === 'video') {
+            wgFeatured.onclick = () => {
+              const v = document.getElementById('wgMedia');
+              if (v.paused) { v.muted = false; v.play(); wgFeatured.classList.add('playing'); }
+              else { v.pause(); wgFeatured.classList.remove('playing'); }
+            };
+          } else {
+            wgFeatured.onclick = () => openLightbox(wgIndex);
+          }
         }
 
-        const playIcon = document.createElement('div');
-        playIcon.className = 'wg-play-icon';
-        playIcon.innerHTML = '<i class="fas fa-play"></i>';
-
-        const info = document.createElement('div');
-        info.className = 'wg-info';
-        info.innerHTML = `<div class="wg-info-title">${item.title}</div><div class="wg-info-desc">${item.desc}</div>`;
-
-        wgFeatured.appendChild(media);
-        wgFeatured.appendChild(playIcon);
-        wgFeatured.appendChild(info);
-
-        wgFeatured.onclick = () => {
-          if (item.type === 'video') {
-            const v = document.getElementById('wgMedia');
-            if (v.paused) { v.muted = false; v.play(); wgFeatured.classList.add('playing'); } 
-            else { v.pause(); wgFeatured.classList.remove('playing'); }
-          } else {
-            openLightbox(idx);
-          }
-        };
-
-        // Update Thumbs & Counter
         document.querySelectorAll('.wg-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
-        document.getElementById('wgCounter').textContent = `0${idx+1} / 0${WORK_ITEMS.length}`;
+        document.getElementById('wgCounter').textContent = `${String(idx+1).padStart(2,'0')} / ${String(filteredItems.length).padStart(2,'0')}`;
       }
 
-      // Lightbox Logic
+      function prevSlide() { if (filteredItems.length) setWgIndex((wgIndex - 1 + filteredItems.length) % filteredItems.length, false); }
+      function nextSlide() { if (filteredItems.length) setWgIndex((wgIndex + 1) % filteredItems.length, false); }
+      document.getElementById('wgPrev').addEventListener('click', prevSlide);
+      document.getElementById('wgNext').addEventListener('click', nextSlide);
+
+      // Swipe support (mobile)
+      let touchStartX = 0;
+      wgFeatured.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+      wgFeatured.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 50) { dx < 0 ? nextSlide() : prevSlide(); }
+      }, { passive: true });
+
+      // Lightbox
       function openLightbox(idx) {
+        if (!filteredItems.length || filteredItems[idx].type === 'placeholder') return;
         wgIndex = idx;
-        const item = WORK_ITEMS[idx];
+        lightboxOpen = true;
+        const item = filteredItems[idx];
         lbContent.innerHTML = '';
         const el = document.createElement(item.type === 'video' ? 'video' : 'img');
         el.className = 'lightbox-media';
         el.src = item.src;
+        el.onerror = () => { lbContent.innerHTML = '<div class="work-placeholder" style="border-radius:15px;padding:60px;"><i class="fas fa-triangle-exclamation"></i><div>media not found ✧</div></div>'; };
         if (item.type === 'video') { el.controls = true; el.autoplay = true; }
         lbContent.appendChild(el);
-        
+
         lightbox.style.display = 'flex';
         gsap.to(lightbox, { opacity: 1, duration: 0.3 });
       }
-      
+
       function closeLightbox() {
+        lightboxOpen = false;
         gsap.to(lightbox, { opacity: 0, duration: 0.3, onComplete: () => {
           lightbox.style.display = 'none';
           lbContent.innerHTML = '';
         }});
       }
-      
-      document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
-      document.querySelector('.lightbox-prev').addEventListener('click', () => openLightbox((wgIndex - 1 + WORK_ITEMS.length) % WORK_ITEMS.length));
-      document.querySelector('.lightbox-next').addEventListener('click', () => openLightbox((wgIndex + 1) % WORK_ITEMS.length));
 
-      // ═════ MUSIC PLAYER (ORIGINAL AUDIO) ═════
+      document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+      document.querySelector('.lightbox-prev').addEventListener('click', () => openLightbox((wgIndex - 1 + filteredItems.length) % filteredItems.length));
+      document.querySelector('.lightbox-next').addEventListener('click', () => openLightbox((wgIndex + 1) % filteredItems.length));
+
+      lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+      lightbox.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 50) {
+          dx < 0 ? document.querySelector('.lightbox-next').click() : document.querySelector('.lightbox-prev').click();
+        }
+      }, { passive: true });
+
+      // Keyboard navigation (gallery + lightbox)
+      document.addEventListener('keydown', e => {
+        if (document.getElementById('cmdPalette').classList.contains('open')) return;
+        if (lightboxOpen) {
+          if (e.key === 'ArrowLeft') document.querySelector('.lightbox-prev').click();
+          if (e.key === 'ArrowRight') document.querySelector('.lightbox-next').click();
+          if (e.key === 'Escape') closeLightbox();
+          return;
+        }
+        if (currentPane === 'work') {
+          if (e.key === 'ArrowLeft') prevSlide();
+          if (e.key === 'ArrowRight') nextSlide();
+        }
+      });
+
+      // ═════ MUSIC PLAYER ═════
       const tracks = [
         { title: "I can't live without you", file: 'assets/Music.mp3' },
         { title: 'Lingering', file: 'assets/Music2.mp3' },
@@ -868,12 +1234,11 @@
       const progressFill = document.getElementById('progressFill');
       const curTime = document.getElementById('curTime');
       const durTime = document.getElementById('durTime');
-      
+
       let curTrack = 0;
       let isPlaying = false;
       let audioCtx, analyser, source;
 
-      // Setup visualizer bars
       const visContainer = document.getElementById('visualizer');
       const visBars = [];
       for(let i=0; i<20; i++) {
@@ -918,8 +1283,7 @@
       audio.addEventListener('timeupdate', () => {
         progressFill.style.width = ((audio.currentTime / audio.duration * 100) || 0) + '%';
         curTime.textContent = fmt(audio.currentTime);
-        
-        // Visualizer logic
+
         if (analyser && isPlaying) {
           const data = new Uint8Array(analyser.frequencyBinCount);
           analyser.getByteFrequencyData(data);
@@ -931,7 +1295,7 @@
           visBars.forEach(b => b.style.height = '2px');
         }
       });
-      
+
       audio.addEventListener('loadedmetadata', () => durTime.textContent = fmt(audio.duration));
       audio.addEventListener('play', () => setPlayState(true));
       audio.addEventListener('pause', () => setPlayState(false));
@@ -951,7 +1315,7 @@
         loadTrack(curTrack);
         if (isPlaying) { initAudioCtx(); audio.play(); }
       });
-      
+
       document.getElementById('nextBtn').addEventListener('click', () => {
         curTrack = (curTrack + 1) % tracks.length;
         loadTrack(curTrack);
@@ -964,20 +1328,37 @@
         audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
       });
 
+      document.getElementById('minimizeBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const mp = document.getElementById('musicPlayer');
+        const collapsed = mp.classList.toggle('collapsed');
+        document.getElementById('minimizeBtn').querySelector('i').className = collapsed ? 'fas fa-plus' : 'fas fa-minus';
+      });
+
       loadTrack(0);
 
       function tryAutoPlayMusic() {
-        // Most browsers block autoplay without interaction, but we try gently
         const p = audio.play();
         if(p !== undefined) {
           p.then(() => { initAudioCtx(); }).catch(() => { setPlayState(false); });
         }
       }
 
-      // Add spin keyframe for vinyl dynamically
       const styleSheet = document.createElement('style');
       styleSheet.innerText = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
       document.head.appendChild(styleSheet);
+
+      // ═════ COPY-TO-CLIPBOARD (links pane) ═════
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(btn.dataset.copy);
+            showToast('✧ link copied ✧');
+          } catch (err) {
+            showToast('couldn\'t copy — long-press the link to copy manually');
+          }
+        });
+      });
 
       // ═════ COMMAND PALETTE (Cmd+K) ═════
       const cmdPalette = document.getElementById('cmdPalette');
@@ -987,12 +1368,36 @@
         { label: 'about() ✦', id: 'home', icon: 'fa-heart' },
         { label: 'skills[] ✦', id: 'skills', icon: 'fa-star' },
         { label: 'work{} ✦', id: 'work', icon: 'fa-gem' },
-        { label: 'contact() ✦', id: 'contact', icon: 'fa-envelope' },
-        { label: 'discord() ✦', id: 'discord', icon: 'fa-discord' },
-        { label: 'roblox() ✦', id: 'roblox', icon: 'fa-gamepad' }
+        { label: 'links() ✦', id: 'links', icon: 'fa-link' }
+      ];
+      const hiddenCommands = [
+        { label: '🎉 party mode', id: '__party', icon: 'fa-gift', trigger: 'party' }
       ];
       let cmdSel = 0;
       let filteredCmds = [];
+      let partyInterval = null;
+
+      function togglePartyMode() {
+        const active = document.body.classList.toggle('party-mode');
+        unlockSecret('party');
+        if (active) {
+          showToast('🎉 party mode activated 🎉');
+          if (!REDUCED_MOTION) {
+            let count = 0;
+            partyInterval = setInterval(() => {
+              confettiBurst(Math.random() * window.innerWidth, Math.random() * window.innerHeight * 0.6, 15);
+              count++;
+              if (count > 10) {
+                clearInterval(partyInterval);
+                document.body.classList.remove('party-mode');
+              }
+            }, 400);
+          }
+        } else {
+          showToast('party mode off');
+          if (partyInterval) clearInterval(partyInterval);
+        }
+      }
 
       function setupCmdPalette() {
         document.addEventListener('keydown', e => {
@@ -1005,10 +1410,9 @@
         cmdInput.addEventListener('keydown', e => {
           if(e.key === 'ArrowDown') { e.preventDefault(); cmdSel = Math.min(cmdSel+1, filteredCmds.length-1); renderCmds(); }
           if(e.key === 'ArrowUp') { e.preventDefault(); cmdSel = Math.max(cmdSel-1, 0); renderCmds(); }
-          if(e.key === 'Enter' && filteredCmds[cmdSel]) { 
-            e.preventDefault(); 
-            activatePane(filteredCmds[cmdSel].id); 
-            closeCmd(); 
+          if(e.key === 'Enter' && filteredCmds[cmdSel]) {
+            e.preventDefault();
+            executeCommand(filteredCmds[cmdSel]);
           }
           if(e.key === 'Escape') closeCmd();
         });
@@ -1030,20 +1434,41 @@
 
       function filterCmds() {
         const q = cmdInput.value.toLowerCase();
-        filteredCmds = commands.filter(c => c.label.toLowerCase().includes(q));
+        const visibleMatches = commands.filter(c => c.label.toLowerCase().includes(q));
+        const hiddenMatches = q.length > 0 ? hiddenCommands.filter(c => c.trigger.includes(q)) : [];
+        filteredCmds = [...visibleMatches, ...hiddenMatches];
         cmdSel = 0;
       }
 
+      function executeCommand(cmd) {
+        if (cmd.id.startsWith('__')) {
+          if (cmd.id === '__party') togglePartyMode();
+        } else {
+          activatePane(cmd.id);
+        }
+        closeCmd();
+      }
+
       function renderCmds() {
-        cmdList.innerHTML = filteredCmds.map((c, i) => `
-          <div class="cmd-item ${i===cmdSel ? 'selected':''}" onclick="document.querySelector('.nav-item[data-id=\\'${c.id}\\']').click(); document.getElementById('cmdPalette').classList.remove('open');">
-            <i class="fas ${c.icon}"></i> ${c.label}
-          </div>
-        `).join('');
+        cmdList.innerHTML = '';
+        if (!filteredCmds.length) {
+          const empty = document.createElement('div');
+          empty.className = 'cmd-empty';
+          empty.textContent = 'no commands found ✧';
+          cmdList.appendChild(empty);
+          return;
+        }
+        filteredCmds.forEach((c, i) => {
+          const div = document.createElement('div');
+          div.className = 'cmd-item' + (i === cmdSel ? ' selected' : '');
+          div.innerHTML = `<i class="fas ${c.icon}"></i> ${c.label}`;
+          div.addEventListener('click', () => executeCommand(c));
+          cmdList.appendChild(div);
+        });
       }
 
       // Sparkle FX button
-      document.getElementById('fxBtn').addEventListener('click', (e) => {
+      document.getElementById('fxBtn').addEventListener('click', () => {
         for(let i=0; i<15; i++) {
           setTimeout(() => {
             const p = document.createElement('div');
