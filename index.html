@@ -1,794 +1,819 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="description" content="uh… — Roblox dev & animator. Dark aesthetic portfolio.">
-  <title>✦ uh… ✦ // dev.system</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      /* Dark Alt-Girl / Neon Pink Theme */
-      --bg: #090204;
-      --grid: rgba(255, 0, 85, 0.03);
-      --card-bg: rgba(20, 5, 10, 0.4);
-      --sidebar-bg: rgba(12, 2, 6, 0.65);
-      --text: #ffe0eb;
-      --text-dim: #b37a8f;
-      --accent: #ff0055;
-      --accent2: #ff007f;
-      --accent3: #ff2a6d;
-      --glass: rgba(255, 0, 85, 0.05);
-      --glass-border: rgba(255, 0, 85, 0.25);
-      --shadow: 0 8px 32px rgba(255, 0, 85, 0.15);
-      --neon-glow: 0 0 10px var(--accent), 0 0 20px var(--accent2);
-      
-      --mono: 'JetBrains Mono', monospace;
-      --cursive: 'Dancing Script', cursive;
-      --sans: 'Outfit', sans-serif;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>✦ dev.cafe // UwU7u76o6 ✦</title>
     
-    html, body {
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Quicksand:wght@300;400;500;600&family=JetBrains+Mono:wght@100;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    /* CRT Scanlines */
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                  linear-gradient(90deg, rgba(255, 0, 85, 0.03), rgba(0, 0, 0, 0), rgba(255, 0, 127, 0.03));
-      background-size: 100% 4px, 3px 100%;
-      z-index: 9999995;
-      pointer-events: none;
-      opacity: 0.8;
-    }
+    <style>
+        /* ═════ CORE VARIABLES & AESTHETIC ═════ */
+        :root {
+            --bg-base: #0a0406;
+            --pink-soft: #ffb6c1;
+            --pink-hot: #ff69b4;
+            --pink-neon: #ff1493;
+            --holo-1: rgba(255, 182, 193, 0.4);
+            --holo-2: rgba(135, 206, 235, 0.3);
+            --holo-3: rgba(221, 160, 221, 0.4);
+            --glass-bg: rgba(255, 240, 245, 0.03);
+            --glass-border: rgba(255, 182, 193, 0.15);
+            --glass-glow: 0 8px 32px rgba(255, 105, 180, 0.15);
+            
+            --font-cinematic: 'Cinzel', serif;
+            --font-ui: 'Quicksand', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
 
-    /* Custom Cursor */
-    @media(pointer:fine) {
-      html { cursor: none; }
-      a, button, input, .nav-item, .social-link, .tag, .fx-btn, .wg-thumb, .wg-arrow, .ctrl-btn, .top-btn, .sidebar-pfp { cursor: none; }
-    }
-    
-    #cursor {
-      position: fixed; width: 24px; height: 24px;
-      border: 2px solid var(--accent);
-      border-radius: 50%;
-      pointer-events: none; z-index: 9999999;
-      transform: translate(-50%, -50%);
-      transition: width 0.15s, height 0.15s, border-color 0.15s, background 0.15s;
-      box-shadow: var(--neon-glow);
-    }
-    #cursor::after {
-      content: ''; position: absolute;
-      top: 50%; left: 50%;
-      width: 4px; height: 4px;
-      background: var(--text);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-    #cursor.hover {
-      width: 40px; height: 40px;
-      border-color: var(--accent2);
-      background: rgba(255, 0, 127, 0.1);
-    }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        
+        body, html {
+            width: 100vw; height: 100vh; overflow: hidden;
+            background: var(--bg-base); color: var(--pink-soft);
+            font-family: var(--font-ui); cursor: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    /* Custom Context Menu */
-    #contextMenu {
-      position: fixed; z-index: 9999998;
-      background: var(--sidebar-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 8px;
-      display: none; opacity: 0;
-      box-shadow: var(--shadow);
-      min-width: 180px;
-    }
-    .ctx-item {
-      padding: 10px 14px; font-size: 0.75rem;
-      color: var(--text); display: flex; align-items: center; gap: 10px;
-      border-radius: 8px; transition: 0.2s; font-family: var(--mono);
-    }
-    .ctx-item:hover {
-      background: var(--accent); color: #fff;
-      box-shadow: var(--neon-glow); transform: translateX(5px);
-    }
+        /* ═════ SECURITY & PROTECTIONS ═════ */
+        .security-overlay {
+            position: fixed; inset: 0; z-index: 99999999;
+            background: rgba(10, 4, 6, 0.98); backdrop-filter: blur(20px);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            font-family: var(--font-code); color: var(--pink-neon); text-align: center;
+        }
+        .security-overlay.breach { display: flex; }
+        .glitch-text { font-size: 2rem; text-shadow: 2px 0 var(--holo-2), -2px 0 var(--holo-3); animation: shake 0.2s infinite; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) } 50% { transform: translate(-1px, -1px) } 100% { transform: translate(1px, -1px) } }
 
-    /* Flash FX */
-    .screen-flash {
-      position: fixed; inset: 0; z-index: 9999999;
-      background: var(--accent2); pointer-events: none;
-      opacity: 0; mix-blend-mode: overlay;
-    }
+        /* ═════ CINEMATIC ENVIRONMENT ═════ */
+        #webgl-container { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+        
+        .cinematic-vignette {
+            position: fixed; inset: 0; z-index: 2; pointer-events: none;
+            background: radial-gradient(circle, transparent 40%, rgba(10, 4, 6, 0.8) 120%);
+        }
 
-    /* ── INTRO ── */
-    #introScreen {
-      position: fixed; inset: 0; z-index: 100000;
-      background: var(--bg);
-      display: flex; align-items: center; justify-content: center; flex-direction: column;
-    }
-    .glitch-text {
-      font-family: var(--mono); font-size: 2.5rem; font-weight: 800;
-      color: var(--text); text-transform: uppercase; letter-spacing: 4px;
-      position: relative; text-shadow: 0 0 10px var(--accent);
-    }
-    .glitch-text::before, .glitch-text::after {
-      content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    }
-    .glitch-text::before {
-      left: 2px; text-shadow: -2px 0 var(--accent2);
-      clip: rect(44px, 450px, 56px, 0);
-      animation: glitch-anim 5s infinite linear alternate-reverse;
-    }
-    .glitch-text::after {
-      left: -2px; text-shadow: -2px 0 var(--accent);
-      clip: rect(44px, 450px, 56px, 0);
-      animation: glitch-anim2 5s infinite linear alternate-reverse;
-    }
-    @keyframes glitch-anim {
-      0% { clip: rect(10px, 9999px, 31px, 0); }
-      20% { clip: rect(62px, 9999px, 14px, 0); }
-      40% { clip: rect(34px, 9999px, 59px, 0); }
-      60% { clip: rect(81px, 9999px, 2px, 0); }
-      80% { clip: rect(22px, 9999px, 91px, 0); }
-      100% { clip: rect(54px, 9999px, 43px, 0); }
-    }
-    @keyframes glitch-anim2 {
-      0% { clip: rect(65px, 9999px, 100px, 0); }
-      20% { clip: rect(12px, 9999px, 50px, 0); }
-      40% { clip: rect(89px, 9999px, 20px, 0); }
-      60% { clip: rect(32px, 9999px, 70px, 0); }
-      80% { clip: rect(98px, 9999px, 10px, 0); }
-      100% { clip: rect(45px, 9999px, 80px, 0); }
-    }
-    .hacker-bar {
-      width: 250px; height: 2px; background: var(--glass-border);
-      margin-top: 20px; position: relative; overflow: hidden;
-    }
-    .hacker-fill {
-      position: absolute; top: 0; left: 0; height: 100%; width: 0%;
-      background: var(--accent); box-shadow: var(--neon-glow);
-    }
-    .sys-log {
-      font-family: var(--mono); font-size: 0.6rem; color: var(--accent2);
-      margin-top: 10px; opacity: 0.7; min-height: 15px;
-    }
+        .holographic-overlay {
+            position: fixed; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: overlay;
+            background: linear-gradient(45deg, var(--holo-1), var(--holo-2), var(--holo-3));
+            opacity: 0.15; animation: holo-shift 10s infinite alternate ease-in-out;
+        }
+        @keyframes holo-shift { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(45deg); } }
 
-    /* ── MAIN ── */
-    #mainInterface {
-      position: fixed; inset: 0; display: none; opacity: 0;
-      background-image: 
-        linear-gradient(var(--grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-    #threeCanvas { position: absolute; inset: 0; z-index: 0; }
+        /* ═════ PHYSICS CURSOR ═════ */
+        #cursor-dot {
+            position: fixed; width: 6px; height: 6px; background: #fff; border-radius: 50%;
+            z-index: 999999; pointer-events: none; box-shadow: 0 0 10px #fff, 0 0 20px var(--pink-hot);
+        }
+        #cursor-ring {
+            position: fixed; width: 40px; height: 40px; border: 1px solid var(--pink-soft);
+            border-radius: 50%; z-index: 999998; pointer-events: none;
+            transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
+            transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center;
+        }
+        #cursor-ring.active {
+            width: 60px; height: 60px; background: rgba(255, 182, 193, 0.05);
+            border-color: var(--pink-neon); backdrop-filter: blur(2px);
+        }
 
-    /* Dark Glassmorphism Sidebar */
-    #sidebar {
-      width: 260px; background: var(--sidebar-bg);
-      backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-      border-right: 1px solid var(--glass-border);
-      z-index: 50; display: flex; flex-direction: column;
-      box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-    }
-    .sidebar-header { padding: 25px 20px; border-bottom: 1px solid var(--glass-border); }
-    .sidebar-logo h1 {
-      font-family: var(--cursive); font-size: 2.5rem; color: #fff;
-      text-shadow: var(--neon-glow); letter-spacing: 2px;
-    }
-    .sidebar-profile { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
-    .sidebar-pfp {
-      width: 50px; height: 50px; border-radius: 12px;
-      border: 2px solid var(--accent); box-shadow: var(--neon-glow);
-      background: #1a0510 center/cover; position: relative; overflow: hidden;
-    }
-    .sidebar-pfp::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 50%, rgba(255,0,85,0.2) 100%);
-    }
-    .sidebar-status {
-      font-family: var(--mono); font-size: 0.55rem; color: var(--accent2);
-      margin-top: 4px; text-transform: uppercase; letter-spacing: 1px;
-    }
+        /* ═════ UI ARCHITECTURE (GLASSMORPHISM) ═════ */
+        .master-container {
+            position: relative; width: 100vw; height: 100vh; z-index: 10;
+            display: flex; align-items: center; justify-content: center; perspective: 2000px;
+        }
 
-    /* Navigation */
-    .nav-items { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 8px; }
-    .nav-item {
-      display: flex; align-items: center; gap: 14px; padding: 12px 16px;
-      border-radius: 10px; color: var(--text-dim);
-      font-family: var(--sans); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
-      text-decoration: none; background: transparent; border: 1px solid transparent;
-      width: 100%; text-align: left; position: relative; overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .nav-item i { width: 20px; text-align: center; font-size: 1rem; transition: 0.3s; }
-    
-    .nav-item::before {
-      content: ''; position: absolute; left: -100%; top: 0; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,0,85,0.2), transparent);
-      transition: 0.4s;
-    }
-    .nav-item:hover {
-      color: #fff; border-color: var(--glass-border);
-      background: rgba(255,0,85,0.05); box-shadow: inset 0 0 15px rgba(255,0,85,0.1);
-    }
-    .nav-item:hover::before { left: 100%; }
-    .nav-item:hover i { color: var(--accent); text-shadow: var(--neon-glow); transform: scale(1.2); }
-    
-    .nav-item.active {
-      color: #fff; background: rgba(255,0,85,0.1);
-      border-color: var(--accent); box-shadow: var(--neon-glow);
-    }
-    .nav-item.active i { color: var(--accent); text-shadow: var(--neon-glow); }
+        /* Advanced CanvasGroup Simulator via CSS */
+        .canvas-group {
+            position: absolute; width: 85vw; max-width: 1400px; height: 80vh;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 30px; box-shadow: var(--glass-glow);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            display: flex; overflow: hidden; opacity: 0;
+            /* Using GroupTransparency conceptually mapped to opacity/blur via JS */
+            transition: border-color 0.4s;
+        }
+        .canvas-group::before {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background: linear-gradient(125deg, rgba(255,255,255,0.1) 0%, transparent 40%, rgba(255,105,180,0.05) 100%);
+        }
 
-    /* Footer Controls */
-    .sidebar-footer { padding: 20px; border-top: 1px solid var(--glass-border); }
-    .top-btn {
-      background: var(--card-bg); border: 1px solid var(--glass-border);
-      color: var(--text-dim); width: 36px; height: 36px; border-radius: 8px;
-      font-size: 0.9rem; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center;
-    }
-    .top-btn:hover, .top-btn.on {
-      background: var(--accent); color: #fff; border-color: var(--accent);
-      box-shadow: var(--neon-glow); transform: translateY(-3px);
-    }
+        /* Sidebar */
+        .sidebar {
+            width: 300px; border-right: 1px solid var(--glass-border);
+            padding: 40px 30px; display: flex; flex-direction: column; position: relative;
+            background: linear-gradient(90deg, rgba(0,0,0,0.4), transparent);
+        }
+        .brand { font-family: var(--font-cinematic); font-size: 2rem; color: #fff; text-shadow: 0 0 20px var(--pink-hot); }
+        .brand-sub { font-family: var(--font-code); font-size: 0.6rem; letter-spacing: 4px; color: var(--pink-soft); opacity: 0.6; margin-top: 5px; }
+        
+        .nav-menu { margin-top: 60px; display: flex; flex-direction: column; gap: 15px; }
+        .nav-link {
+            position: relative; padding: 15px 20px; font-size: 0.85rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 2px; color: var(--pink-soft);
+            display: flex; align-items: center; gap: 15px; cursor: none;
+            border-radius: 12px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+        .nav-link::before {
+            content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 0%;
+            background: linear-gradient(90deg, rgba(255, 105, 180, 0.2), transparent);
+            transition: width 0.4s ease; z-index: -1;
+        }
+        .nav-link:hover::before, .nav-link.active::before { width: 100%; }
+        .nav-link:hover, .nav-link.active { color: #fff; text-shadow: 0 0 10px var(--pink-soft); transform: translateX(10px); }
+        .nav-link i { font-size: 1.1rem; width: 24px; text-align: center; }
 
-    /* Content Area */
-    #contentArea { flex: 1; position: relative; z-index: 10; perspective: 1000px; }
-    .content-pane {
-      position: absolute; inset: 0; overflow-y: auto; padding: 40px 60px;
-      opacity: 0; pointer-events: none;
-      /* Directional Fluid Translation Default */
-      transform: translateX(40px) rotateY(-5deg);
-      transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1), transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-      scrollbar-width: none; 
-    }
-    .content-pane.active {
-      opacity: 1; transform: translateX(0) rotateY(0); pointer-events: auto;
-    }
-    
-    .pane-header { margin-bottom: 30px; }
-    .pane-title {
-      font-family: var(--mono); font-size: 2.8rem; color: #fff;
-      text-transform: uppercase; font-weight: 800; letter-spacing: -1px;
-      text-shadow: -2px 2px 0px var(--accent), -4px 4px 0px rgba(255, 0, 85, 0.3);
-    }
-    .pane-subtitle {
-      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 4px;
-      color: var(--accent2); text-transform: uppercase; margin-top: 5px;
-    }
-    
-    /* Stats & Cards - Glassmorphism */
-    .glass-card {
-      background: var(--card-bg); backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border); border-radius: 16px;
-      padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      position: relative; overflow: hidden;
-    }
-    .glass-card::before {
-      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-      transform: skewX(-20deg); transition: 0.5s;
-    }
-    .glass-card:hover::before { left: 150%; }
+        /* Directional Transition Wrapper */
+        .content-wrapper {
+            flex: 1; position: relative; overflow: hidden;
+            /* Visualizing the "Slot Frame BG Image Rotation" concept */
+        }
+        .page-node {
+            position: absolute; inset: 0; padding: 50px 60px;
+            opacity: 0; pointer-events: none; overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .page-node.active { opacity: 1; pointer-events: auto; }
 
-    .tag {
-      padding: 6px 14px; border: 1px solid var(--accent); border-radius: 4px;
-      font-size: 0.65rem; background: rgba(255, 0, 85, 0.1);
-      font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;
-      color: #fff; transition: 0.2s; display: inline-block; box-shadow: inset 0 0 10px rgba(255,0,85,0.2);
-    }
-    .tag:hover { background: var(--accent); box-shadow: var(--neon-glow); }
+        /* Typography & Components */
+        h1.cinematic-title {
+            font-family: var(--font-cinematic); font-size: 4.5rem; color: #fff;
+            line-height: 1.1; margin-bottom: 10px; text-shadow: 0 0 30px rgba(255, 105, 180, 0.4);
+        }
+        .cinematic-subtitle {
+            font-family: var(--font-code); font-size: 0.8rem; letter-spacing: 6px;
+            text-transform: uppercase; color: var(--pink-hot); margin-bottom: 40px; display: block;
+        }
+        
+        .bento-grid {
+            display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(180px, auto); gap: 20px;
+        }
+        .bento-card {
+            background: rgba(20, 5, 10, 0.4); border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 30px; position: relative; overflow: hidden;
+            backdrop-filter: blur(10px); transition: 0.4s;
+        }
+        .bento-card:hover { border-color: var(--pink-hot); transform: translateY(-5px); box-shadow: var(--glass-glow); }
+        .bento-card::after {
+            content: ''; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.08) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .bento-card:hover::after { opacity: 1; }
 
-    .skill-bar { height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden; margin-top: 8px; border: 1px solid var(--glass-border); }
-    .skill-fill { height: 100%; width: 0%; background: var(--accent); box-shadow: var(--neon-glow); transition: width 1s cubic-bezier(0.19, 1, 0.22, 1); }
+        .tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+        .tag {
+            font-family: var(--font-code); font-size: 0.6rem; padding: 6px 12px;
+            border-radius: 20px; border: 1px solid rgba(255, 182, 193, 0.3);
+            background: rgba(255, 182, 193, 0.05); color: var(--pink-soft);
+        }
 
-    .social-link {
-      display: flex; align-items: center; gap: 12px;
-      border: 1px solid var(--glass-border); border-radius: 8px;
-      padding: 14px 20px; margin-bottom: 12px; font-size: 0.85rem;
-      color: var(--text); font-family: var(--mono); text-transform: uppercase;
-      text-decoration: none; background: rgba(0,0,0,0.3); transition: 0.2s;
-    }
-    .social-link i { color: var(--accent); font-size: 1.2rem; }
-    .social-link:hover {
-      border-color: var(--accent); background: rgba(255,0,85,0.1);
-      box-shadow: var(--neon-glow); transform: translateX(10px);
-    }
+        /* ═════ INTERACTIVE MODULES ═════ */
+        
+        /* Combo Hit System Indicator */
+        .combo-meter {
+            position: fixed; top: 30px; right: 40px; z-index: 100;
+            display: flex; gap: 8px; align-items: center;
+        }
+        .combo-node {
+            width: 12px; height: 12px; border: 1px solid var(--glass-border);
+            transform: rotate(45deg); transition: 0.3s;
+        }
+        .combo-node.filled { background: var(--pink-neon); box-shadow: 0 0 15px var(--pink-neon); border-color: #fff; }
+        .combo-text { font-family: var(--font-code); font-size: 0.7rem; letter-spacing: 2px; color: var(--pink-soft); margin-right: 10px; opacity: 0; transition: 0.3s; }
 
-    /* Music Player */
-    #musicPlayer {
-      position: fixed; bottom: 30px; right: 30px; z-index: 200;
-      width: 280px; background: var(--sidebar-bg); backdrop-filter: blur(20px);
-      border: 1px solid var(--accent); border-radius: 16px;
-      padding: 16px; box-shadow: var(--shadow), var(--neon-glow);
-    }
-    .vinyl-record {
-      width: 46px; height: 46px; border-radius: 50%;
-      background: radial-gradient(circle at center, #111 20%, #222 40%, #050505 80%);
-      border: 2px solid var(--accent); box-shadow: 0 0 10px var(--accent);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .vinyl-center { width: 12px; height: 12px; background: var(--accent2); border-radius: 50%; }
-    
-    /* Command Palette */
-    #cmdPalette {
-      position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20px) scale(0.95);
-      z-index: 50000; width: 500px; max-width: 90vw;
-      background: rgba(10, 2, 5, 0.85); backdrop-filter: blur(30px);
-      border: 1px solid var(--accent); border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8), var(--neon-glow);
-      display: none; opacity: 0; overflow: hidden; font-family: var(--mono);
-    }
-    #cmdPalette.open { display: block; }
-    .cmd-input-wrap { display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid var(--glass-border); }
-    #cmdInput { flex: 1; background: transparent; border: none; color: #fff; font-size: 0.9rem; outline: none; font-family: var(--mono); }
-    .cmd-item { padding: 12px 16px; font-size: 0.75rem; color: var(--text-dim); transition: 0.1s; display: flex; gap: 12px; align-items: center; }
-    .cmd-item.selected, .cmd-item:hover { background: rgba(255,0,85,0.15); color: #fff; border-left: 3px solid var(--accent); }
+        /* NPC Dialogue System Interface */
+        #dialogue-overlay {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            width: 600px; max-width: 90vw; background: rgba(10, 4, 6, 0.85);
+            border: 1px solid var(--pink-hot); border-radius: 16px; padding: 25px;
+            box-shadow: 0 10px 40px rgba(255, 20, 147, 0.3); z-index: 999;
+            backdrop-filter: blur(20px); display: none; opacity: 0;
+        }
+        .npc-name { font-family: var(--font-cinematic); color: #fff; font-size: 1.2rem; margin-bottom: 10px; }
+        .dialogue-text { font-family: var(--font-code); font-size: 0.85rem; line-height: 1.6; color: var(--pink-soft); min-height: 60px; }
+        .dialogue-choices { display: flex; gap: 10px; margin-top: 15px; }
+        .choice-btn {
+            background: transparent; border: 1px solid var(--glass-border); color: #fff;
+            padding: 8px 15px; font-family: var(--font-ui); font-size: 0.75rem;
+            border-radius: 8px; transition: 0.3s; cursor: none;
+        }
+        .choice-btn:hover { background: rgba(255, 105, 180, 0.2); border-color: var(--pink-hot); }
 
-    /* Modals/Dialogs */
-    #customModal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-      z-index: 99999; display: none; align-items: center; justify-content: center; opacity: 0;
-    }
-    .modal-box {
-      background: var(--sidebar-bg); border: 1px solid var(--accent);
-      padding: 30px; border-radius: 12px; box-shadow: var(--neon-glow);
-      max-width: 400px; width: 90%; color: #fff; font-family: var(--mono);
-    }
-
-  </style>
+        /* Terminal Window */
+        #terminal-sys {
+            position: absolute; bottom: 30px; right: 30px; width: 350px; height: 250px;
+            background: rgba(5, 2, 3, 0.9); border: 1px solid rgba(255, 20, 147, 0.4);
+            border-radius: 12px; font-family: var(--font-code); padding: 15px;
+            display: flex; flex-direction: column; z-index: 50; box-shadow: var(--glass-glow);
+        }
+        .term-header { font-size: 0.6rem; color: var(--pink-hot); border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .term-body { flex: 1; overflow-y: auto; font-size: 0.65rem; color: #fff; scrollbar-width: none; display: flex; flex-direction: column; gap: 5px; }
+        .term-input-wrapper { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
+        .term-input { background: transparent; border: none; color: var(--pink-soft); font-family: var(--font-code); font-size: 0.7rem; flex: 1; outline: none; }
+        
+    </style>
 </head>
 <body>
 
-  <!-- Custom Cursor -->
-  <div id="cursor"></div>
-  <div class="screen-flash" id="screenFlash"></div>
-
-  <!-- Custom Context Menu -->
-  <div id="contextMenu">
-    <div class="ctx-item" id="ctxHome"><i class="fas fa-home"></i> return /_home</div>
-    <div class="ctx-item" id="ctxCmd"><i class="fas fa-terminal"></i> run cmd.exe</div>
-    <div class="ctx-item" id="ctxGlitch"><i class="fas fa-bolt"></i> trigger_glitch</div>
-  </div>
-
-  <!-- INTRO -->
-  <div id="introScreen">
-    <div class="glitch-text" data-text="SYSTEM.INIT">SYSTEM.INIT</div>
-    <div class="hacker-bar"><div class="hacker-fill" id="hackerFill"></div></div>
-    <div class="sys-log" id="sysLog">establishing secure connection...</div>
-  </div>
-
-  <!-- MAIN -->
-  <div id="mainInterface">
-    <canvas id="threeCanvas"></canvas>
-
-    <div id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-logo"><h1>dev.sys</h1></div>
-        <div class="sidebar-profile">
-          <div class="sidebar-pfp"></div>
-          <div>
-            <div style="font-family:var(--mono); font-weight:800; font-size:1rem; color:#fff">uh…</div>
-            <div class="sidebar-status" id="profileStatus">IDLE_</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="nav-items" id="navItems">
-        <button class="nav-item active" data-id="home"><i class="fas fa-crosshairs"></i> /whoami</button>
-        <button class="nav-item" data-id="skills"><i class="fas fa-microchip"></i> /stack</button>
-        <button class="nav-item" data-id="work"><i class="fas fa-folder-open"></i> /gallery</button>
-        <button class="nav-item" data-id="links"><i class="fas fa-link"></i> /network</button>
-      </div>
-
-      <div class="sidebar-footer">
-        <div style="font-family:var(--mono); font-size:0.5rem; color:var(--text-dim); margin-bottom:10px;">> press CMD+K or /</div>
-        <div style="display:flex; gap:8px;">
-          <button class="top-btn" id="terminalBtn"><i class="fas fa-terminal"></i></button>
-          <button class="top-btn" id="fxBtn"><i class="fas fa-eye"></i></button>
-        </div>
-      </div>
+    <!-- SECURITY OVERLAY -->
+    <div class="security-overlay" id="sec-shield">
+        <i class="fas fa-shield-alt" style="font-size: 4rem; margin-bottom: 20px;"></i>
+        <div class="glitch-text">UNAUTHORIZED ACCESS DETECTED</div>
+        <p style="margin-top: 10px; opacity: 0.6;">DevTools initialization blocked. Source code protected by proprietary framework.</p>
     </div>
 
-    <div id="contentArea">
-      
-      <!-- HOME -->
-      <div class="content-pane active" id="pane-home">
-        <div class="pane-header">
-          <h2 class="pane-title">uh...</h2>
-          <p class="pane-subtitle">Roblox Dev // Animator // UI Specialist</p>
-        </div>
-        
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:16px; margin-bottom:30px;">
-          <div class="glass-card" style="padding:16px; text-align:center;">
-            <div style="font-family:var(--mono); font-size:1.5rem; color:var(--accent); font-weight:800">12+</div>
-            <div style="font-size:0.6rem; text-transform:uppercase; opacity:0.6; margin-top:4px;">Modules</div>
-          </div>
-          <div class="glass-card" style="padding:16px; text-align:center;">
-            <div style="font-family:var(--mono); font-size:1.5rem; color:var(--accent); font-weight:800">99%</div>
-            <div style="font-size:0.6rem; text-transform:uppercase; opacity:0.6; margin-top:4px;">Uptime</div>
-          </div>
+    <!-- CINEMATIC WEBGL -->
+    <div id="webgl-container"></div>
+    <div class="cinematic-vignette"></div>
+    <div class="holographic-overlay"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <!-- COMBO SYSTEM -->
+    <div class="combo-meter">
+        <span class="combo-text" id="combo-alert">SEQUENCE TRIGGERED</span>
+        <div class="combo-node" id="c-1"></div>
+        <div class="combo-node" id="c-2"></div>
+        <div class="combo-node" id="c-3"></div>
+        <div class="combo-node" id="c-4"></div>
+    </div>
+
+    <!-- NPC DIALOGUE SYSTEM -->
+    <div id="dialogue-overlay">
+        <div class="npc-name" id="npc-name">System</div>
+        <div class="dialogue-text" id="npc-text"></div>
+        <div class="dialogue-choices" id="npc-choices"></div>
+    </div>
+
+    <!-- MAIN UI -->
+    <div class="master-container">
+        <div class="canvas-group" id="main-canvas">
+            
+            <div class="sidebar">
+                <div class="brand">UwU7u76o6</div>
+                <div class="brand-sub">ROBLOX // ANIMATOR // DESIGNER</div>
+                
+                <div class="nav-menu">
+                    <div class="nav-link active" data-target="sys-core">
+                        <i class="fas fa-atom"></i> Sys.Core
+                    </div>
+                    <div class="nav-link" data-target="sys-frameworks">
+                        <i class="fas fa-code-branch"></i> Frameworks
+                    </div>
+                    <div class="nav-link" data-target="sys-visuals">
+                        <i class="fas fa-magic"></i> Animation_IK
+                    </div>
+                    <div class="nav-link" data-target="sys-network">
+                        <i class="fas fa-satellite-dish"></i> Comm_Link
+                    </div>
+                </div>
+
+                <div style="margin-top: auto; font-family: var(--font-code); font-size: 0.55rem; color: var(--pink-soft); opacity: 0.5;">
+                    <p>CANVAS_GROUP_STATUS: ACTIVE</p>
+                    <p>GROUP_TRANSPARENCY: 0.0</p>
+                    <p>ALPHA_NODE: DEPRECATED</p>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+                
+                <!-- PAGE: CORE -->
+                <div class="page-node active" id="sys-core">
+                    <h1 class="cinematic-title">Architect of<br>Digital Worlds.</h1>
+                    <span class="cinematic-subtitle">Fluidity • Glassmorphism • Precision</span>
+                    
+                    <div class="bento-grid">
+                        <div class="bento-card" style="grid-column: span 8;">
+                            <h3 style="font-family: var(--font-cinematic); font-size: 1.5rem; color: #fff; margin-bottom: 10px;">The Methodology</h3>
+                            <p style="font-size: 0.9rem; line-height: 1.7; color: var(--pink-soft);">
+                                Engineering immersive Roblox experiences requires more than code—it demands a cinematic approach. 
+                                By abandoning deprecated logic and focusing on advanced rendering techniques, fluid GSAP-style transitions, and 
+                                complex spatial queries, I build systems that feel alive.
+                            </p>
+                            <div class="tag-group">
+                                <span class="tag">Luau Architecture</span>
+                                <span class="tag">Directional UI Flows</span>
+                                <span class="tag">Combat Frameworks</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bento-card interactive-hover" style="grid-column: span 4; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                            <i class="fas fa-crown" style="font-size: 2.5rem; color: var(--pink-neon); margin-bottom: 15px;"></i>
+                            <h4 style="font-family: var(--font-code); color: #fff;">Candy Network</h4>
+                            <p style="font-size: 0.7rem; opacity: 0.7; margin-top: 5px;">Global Leaderboard Active</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE: FRAMEWORKS -->
+                <div class="page-node" id="sys-frameworks">
+                    <h1 class="cinematic-title" style="font-size: 3.5rem;">Modular Systems.</h1>
+                    <span class="cinematic-subtitle">DataStore • Automation • Combat</span>
+                    
+                    <div class="bento-grid">
+                        <div class="bento-card" style="grid-column: span 6;">
+                            <h3 style="font-family: var(--font-ui); color: #fff; margin-bottom: 8px;">AnimationFlow Pro</h3>
+                            <p style="font-size: 0.8rem; color: var(--pink-soft);">A bespoke Roblox Studio plugin featuring a flawless Glassmorphism interface. Automates script generation and animation linking natively.</p>
+                            <div class="tag-group"><span class="tag">Plugin Dev</span><span class="tag">Widget UI</span></div>
+                        </div>
+                        <div class="bento-card" style="grid-column: span 6;">
+                            <h3 style="font-family: var(--font-ui); color: #fff; margin-bottom: 8px;">Toji Combat Module</h3>
+                            <p style="font-size: 0.8rem; color: var(--pink-soft);">Battlegrounds-style logic. Sequence-based 4-hit combos utilizing spatial query hitboxes and visual debug blocks.</p>
+                            <div class="tag-group"><span class="tag">Server Validation</span><span class="tag">Hitbox Arrays</span></div>
+                        </div>
+                        <div class="bento-card" style="grid-column: span 12;">
+                            <h3 style="font-family: var(--font-ui); color: #fff; margin-bottom: 8px;">Dynamic NPC Branching (RigDude & Juh)</h3>
+                            <p style="font-size: 0.8rem; color: var(--pink-soft);">
+                                Advanced interactive proximity systems utilizing BillboardGuis, typing effect algorithms, and camera tracking.
+                            </p>
+                            <button class="choice-btn" id="trigger-npc" style="margin-top: 15px; border-color: var(--pink-neon);">Initialize Dialogue Test</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE: VISUALS -->
+                <div class="page-node" id="sys-visuals">
+                    <h1 class="cinematic-title" style="font-size: 3.5rem;">Kinematics & UI.</h1>
+                    <span class="cinematic-subtitle">Blender • VR Support • Glass</span>
+                    
+                    <div class="bento-grid">
+                        <div class="bento-card" style="grid-column: span 12;">
+                            <h3 style="font-family: var(--font-ui); color: #fff; margin-bottom: 8px;">VR Integration & Inverse Kinematics</h3>
+                            <p style="font-size: 0.85rem; line-height: 1.6; color: var(--pink-soft);">
+                                Engineered a modular full-body tracking system. By routing calculations through spatial math 
+                                (bypassing invalid native SetUserCFrame calls), limb replication achieves 1:1 parity with networked server states. 
+                                Includes diegetic in-world glass panels.
+                            </p>
+                            <div class="tag-group">
+                                <span class="tag">VRService</span>
+                                <span class="tag">Inverse Kinematics (IK)</span>
+                                <span class="tag">Diegetic UI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE: NETWORK -->
+                <div class="page-node" id="sys-network">
+                    <h1 class="cinematic-title" style="font-size: 3.5rem;">Establish Link.</h1>
+                    <span class="cinematic-subtitle">Comm_Channels</span>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px; max-width: 400px;">
+                        <div class="bento-card interactive-hover" style="display: flex; align-items: center; gap: 20px; padding: 20px;">
+                            <i class="fab fa-discord" style="font-size: 2rem; color: #fff;"></i>
+                            <div>
+                                <h4 style="color: #fff; font-family: var(--font-ui);">Discord Gateway</h4>
+                                <p style="font-size: 0.7rem; color: var(--pink-soft); font-family: var(--font-code);">@Uh._._.</p>
+                            </div>
+                        </div>
+                        <div class="bento-card interactive-hover" style="display: flex; align-items: center; gap: 20px; padding: 20px;">
+                            <i class="fas fa-gamepad" style="font-size: 2rem; color: #fff;"></i>
+                            <div>
+                                <h4 style="color: #fff; font-family: var(--font-ui);">Roblox Node</h4>
+                                <p style="font-size: 0.7rem; color: var(--pink-soft); font-family: var(--font-code);">ID: 1803582764</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-        <div class="glass-card">
-          <p style="font-weight:700; font-size:1.1rem; color:#fff; margin-bottom:10px;">> sys.about() ✦</p>
-          <p style="font-size:0.85rem; line-height:1.7; color:var(--text-dim);">
-            I engineer dark, immersive Roblox experiences. Specializing in highly fluid, direction-based UI animations, advanced combat frameworks, and flawless glassmorphism logic. Every script is lethal. Every frame is intentional.
-          </p>
-          <div style="margin-top:20px; display:flex; gap:8px; flex-wrap:wrap;">
-            <span class="tag">Lua // Luau</span>
-            <span class="tag">Blender IK</span>
-            <span class="tag">UI/UX</span>
-            <span class="tag">Glassmorphism</span>
-          </div>
+        <!-- Terminal Module -->
+        <div id="terminal-sys">
+            <div class="term-header">
+                <span>UwU_Term v2.4</span>
+                <span id="term-time">00:00:00</span>
+            </div>
+            <div class="term-body" id="term-output">
+                <span style="color: var(--pink-soft);">> CanvasGroup engine loaded.</span>
+                <span style="color: rgba(255,105,180,0.6);">> Note: Applying GroupTransparency...</span>
+            </div>
+            <div class="term-input-wrapper">
+                <span style="color: var(--pink-neon);">root@uwu:~#</span>
+                <input type="text" class="term-input" id="term-input" autocomplete="off" spellcheck="false">
+            </div>
         </div>
-      </div>
-
-      <!-- SKILLS -->
-      <div class="content-pane" id="pane-skills">
-        <div class="pane-header">
-          <h2 class="pane-title">Capabilities</h2>
-          <p class="pane-subtitle">Technical Matrix</p>
-        </div>
-        <div class="glass-card">
-          <div style="margin-bottom:20px;">
-            <div style="display:flex; justify-content:space-between; font-family:var(--mono); font-size:0.75rem;"><span>Luau / Frameworks</span><span style="color:var(--accent)">95%</span></div>
-            <div class="skill-bar"><div class="skill-fill" data-w="95"></div></div>
-          </div>
-          <div style="margin-bottom:20px;">
-            <div style="display:flex; justify-content:space-between; font-family:var(--mono); font-size:0.75rem;"><span>UI / Directional Fluidity</span><span style="color:var(--accent)">90%</span></div>
-            <div class="skill-bar"><div class="skill-fill" data-w="90"></div></div>
-          </div>
-          <div style="margin-bottom:20px;">
-            <div style="display:flex; justify-content:space-between; font-family:var(--mono); font-size:0.75rem;"><span>Blender / Animation</span><span style="color:var(--accent)">85%</span></div>
-            <div class="skill-bar"><div class="skill-fill" data-w="85"></div></div>
-          </div>
-          <p style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); margin-top:20px;">// core architecture loaded.</p>
-        </div>
-      </div>
-
-      <!-- WORK -->
-      <div class="content-pane" id="pane-work">
-        <div class="pane-header">
-          <h2 class="pane-title">Archives</h2>
-          <p class="pane-subtitle">Visual Data</p>
-        </div>
-        <div class="glass-card" style="text-align:center; padding:50px;">
-          <i class="fas fa-database" style="font-size:3rem; color:var(--accent); margin-bottom:20px; text-shadow:var(--neon-glow)"></i>
-          <p style="font-family:var(--mono); font-size:0.8rem; color:var(--text-dim);">Directory empty or encrypted.<br>Awaiting clearance...</p>
-        </div>
-      </div>
-
-      <!-- LINKS -->
-      <div class="content-pane" id="pane-links">
-        <div class="pane-header">
-          <h2 class="pane-title">Network</h2>
-          <p class="pane-subtitle">External Comm Links</p>
-        </div>
-        <a class="social-link" href="#" target="_blank"><i class="fab fa-discord"></i> Discord: @Uh._._.</a>
-        <a class="social-link" href="https://discord.gg/QJfTJjtYJJ" target="_blank"><i class="fas fa-server"></i> Server Access</a>
-        <a class="social-link" href="https://www.roblox.com/users/1803582764/profile" target="_blank"><i class="fas fa-gamepad"></i> Roblox Node</a>
-      </div>
 
     </div>
 
-    <!-- Music Player -->
-    <div id="musicPlayer">
-      <div style="display:flex; gap:14px; align-items:center;">
-        <div class="vinyl-record" id="vinylRecord"><div class="vinyl-center"></div></div>
-        <div style="flex:1;">
-          <div style="font-family:var(--mono); font-size:0.7rem; color:#fff; font-weight:700">Dark Track.mp3</div>
-          <div style="font-family:var(--mono); font-size:0.5rem; color:var(--accent); margin-top:2px;" id="trackState">⏸ OFFLINE</div>
-          <div style="display:flex; gap:8px; margin-top:8px;">
-            <button class="top-btn" style="width:24px; height:24px; font-size:0.6rem;"><i class="fas fa-backward"></i></button>
-            <button class="top-btn" id="playBtn" style="width:24px; height:24px; font-size:0.6rem; color:var(--accent); border-color:var(--accent)"><i class="fas fa-play"></i></button>
-            <button class="top-btn" style="width:24px; height:24px; font-size:0.6rem;"><i class="fas fa-forward"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- ═════ CORE LOGIC & ENGINE ═════ -->
+    <script>
+        (function() {
+            'use strict';
 
-    <!-- CMD Palette -->
-    <div id="cmdPalette">
-      <div class="cmd-input-wrap">
-        <span style="color:var(--accent); font-weight:bold;">></span>
-        <input type="text" id="cmdInput" placeholder="execute script..." autocomplete="off">
-      </div>
-      <div id="cmdList" style="max-height: 250px; overflow-y: auto;"></div>
-    </div>
+            // ─── SECURITY & ANTI-TAMPER ─────────────────────────────
+            const shield = document.getElementById('sec-shield');
+            const prevent = (e) => e.preventDefault();
+            
+            // Block Context Menu & Keys
+            document.addEventListener('contextmenu', prevent);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) {
+                    prevent(e); triggerBreach();
+                }
+            });
 
-    <!-- Modal for Easter Eggs -->
-    <div id="customModal">
-      <div class="modal-box">
-        <h3 style="color:var(--accent); margin-bottom:10px; border-bottom:1px solid var(--accent); padding-bottom:10px;" id="modalTitle">Alert</h3>
-        <div id="modalBody" style="font-size:0.8rem; line-height:1.5; color:var(--text-dim);">...</div>
-        <button class="top-btn" style="margin-top:20px; width:100%; border-color:var(--accent); color:var(--accent)" onclick="closeModal()">Close</button>
-      </div>
-    </div>
+            function triggerBreach() {
+                shield.classList.add('breach');
+                setTimeout(() => shield.classList.remove('breach'), 3000);
+            }
 
-  </div>
+            // Debugger Trap
+            setInterval(() => {
+                const before = new Date().getTime();
+                debugger;
+                const after = new Date().getTime();
+                if (after - before > 100) triggerBreach();
+            }, 2000);
 
-  <script>
-    (function() {
-      'use strict';
+            // Console Overwrite
+            console.log = console.warn = console.error = () => {
+                setTimeout(console.clear.bind(console));
+                return "UNAUTHORIZED";
+            };
 
-      // Custom Cursor
-      const cursor = document.getElementById('cursor');
-      document.addEventListener('mousemove', e => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-      });
-      document.addEventListener('mouseover', e => {
-        const isHoverable = e.target.closest('button, a, .nav-item, .ctx-item, .glass-card, input');
-        cursor.classList.toggle('hover', !!isHoverable);
-      });
+            // ─── PHYSICS CURSOR ────────────────────────────────────
+            const dot = document.getElementById('cursor-dot');
+            const ring = document.getElementById('cursor-ring');
+            let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+            let ringPos = { x: window.innerWidth/2, y: window.innerHeight/2 };
 
-      // Context Menu
-      const ctxMenu = document.getElementById('contextMenu');
-      document.addEventListener('contextmenu', e => {
-        e.preventDefault();
-        ctxMenu.style.display = 'block';
-        
-        let x = e.clientX, y = e.clientY;
-        const rect = ctxMenu.getBoundingClientRect();
-        if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width - 10;
-        if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - 10;
-        
-        ctxMenu.style.left = x + 'px';
-        ctxMenu.style.top = y + 'px';
-        gsap.to(ctxMenu, { opacity: 1, duration: 0.15, ease: "power2.out" });
-      });
-      document.addEventListener('click', e => {
-        if (!e.target.closest('#contextMenu')) {
-          gsap.to(ctxMenu, { opacity: 0, duration: 0.1, onComplete: () => ctxMenu.style.display = 'none' });
-        }
-      });
-      
-      document.getElementById('ctxHome').addEventListener('click', () => { activatePane('home'); ctxMenu.style.display='none'; });
-      document.getElementById('ctxCmd').addEventListener('click', () => { toggleCmdPalette(); ctxMenu.style.display='none'; });
-      document.getElementById('ctxGlitch').addEventListener('click', () => { doGlitch(); ctxMenu.style.display='none'; });
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX; mouse.y = e.clientY;
+                dot.style.transform = `translate(calc(${mouse.x}px - 50%), calc(${mouse.y}px - 50%))`;
+                handleComboHit(); // Integrate combo system click tracking (using movement as reset if needed)
+            });
 
-      function doGlitch() {
-        const flash = document.getElementById('screenFlash');
-        gsap.fromTo(flash, {opacity: 0.8}, {opacity: 0, duration: 0.3, ease: "power4.out"});
-        gsap.to('body', {x: 5, y: -5, duration: 0.05, yoyo: true, repeat: 5});
-      }
+            // Smooth spring physics for ring
+            gsap.ticker.add(() => {
+                const dt = 1.0 - Math.pow(0.8, gsap.ticker.deltaRatio());
+                ringPos.x += (mouse.x - ringPos.x) * (dt * 0.3);
+                ringPos.y += (mouse.y - ringPos.y) * (dt * 0.3);
+                ring.style.left = ringPos.x + 'px';
+                ring.style.top = ringPos.y + 'px';
+            });
 
-      // Intro Sequence
-      const logs = ["bypassing firewall...", "loading aesthetic matrix...", "compiling Luau scripts...", "verifying GroupTransparency...", "access granted."];
-      let logIndex = 0;
-      const logEl = document.getElementById('sysLog');
-      
-      const bootInterval = setInterval(() => {
-        if(logIndex < logs.length) {
-          logEl.textContent = logs[logIndex++];
-        }
-      }, 500);
+            document.querySelectorAll('.nav-link, .bento-card, .choice-btn, input').forEach(el => {
+                el.addEventListener('mouseenter', () => ring.classList.add('active'));
+                el.addEventListener('mouseleave', () => ring.classList.remove('active'));
+            });
 
-      gsap.to('#hackerFill', { width: '100%', duration: 2.5, ease: 'power2.inOut', onComplete: () => {
-        clearInterval(bootInterval);
-        gsap.to('#introScreen', { opacity: 0, scale: 1.1, duration: 0.5, ease: 'power3.in', onComplete: () => {
-          document.getElementById('introScreen').style.display = 'none';
-          launchMain();
-        }});
-      }});
+            // 3D Card Hover Tilt
+            document.querySelectorAll('.bento-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                    card.style.setProperty('--mx', `${x}px`);
+                    card.style.setProperty('--my', `${y}px`);
+                });
+            });
 
-      // 3D Scene
-      let scene, cam, ren, heartMat, heartMesh;
-      function init3D() {
-        scene = new THREE.Scene();
-        // Void Dark Background
-        scene.background = null; 
-        cam = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-        ren = new THREE.WebGLRenderer({ canvas: document.getElementById('threeCanvas'), antialias: true, alpha: true });
-        ren.setSize(window.innerWidth, window.innerHeight);
-        ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        cam.position.z = 20;
+            // ─── CINEMATIC THREE.JS BACKGROUND ───────────────────────
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.getElementById('webgl-container').appendChild(renderer.domElement);
 
-        const shape = new THREE.Shape();
-        shape.moveTo(0, 0);
-        shape.bezierCurveTo(0, -3, -5, -3, -5, 0);
-        shape.bezierCurveTo(-5, 3, -2.5, 6, 0, 8);
-        shape.bezierCurveTo(2.5, 6, 5, 3, 5, 0);
-        shape.bezierCurveTo(5, -3, 0, -3, 0, 0);
+            // Custom Particle Shader Material (Cinematic Bloom/Glow)
+            const particleCount = 15000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            
+            for(let i=0; i<particleCount*3; i+=3) {
+                positions[i] = (Math.random() - 0.5) * 40;
+                positions[i+1] = (Math.random() - 0.5) * 40;
+                positions[i+2] = (Math.random() - 0.5) * 40 - 10;
+                sizes[i/3] = Math.random() * 2.0;
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-        const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.5, bevelEnabled: true, bevelThickness: 0.2 });
-        // Neon Pink Wireframe
-        heartMat = new THREE.MeshBasicMaterial({ color: 0xff0055, wireframe: true, transparent: true, opacity: 0.3 });
-        heartMesh = new THREE.Mesh(geo, heartMat);
-        heartMesh.rotation.z = Math.PI;
-        scene.add(heartMesh);
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uColor1: { value: new THREE.Color(0xffb6c1) }, // Soft Pink
+                    uColor2: { value: new THREE.Color(0xff1493) }  // Neon Pink
+                },
+                vertexShader: `
+                    uniform float uTime;
+                    attribute float size;
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        vec3 pos = position;
+                        // Organic floating movement
+                        pos.x += sin(uTime * 0.5 + pos.z) * 0.5;
+                        pos.y += cos(uTime * 0.3 + pos.x) * 0.5;
+                        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                        gl_PointSize = size * (30.0 / -mvPosition.z);
+                        gl_Position = projectionMatrix * mvPosition;
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 uColor1;
+                    uniform vec3 uColor2;
+                    void main() {
+                        // Circular soft particle
+                        float d = distance(gl_PointCoord, vec2(0.5));
+                        if(d > 0.5) discard;
+                        
+                        // Mix colors based on position
+                        vec3 finalColor = mix(uColor1, uColor2, gl_PointCoord.x);
+                        
+                        // Soft edge fade
+                        float alpha = smoothstep(0.5, 0.1, d) * 0.6;
+                        gl_FragColor = vec4(finalColor, alpha);
+                    }
+                `,
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
 
-        // Add Grid lines in 3D
-        const grid = new THREE.GridHelper(100, 40, 0xff0055, 0xff0055);
-        grid.position.y = -10;
-        grid.material.opacity = 0.1;
-        grid.material.transparent = true;
-        scene.add(grid);
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+            camera.position.z = 15;
 
-        (function anim() {
-          requestAnimationFrame(anim);
-          heartMesh.rotation.x += 0.005;
-          heartMesh.rotation.y += 0.008;
-          ren.render(scene, cam);
+            // Parallax group
+            const sceneGroup = new THREE.Group();
+            sceneGroup.add(particles);
+            scene.add(sceneGroup);
+
+            let clock = new THREE.Clock();
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                const t = clock.getElapsedTime();
+                material.uniforms.uTime.value = t;
+                
+                // Mouse parallax
+                const targetX = (mouse.x / window.innerWidth - 0.5) * 2;
+                const targetY = -(mouse.y / window.innerHeight - 0.5) * 2;
+                
+                sceneGroup.rotation.x += (targetY * 0.2 - sceneGroup.rotation.x) * 0.05;
+                sceneGroup.rotation.y += (targetX * 0.2 - sceneGroup.rotation.y) * 0.05;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // ─── INITIALIZATION ANIMATION ────────────────────────────
+            const mainCanvas = document.getElementById('main-canvas');
+            gsap.to(mainCanvas, { 
+                opacity: 1, 
+                duration: 2, 
+                ease: "power3.inOut",
+                onStart: () => {
+                    // Simulating GroupTransparency fade-in
+                    mainCanvas.style.opacity = 0;
+                }
+            });
+
+            // ─── DIRECTIONAL UI TRANSITION ENGINE (BG Rotation Logic) ──
+            // Based on user profile data: "Slot frames use an image named BG for rotation direction"
+            // We map target pages to conceptual "BG rotation vectors" for sliding animations.
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageNodes = document.querySelectorAll('.page-node');
+            
+            // Map of logical rotation vectors for layout mapping
+            const bgRotations = {
+                'sys-core': { x: 0, y: 50 },       // Comes from Bottom
+                'sys-frameworks': { x: 50, y: 0 }, // Comes from Right
+                'sys-visuals': { x: 0, y: -50 },   // Comes from Top
+                'sys-network': { x: -50, y: 0 }    // Comes from Left
+            };
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if(link.classList.contains('active')) return;
+                    
+                    const currentActive = document.querySelector('.nav-link.active');
+                    const targetId = link.getAttribute('data-target');
+                    
+                    currentActive.classList.remove('active');
+                    link.classList.add('active');
+
+                    switchPage(targetId);
+                });
+            });
+
+            function switchPage(targetId) {
+                const current = document.querySelector('.page-node.active');
+                const target = document.getElementById(targetId);
+                const vector = bgRotations[targetId];
+
+                // Exit animation
+                gsap.to(current, {
+                    opacity: 0,
+                    x: -vector.x, // Opposite direction
+                    y: -vector.y,
+                    duration: 0.5,
+                    ease: "power2.in",
+                    onComplete: () => {
+                        current.classList.remove('active');
+                        current.style.transform = "translate(0px, 0px)"; // reset
+                    }
+                });
+
+                // Entry animation
+                target.classList.add('active');
+                gsap.fromTo(target, 
+                    { opacity: 0, x: vector.x, y: vector.y },
+                    { opacity: 1, x: 0, y: 0, duration: 0.7, delay: 0.3, ease: "power3.out" }
+                );
+            }
+
+            // ─── 4-HIT COMBO SYSTEM (Easter Egg) ─────────────────────
+            let comboCount = 0;
+            let comboTimer = null;
+            const nodes = [
+                document.getElementById('c-1'),
+                document.getElementById('c-2'),
+                document.getElementById('c-3'),
+                document.getElementById('c-4')
+            ];
+            const comboAlert = document.getElementById('combo-alert');
+
+            window.addEventListener('click', (e) => {
+                if(e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+                
+                comboCount++;
+                clearTimeout(comboTimer);
+                
+                // Update UI Nodes
+                nodes.forEach((node, idx) => {
+                    if(idx < comboCount) node.classList.add('filled');
+                    else node.classList.remove('filled');
+                });
+
+                // Trigger 4-Hit Finisher
+                if(comboCount === 4) {
+                    comboAlert.style.opacity = 1;
+                    triggerFinisher();
+                    comboCount = 0;
+                    setTimeout(() => {
+                        nodes.forEach(n => n.classList.remove('filled'));
+                        comboAlert.style.opacity = 0;
+                    }, 2000);
+                } else {
+                    comboTimer = setTimeout(() => {
+                        comboCount = 0;
+                        nodes.forEach(n => n.classList.remove('filled'));
+                    }, 800); // 800ms combo window
+                }
+            });
+
+            function triggerFinisher() {
+                // Flash bang effect
+                const flash = document.createElement('div');
+                flash.style.cssText = "position:fixed;inset:0;background:#fff;z-index:99999999;mix-blend-mode:overlay;pointer-events:none;";
+                document.body.appendChild(flash);
+                gsap.to(flash, { opacity: 0, duration: 1, ease: "power4.out", onComplete: () => flash.remove() });
+                
+                // Color shift via uniforms
+                gsap.to(material.uniforms.uColor1.value, { r: 1, g: 0.1, b: 0.5, duration: 0.5, yoyo: true, repeat: 1 });
+                termPrint("SEQUENCE: 4-Hit Aerial Finisher Executed.", "var(--pink-neon)");
+            }
+
+            // ─── NPC DIALOGUE SYSTEM (RigDude / Juh logic) ────────────
+            const dialogueData = {
+                start: {
+                    name: "Juh",
+                    text: "You're utilizing CanvasGroups, aren't you? Remember, GroupAlpha doesn't exist anymore.",
+                    choices: [
+                        { label: "Yeah, I use GroupTransparency.", next: "correct" },
+                        { label: "Wait, what?", next: "confused" }
+                    ]
+                },
+                correct: {
+                    name: "Juh",
+                    text: "Good. Fluidity requires precision. Don't let your UI render weirdly.",
+                    choices: [ { label: "[End Interaction]", next: "end" } ]
+                },
+                confused: {
+                    name: "RigDude",
+                    text: "Hey! Let me step in. If your effects look strange, change it to GroupTransparency. Trust the logs.",
+                    choices: [ { label: "Got it.", next: "end" } ]
+                }
+            };
+
+            const diagOverlay = document.getElementById('dialogue-overlay');
+            const nameEl = document.getElementById('npc-name');
+            const textEl = document.getElementById('npc-text');
+            const choicesEl = document.getElementById('npc-choices');
+            let typeInterval;
+
+            document.getElementById('trigger-npc').addEventListener('click', () => {
+                diagOverlay.style.display = 'block';
+                gsap.to(diagOverlay, { opacity: 1, y: -20, duration: 0.4, ease: "back.out" });
+                loadDialogueNode('start');
+            });
+
+            function loadDialogueNode(nodeId) {
+                if(nodeId === 'end') {
+                    gsap.to(diagOverlay, { opacity: 0, y: 0, duration: 0.3, onComplete: () => diagOverlay.style.display = 'none' });
+                    return;
+                }
+                
+                const node = dialogueData[nodeId];
+                nameEl.textContent = node.name;
+                nameEl.style.color = node.name === 'Juh' ? 'var(--pink-neon)' : 'var(--holo-2)';
+                
+                choicesEl.innerHTML = '';
+                typeText(node.text, () => {
+                    node.choices.forEach(c => {
+                        const btn = document.createElement('button');
+                        btn.className = 'choice-btn';
+                        btn.textContent = c.label;
+                        btn.addEventListener('click', () => loadDialogueNode(c.next));
+                        choicesEl.appendChild(btn);
+                    });
+                });
+            }
+
+            function typeText(str, callback) {
+                clearInterval(typeInterval);
+                textEl.textContent = '';
+                let i = 0;
+                typeInterval = setInterval(() => {
+                    textEl.textContent += str.charAt(i);
+                    i++;
+                    if(i >= str.length) {
+                        clearInterval(typeInterval);
+                        if(callback) callback();
+                    }
+                }, 30); // Typing speed
+            }
+
+            // ─── TERMINAL MODULE ─────────────────────────────────────
+            const termOutput = document.getElementById('term-output');
+            const termInput = document.getElementById('term-input');
+            const termTime = document.getElementById('term-time');
+
+            setInterval(() => {
+                const d = new Date();
+                termTime.textContent = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+            }, 1000);
+
+            function termPrint(msg, color = "#fff") {
+                const span = document.createElement('span');
+                span.style.color = color;
+                span.textContent = msg;
+                termOutput.appendChild(span);
+                termOutput.scrollTop = termOutput.scrollHeight;
+            }
+
+            termInput.addEventListener('keydown', (e) => {
+                if(e.key === 'Enter') {
+                    const val = termInput.value.trim().toLowerCase();
+                    termPrint(`root@uwu:~# ${val}`, 'rgba(255,255,255,0.5)');
+                    termInput.value = '';
+                    
+                    if(val === 'help') {
+                        termPrint("Commands: clear, status, datastore, sysinfo, hack");
+                    } else if (val === 'clear') {
+                        termOutput.innerHTML = '';
+                    } else if (val === 'status') {
+                        termPrint("[OK] VR IK Modules", "var(--pink-soft)");
+                        termPrint("[OK] GlobalCandyLeaderboard Data", "var(--pink-soft)");
+                        termPrint("[OK] AnimationFlow Pro Hook", "var(--pink-soft)");
+                    } else if (val === 'datastore') {
+                        termPrint("Fetching CandyLeaderboard...", "var(--holo-2)");
+                        setTimeout(() => termPrint("1. UwU7u76o6 [9,999 🍬]", "var(--pink-neon)"), 500);
+                        setTimeout(() => termPrint("2. RigDude   [4,250 🍬]", "#fff"), 1000);
+                    } else if (val === 'sysinfo') {
+                        termPrint("UI Engine: GroupTransparency v2");
+                        termPrint("Invalid APIs Bypassed: SetUserCFrame");
+                    } else if (val === 'hack') {
+                        termPrint("Initiating breach protocol...", "var(--pink-hot)");
+                        setTimeout(() => triggerBreach(), 1000);
+                    } else if (val !== '') {
+                        termPrint(`Command not found: ${val}`, "red");
+                    }
+                }
+            });
+
         })();
-
-        window.addEventListener('resize', () => {
-          cam.aspect = window.innerWidth / window.innerHeight;
-          cam.updateProjectionMatrix();
-          ren.setSize(window.innerWidth, window.innerHeight);
-        });
-      }
-
-      function launchMain() {
-        const main = document.getElementById('mainInterface');
-        main.style.display = 'block';
-        gsap.to(main, { opacity: 1, duration: 1 });
-        init3D();
-        setupCmdPalette();
-        doGlitch();
-        
-        // Status typer
-        const states = ["IDLE_", "COMPILING_", "IN STUDIO_", "DESIGNING_"];
-        let sIdx = 0;
-        setInterval(() => {
-          document.getElementById('profileStatus').textContent = states[sIdx++ % states.length];
-        }, 3000);
-      }
-
-      // Navigation Logic (Directional Fluidity)
-      const panes = ['home', 'skills', 'work', 'links'];
-      document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const target = btn.dataset.id;
-          activatePane(target);
-        });
-      });
-
-      function activatePane(id) {
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.id === id));
-        
-        document.querySelectorAll('.content-pane').forEach(pane => {
-          if(pane.id === `pane-${id}`) {
-            pane.classList.add('active');
-            // Trigger skill bars if applicable
-            if(id === 'skills') {
-              setTimeout(() => {
-                pane.querySelectorAll('.skill-fill').forEach(f => f.style.width = f.dataset.w + '%');
-              }, 100);
-            }
-          } else {
-            if(pane.classList.contains('active')) {
-              pane.classList.remove('active');
-              // Reset transform state for re-entry
-              pane.style.transform = 'translateX(40px) rotateY(-5deg)'; 
-              setTimeout(() => pane.style.transform = '', 500);
-            }
-          }
-        });
-      }
-
-      // Command Palette & Easter Eggs
-      const cmdPalette = document.getElementById('cmdPalette');
-      const cmdInput = document.getElementById('cmdInput');
-      const cmdList = document.getElementById('cmdList');
-      
-      const commands = [
-        { label: '/home', desc: 'Return to core architecture', action: () => activatePane('home') },
-        { label: '/fix_canvas', desc: 'Debug GroupTransparency logic', action: () => showModal('Debug Log', 'Adjusting CanvasGroup.GroupTransparency... Bypass successful. GroupAlpha is deprecated.') },
-        { label: '/toji', desc: 'Execute Inverted Spear Sequence', action: () => runTojiFX() },
-        { label: '/candy_lb', desc: 'Fetch GlobalCandyLeaderboard', action: () => showModal('DataStore Fetched', '1. UwU7u76o6 - 9,999 🍬<br>2. RigDude - 4,200 🍬<br>3. Juh - 666 🍬') },
-        { label: '/stats', desc: 'AnimationFlow Pro metrics', action: () => showModal('Plugin Metrics', 'AnimationFlow Pro<br>Status: ACTIVE<br>UI Style: Glassmorphism<br>Generations: 402') }
-      ];
-      let filtered = [], cmdSel = 0;
-
-      function setupCmdPalette() {
-        document.addEventListener('keydown', e => {
-          if((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); toggleCmdPalette(); }
-          if(e.key === '/' && !e.target.closest('input')) { e.preventDefault(); toggleCmdPalette(); }
-          if(e.key === 'Escape' && cmdPalette.classList.contains('open')) closeCmdPalette();
-        });
-        
-        cmdInput.addEventListener('input', () => { filterCmds(); cmdSel = 0; renderCmds(); });
-        cmdInput.addEventListener('keydown', e => {
-          if (e.key === 'ArrowDown') { e.preventDefault(); cmdSel = Math.min(cmdSel + 1, filtered.length - 1); renderCmds(); }
-          if (e.key === 'ArrowUp') { e.preventDefault(); cmdSel = Math.max(cmdSel - 1, 0); renderCmds(); }
-          if (e.key === 'Enter') { e.preventDefault(); if (filtered[cmdSel]) { filtered[cmdSel].action(); closeCmdPalette(); } }
-        });
-        
-        document.getElementById('terminalBtn').addEventListener('click', toggleCmdPalette);
-      }
-
-      function toggleCmdPalette() {
-        if(cmdPalette.classList.contains('open')) closeCmdPalette();
-        else {
-          cmdPalette.classList.add('open');
-          cmdInput.value = ''; filterCmds(); cmdSel = 0; renderCmds();
-          gsap.fromTo(cmdPalette, {opacity:0, y:-30, scale:0.95}, {opacity:1, y:0, scale:1, duration:0.2, ease:"back.out(1.5)"});
-          setTimeout(() => cmdInput.focus(), 50);
-        }
-      }
-      function closeCmdPalette() {
-        gsap.to(cmdPalette, {opacity:0, y:-20, scale:0.95, duration:0.15, onComplete: () => cmdPalette.classList.remove('open')});
-      }
-
-      function filterCmds() {
-        const q = cmdInput.value.toLowerCase();
-        filtered = commands.filter(c => c.label.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q));
-      }
-      function renderCmds() {
-        cmdList.innerHTML = filtered.map((c, i) => `
-          <div class="cmd-item ${i===cmdSel ? 'selected' : ''}" data-idx="${i}">
-            <span style="color:var(--accent); width:80px;">${c.label}</span>
-            <span>// ${c.desc}</span>
-          </div>
-        `).join('');
-        cmdList.querySelectorAll('.cmd-item').forEach(item => {
-          item.addEventListener('mouseover', () => { cmdSel = +item.dataset.idx; renderCmds(); });
-          item.addEventListener('click', () => { filtered[+item.dataset.idx].action(); closeCmdPalette(); });
-        });
-      }
-
-      // Special Functions
-      function runTojiFX() {
-        // Simulates a combo hit slash screen effect
-        doGlitch();
-        heartMat.color.setHex(0x9d00ff); // Purple vibe
-        setTimeout(() => heartMat.color.setHex(0xff0055), 1500);
-        
-        const slash = document.createElement('div');
-        slash.style.cssText = "position:fixed; top:50%; left:-20%; width:140%; height:4px; background:#fff; box-shadow:0 0 20px #9d00ff; z-index:999999; transform:rotate(-15deg); pointer-events:none;";
-        document.body.appendChild(slash);
-        gsap.fromTo(slash, {scaleX:0, opacity:1}, {scaleX:1, opacity:0, duration:0.4, ease:"power4.in", onComplete:()=>slash.remove()});
-      }
-
-      window.showModal = function(title, bodyText) {
-        document.getElementById('modalTitle').textContent = title;
-        document.getElementById('modalBody').innerHTML = bodyText;
-        const m = document.getElementById('customModal');
-        m.style.display = 'flex';
-        gsap.fromTo(m, {opacity:0}, {opacity:1, duration:0.2});
-      }
-      window.closeModal = function() {
-        const m = document.getElementById('customModal');
-        gsap.to(m, {opacity:0, duration:0.15, onComplete:() => m.style.display = 'none'});
-      }
-
-      // Mini Music Player Interaction
-      const playBtn = document.getElementById('playBtn');
-      const trackState = document.getElementById('trackState');
-      const vinyl = document.getElementById('vinylRecord');
-      let playing = false;
-      playBtn.addEventListener('click', () => {
-        playing = !playing;
-        playBtn.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
-        trackState.textContent = playing ? '▶ SYNCED' : '⏸ OFFLINE';
-        trackState.style.color = playing ? '#00ff88' : 'var(--accent)';
-        if(playing) gsap.to(vinyl, {rotation: 360, duration: 2, repeat: -1, ease: 'none'});
-        else gsap.killTweensOf(vinyl);
-      });
-
-      // Heart/Visual toggle via footer
-      document.getElementById('fxBtn').addEventListener('click', doGlitch);
-      
-    })();
-  </script>
+    </script>
 </body>
 </html>
