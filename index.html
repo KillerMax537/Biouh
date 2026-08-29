@@ -6,6 +6,7 @@
   <meta name="description" content="✦ uh… ✦ — dev, animator & designer.">
   <title>✦ uh… ✦ // dev.cafe</title>
 
+  <!-- Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -16,10 +17,8 @@
       --bg: #0d0205;
       --bg-light: #1a050a;
       
-      /* 3D Glass Colors */
-      --window-bg: rgba(22, 4, 9, 0.55);
+      --window-bg: rgba(22, 4, 9, 0.4);
       --card-bg: linear-gradient(135deg, rgba(255, 94, 126, 0.08), rgba(0, 0, 0, 0.4));
-      --sidebar-bg: linear-gradient(180deg, rgba(18, 3, 7, 0.8), rgba(10, 1, 3, 0.9));
 
       --text: #ffe6ed;
       --text-dim: #ffb3c6;
@@ -28,10 +27,8 @@
       --accent2: #ff5e7e;
       --accent3: #ff8da1;
 
-      /* 3D Borders & Shadows */
       --glass-top: rgba(255, 141, 161, 0.3);
       --glass-bottom: rgba(0, 0, 0, 0.8);
-      --glass-border: rgba(255, 94, 126, 0.15);
       
       --glow: 0 0 15px rgba(255, 94, 126, 0.3), inset 0 0 10px rgba(255, 20, 147, 0.1);
       --glow-strong: 0 0 25px rgba(255, 20, 147, 0.6);
@@ -42,24 +39,25 @@
       --sans: 'Quicksand', sans-serif;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ANTI-THEFT CSS */
+    * { 
+      margin: 0; padding: 0; box-sizing: border-box; 
+      -webkit-user-drag: none; /* Block image dragging */
+    }
 
     html, body {
       width: 100%; height: 100%; overflow: hidden;
       background: var(--bg); color: var(--text);
-      font-family: var(--sans); user-select: none;
+      font-family: var(--sans); 
+      user-select: none; -webkit-user-select: none; /* Block text selection */
       -webkit-tap-highlight-color: transparent;
-      perspective: 1200px; /* Global perspective for 3D */
+      perspective: 1200px;
     }
 
-    /* ═════ PERFORMANCE CANVAS BACKGROUND ═════ */
     #bgCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    /* ═════ CUSTOM CURSOR & TRAILS ═════ */
-    @media(pointer:fine) {
-      html { cursor: none; }
-      a, button, input, .nav-item, .social-link, .tag, .fx-btn, .wg-thumb, .wg-arrow, .wg-featured, .wg-expand-btn, .lightbox-close, .lightbox-nav, .cmd-item, .ctrl-btn, .top-btn, .mnav-btn, .filter-chip, .copy-btn { cursor: none; }
-    }
+    /* ═════ CUSTOM CURSOR ═════ */
+    @media(pointer:fine) { html, a, button, input, .dock-item, .wg-thumb { cursor: none !important; } }
 
     #cursor {
       position: fixed; width: 6px; height: 6px; background: #fff;
@@ -80,17 +78,11 @@
       position: fixed; pointer-events: none; z-index: 9999996;
       color: var(--accent3); font-size: 0.8rem;
       animation: burstFly 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-      text-shadow: 0 0 10px var(--accent);
+      text-shadow: 0 0 10px var(--accent); will-change: transform, opacity;
     }
     @keyframes burstFly {
       0% { opacity: 1; transform: translate(0, 0) scale(0.5) translateZ(20px); }
       100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.5) translateZ(50px); }
-    }
-
-    .cursor-trail-dot {
-      position: fixed; width: 4px; height: 4px; border-radius: 50%;
-      background: var(--accent2); pointer-events: none; z-index: 9999995;
-      box-shadow: 0 0 6px var(--accent2); transform: translate(-50%, -50%);
     }
 
     /* ═════ ANTI-DEVTOOLS WARNING ═════ */
@@ -101,7 +93,7 @@
       color: var(--accent2); font-family: var(--sans); text-align: center; gap: 20px;
     }
 
-    /* ═════ INTRO SCREEN (3D UPGRADE) ═════ */
+    /* ═════ INTRO SCREEN ═════ */
     #introScreen {
       position: fixed; inset: 0; z-index: 100000;
       background: radial-gradient(circle at center, var(--bg-light), var(--bg));
@@ -114,172 +106,110 @@
     }
     .progress-container { margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 20px; perspective: 600px; }
     
-    /* 3D Gyroscope Loader */
-    .loader-3d {
-      position: relative; width: 70px; height: 70px;
-      display: flex; align-items: center; justify-content: center;
-      transform-style: preserve-3d;
-    }
+    .loader-3d { position: relative; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; }
     .loader-ring {
-      position: absolute; inset: 0; border: 2px solid transparent;
-      border-top-color: var(--accent2); border-radius: 50%;
-      animation: spin3D 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-      box-shadow: 0 10px 20px rgba(255, 94, 126, 0.2);
+      position: absolute; inset: 0; border: 2px solid transparent; border-top-color: var(--accent2); border-radius: 50%;
+      animation: spin3D 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; box-shadow: 0 10px 20px rgba(255, 94, 126, 0.2);
     }
-    .loader-ring.ring2 {
-      border-top-color: transparent; border-bottom-color: var(--accent);
-      animation: spin3D 2s linear infinite reverse;
-    }
-    .glowing-heart {
-      color: var(--accent); font-size: 1.5rem;
-      filter: drop-shadow(0 0 15px var(--accent));
-      animation: pulseHeart 0.8s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .loader-ring.ring2 { border-top-color: transparent; border-bottom-color: var(--accent); animation: spin3D 2s linear infinite reverse; }
+    .glowing-heart { color: var(--accent); font-size: 1.5rem; filter: drop-shadow(0 0 15px var(--accent)); animation: pulseHeart 0.8s infinite alternate cubic-bezier(0.4, 0, 0.2, 1); }
     
     @keyframes spin3D { 0% { transform: rotateX(70deg) rotateZ(0deg); } 100% { transform: rotateX(70deg) rotateZ(360deg); } }
     @keyframes pulseHeart { 0% { transform: scale(0.8) translateZ(10px); } 100% { transform: scale(1.1) translateZ(30px); } }
     
     .progress-percent { font-family: var(--mono); font-size: 0.75rem; color: #fff; letter-spacing: 3px; text-shadow: 0 0 10px var(--accent); }
 
-    /* ═════ MAIN INTERFACE (FLOATING OS WINDOW) ═════ */
+    /* ═════ MAIN INTERFACE ═════ */
     #mainInterface {
-      position: absolute;
-      top: 50%; left: 50%;
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0.95);
-      width: 94vw; height: 92vh; max-width: 1500px;
-      display: none; opacity: 0;
-      border-radius: 30px;
-      background: var(--window-bg);
-      backdrop-filter: blur(25px) saturate(120%);
-      border-top: 1px solid var(--glass-top);
-      border-left: 1px solid rgba(255,255,255,0.1);
-      border-bottom: 1px solid var(--glass-bottom);
-      border-right: 1px solid rgba(0,0,0,0.4);
+      width: 96vw; height: 94vh; max-width: 1600px;
+      display: none; opacity: 0; border-radius: 30px;
+      background: var(--window-bg); backdrop-filter: blur(25px) saturate(120%);
+      border-top: 1px solid var(--glass-top); border-left: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid var(--glass-bottom); border-right: 1px solid rgba(0,0,0,0.4);
       box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,94,126,0.05);
-      overflow: hidden;
-      transform-style: preserve-3d;
+      overflow: hidden; display: flex; flex-direction: column; transform-style: preserve-3d;
     }
-    
+    @media(max-width:850px) { #mainInterface { width: 100vw; height: 100vh; border-radius: 0; border: none; } }
+
     body.rainbow-mode #mainInterface { animation: rainbowHue 3s linear infinite; }
     @keyframes rainbowHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
     body.party-mode #mainInterface { animation: partyPulse 0.9s ease-in-out infinite; }
     @keyframes partyPulse { 0%, 100% { filter: saturate(1); } 50% { filter: saturate(1.7) brightness(1.12); } }
 
-    /* SIDEBAR (3D Inset) */
-    #sidebar {
-      width: 280px; background: var(--sidebar-bg);
-      border-right: 1px solid rgba(0,0,0,0.5);
-      box-shadow: 10px 0 30px rgba(0,0,0,0.4), inset -1px 0 1px rgba(255,255,255,0.05);
-      z-index: 50; display: flex; flex-direction: column; padding: 40px 0;
-      transition: width 0.3s;
+    /* ═════ TOP BAR (Profile & Actions) ═════ */
+    #topBar {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 30px 40px 0; z-index: 100; pointer-events: none;
     }
-    @media(max-width:850px) { #sidebar { display: none; } #mobileNav { display: flex !important; } #mainInterface { width: 100vw; height: 100vh; border-radius: 0; border: none; } }
-
-    .sidebar-header { padding: 0 24px 25px; border-bottom: 1px solid rgba(0,0,0,0.4); box-shadow: 0 5px 10px rgba(0,0,0,0.1); text-align: center; }
-    .sidebar-logo h1 { font-family: var(--cursive); font-size: 3.2rem; color: #fff; text-shadow: var(--glow-strong), 0 5px 5px rgba(0,0,0,0.5); }
-    .sidebar-logo .sub { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 4px; color: var(--accent3); text-transform: uppercase; margin-top: 5px; }
-
-    .sidebar-profile { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 25px; }
-    .sidebar-pfp {
-      width: 80px; height: 80px; border-radius: 50%;
-      border: 3px solid var(--accent2);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.8);
-      background: #1a050a url('assets/pfp.gif') center/cover;
-      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    .profile-widget {
+      pointer-events: auto; display: flex; align-items: center; gap: 15px;
+      background: linear-gradient(135deg, rgba(255,94,126,0.1), rgba(0,0,0,0.3));
+      padding: 10px 25px 10px 10px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+      transition: transform 0.3s;
     }
-    .sidebar-pfp:hover { transform: scale(1.15) rotate(8deg) translateZ(20px); border-color: #fff; box-shadow: var(--glow-strong); }
-    .sidebar-status { font-family: var(--mono); font-size: 0.55rem; color: var(--accent2); opacity: 0.9; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-
-    .nav-items { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 30px 20px; }
-    .nav-item {
-      display: flex; align-items: center; gap: 15px; padding: 14px 20px;
-      border-radius: 15px; color: var(--text-dim); font-family: var(--sans);
-      font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-      background: rgba(0,0,0,0.2); border: 1px solid transparent;
-      border-top: 1px solid rgba(255,255,255,0.03);
-      border-bottom: 1px solid rgba(0,0,0,0.5);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      width: 100%; text-align: left; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-      position: relative; overflow: hidden;
+    .profile-widget:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--glow); border-color: rgba(255,255,255,0.3); }
+    .top-pfp {
+      width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent2);
+      background: url('assets/pfp.gif') center/cover; cursor: none;
     }
-    .nav-item i { font-size: 1.1rem; color: var(--accent2); width: 20px; text-align: center; transition: 0.3s; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
-    
-    .nav-item:hover, .nav-item.active {
-      color: #fff; background: rgba(255,20,147,0.15);
-      border-top-color: rgba(255, 94, 126, 0.4); border-bottom-color: transparent;
-      box-shadow: inset 0 0 15px rgba(255,94,126,0.2), 0 5px 15px rgba(0,0,0,0.4);
-      transform: translateY(-2px);
-    }
-    .nav-item:active { transform: translateY(1px); box-shadow: inset 0 5px 10px rgba(0,0,0,0.4); }
-    .nav-item:hover i, .nav-item.active i { color: #fff; transform: scale(1.2) translateZ(10px); text-shadow: var(--glow-strong); }
+    .top-info h1 { font-family: var(--cursive); font-size: 1.6rem; color: #fff; text-shadow: var(--glow); line-height: 1; }
+    .top-info .status { font-family: var(--mono); font-size: 0.55rem; color: var(--accent3); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
 
-    .sidebar-footer { padding: 20px 24px 0; display: flex; justify-content: center; gap: 15px; }
+    .actions-widget { pointer-events: auto; display: flex; gap: 15px; }
     .top-btn {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: linear-gradient(135deg, rgba(255,94,126,0.1), rgba(0,0,0,0.4));
+      width: 45px; height: 45px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.4));
       border-top: 1px solid var(--glass-top); border-bottom: 1px solid rgba(0,0,0,0.6);
-      box-shadow: 0 8px 15px rgba(0,0,0,0.4); color: var(--accent2);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.4); color: var(--accent2); font-size: 1rem;
       display: flex; align-items: center; justify-content: center; transition: 0.3s;
     }
-    .top-btn:hover { background: var(--accent); color: #fff; box-shadow: var(--glow-strong), 0 10px 20px rgba(0,0,0,0.5); transform: translateY(-4px) translateZ(10px); }
+    .top-btn:hover { background: var(--accent); color: #fff; box-shadow: var(--glow-strong); transform: translateY(-4px); }
 
-    /* CONTENT AREA */
+    /* ═════ CENTRAL CONTENT AREA ═════ */
     #contentArea { flex: 1; position: relative; z-index: 10; overflow: hidden; perspective: 1000px; }
     .content-pane {
-      position: absolute; inset: 0; overflow-y: auto; padding: 60px 100px;
+      position: absolute; inset: 0; overflow-y: auto; padding: 40px 10%;
+      padding-bottom: 150px; /* Space for dock */
       opacity: 0; pointer-events: none; scrollbar-width: none;
       transform: translateY(40px) translateZ(-50px) rotateX(-5deg);
       transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     .content-pane.active { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0); pointer-events: auto; }
-    @media(max-width:850px) { .content-pane { padding: 40px 25px 120px; } }
+    @media(max-width:850px) { .content-pane { padding: 30px 25px 150px; } }
 
-    .pane-title { font-family: var(--cursive); font-size: 4rem; color: #fff; text-shadow: var(--glow-strong), 3px 5px 10px rgba(0,0,0,0.6); margin-bottom: 5px; min-height: 1.2em; transform: translateZ(30px); }
-    .pane-subtitle { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 5px; color: var(--accent3); text-transform: uppercase; margin-bottom: 40px; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+    .pane-title { font-family: var(--cursive); font-size: 4.5rem; color: #fff; text-shadow: var(--glow-strong), 3px 5px 10px rgba(0,0,0,0.6); margin-bottom: 5px; text-align: center; }
+    .pane-subtitle { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 5px; color: var(--accent3); text-transform: uppercase; margin-bottom: 40px; text-shadow: 0 2px 5px rgba(0,0,0,0.8); text-align: center; }
 
     /* 3D Glass Cards */
     .glass-card {
-      background: var(--card-bg);
-      border-top: 1px solid var(--glass-top);
-      border-left: 1px solid rgba(255, 94, 126, 0.15);
-      border-right: 1px solid rgba(0,0,0,0.4);
-      border-bottom: 1px solid var(--glass-bottom);
-      border-radius: 25px; padding: 35px;
-      box-shadow: var(--shadow-3d);
-      backdrop-filter: blur(15px); margin-bottom: 25px;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-style: preserve-3d; will-change: transform;
+      background: var(--card-bg); border-top: 1px solid var(--glass-top);
+      border-left: 1px solid rgba(255, 94, 126, 0.15); border-right: 1px solid rgba(0,0,0,0.4); border-bottom: 1px solid var(--glass-bottom);
+      border-radius: 25px; padding: 35px; box-shadow: var(--shadow-3d);
+      backdrop-filter: blur(15px); margin-bottom: 25px; transition: all 0.4s; transform-style: preserve-3d;
     }
-    .glass-card:hover { border-color: rgba(255,255,255,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.8), inset 2px 2px 10px rgba(255,255,255,0.1), var(--glow); }
+    .glass-card:hover { border-color: rgba(255,255,255,0.3); box-shadow: 0 25px 50px rgba(0,0,0,0.8), inset 2px 2px 10px rgba(255,255,255,0.1), var(--glow); }
 
     .stat-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; transform-style: preserve-3d; }
     .stat-box {
-      flex: 1; min-width: 90px;
-      background: linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(0,0,0,0.6));
+      flex: 1; min-width: 90px; background: linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(0,0,0,0.6));
       border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(0,0,0,0.8);
-      border-radius: 20px; padding: 20px; text-align: center;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 2px 5px rgba(0,0,0,0.3);
-      transition: 0.3s;
+      border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s;
     }
     .stat-box:hover { transform: translateY(-5px) scale(1.05) translateZ(20px); border-top-color: var(--accent2); box-shadow: 0 15px 30px rgba(0,0,0,0.7), var(--glow); }
-    .stat-box.floaty { animation: floaty 4s ease-in-out infinite alternate; }
-    @keyframes floaty { 0% { transform: translateY(0) rotateX(2deg); } 100% { transform: translateY(-8px) rotateX(-2deg); } }
-    .stat-num { font-family: var(--cursive); font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px var(--accent), 0 5px 10px rgba(0,0,0,0.8); transform: translateZ(10px); }
+    .stat-num { font-family: var(--cursive); font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px var(--accent), 0 5px 10px rgba(0,0,0,0.8); }
     .stat-label { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
 
-    .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; transform: translateZ(10px); }
-    .tag {
-      padding: 8px 18px; border-top: 1px solid var(--glass-top); border-bottom: 1px solid rgba(0,0,0,0.5);
-      border-radius: 30px; font-size: 0.65rem; font-family: var(--mono); color: #fff;
-      background: rgba(0,0,0,0.4); box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-      transition: 0.3s; letter-spacing: 1px;
-    }
-    .tag:hover { background: var(--accent); transform: translateY(-3px) translateZ(10px); box-shadow: var(--glow-strong), 0 8px 15px rgba(0,0,0,0.5); }
+    .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; }
+    .tag { padding: 8px 18px; border-top: 1px solid var(--glass-top); border-bottom: 1px solid rgba(0,0,0,0.5); border-radius: 30px; font-size: 0.65rem; font-family: var(--mono); color: #fff; background: rgba(0,0,0,0.4); box-shadow: 0 5px 10px rgba(0,0,0,0.3); transition: 0.3s; letter-spacing: 1px; }
+    .tag:hover { background: var(--accent); transform: translateY(-3px); box-shadow: var(--glow-strong), 0 8px 15px rgba(0,0,0,0.5); }
 
     .skill-row { margin-bottom: 22px; }
     .skill-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.8rem; color: #fff; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-    .skill-bar { height: 8px; background: rgba(0,0,0,0.6); border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.1); }
-    .skill-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent3), var(--accent)); box-shadow: 0 0 15px var(--accent), inset 0 2px 4px rgba(255,255,255,0.4); transition: width 1.5s cubic-bezier(0.19, 1, 0.22, 1); border-radius: 8px; }
+    .skill-bar { height: 8px; background: rgba(0,0,0,0.6); border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); }
+    .skill-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent3), var(--accent)); box-shadow: 0 0 15px var(--accent); transition: width 1.5s cubic-bezier(0.19, 1, 0.22, 1); border-radius: 8px; }
 
     .social-link {
       display: flex; align-items: center; gap: 15px; padding: 18px 25px;
@@ -287,222 +217,174 @@
       border-radius: 20px; background: rgba(0,0,0,0.4); color: #fff; text-decoration: none;
       font-family: var(--mono); font-size: 0.85rem; transition: 0.3s; box-shadow: 0 8px 15px rgba(0,0,0,0.3);
     }
-    .social-link i { color: var(--accent2); font-size: 1.4rem; transition: 0.3s; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
-    .social-link:hover { background: rgba(255,20,147,0.15); border-top-color: var(--accent2); transform: translateX(10px) translateZ(10px); box-shadow: 0 15px 25px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,94,126,0.1); }
+    .social-link i { color: var(--accent2); font-size: 1.4rem; transition: 0.3s; }
+    .social-link:hover { background: rgba(255,20,147,0.15); border-top-color: var(--accent2); transform: translateX(10px); box-shadow: 0 15px 25px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,94,126,0.1); }
     .social-link:hover i { color: #fff; text-shadow: var(--glow-strong); transform: scale(1.2); }
 
     .social-link-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
     .social-link-row .social-link { flex: 1; margin-bottom: 0; }
-    .links-section-title { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: var(--accent3); margin: 30px 0 15px; opacity: 0.8; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-    .links-section-title:first-child { margin-top: 0; }
-
+    
     .copy-btn {
-      width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.6));
-      border-top: 1px solid var(--glass-top); border-bottom: 1px solid rgba(0,0,0,0.8);
-      color: var(--accent2); font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+      width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.6));
+      border-top: 1px solid var(--glass-top); border-bottom: 1px solid rgba(0,0,0,0.8); color: var(--accent2); font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 8px 15px rgba(0,0,0,0.4);
     }
-    .copy-btn:hover { background: var(--accent); color: #fff; box-shadow: var(--glow-strong), 0 10px 20px rgba(0,0,0,0.6); transform: translateY(-3px); }
+    .copy-btn:hover { background: var(--accent); color: #fff; box-shadow: var(--glow-strong); transform: translateY(-3px); }
 
     /* WORK GALLERY */
-    .tag-filter-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; transform: translateZ(10px); }
-    .filter-chip {
-      padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(0,0,0,0.6);
-      border-radius: 30px; font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim);
-      background: rgba(0,0,0,0.4); transition: 0.3s; letter-spacing: 1px; text-transform: lowercase;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-    }
-    .filter-chip:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.4); }
-    .filter-chip.active { background: var(--accent); color: #fff; border-top-color: #fff; box-shadow: var(--glow-strong), 0 8px 15px rgba(0,0,0,0.5); transform: translateY(-3px); }
+    .tag-filter-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; justify-content: center; }
+    .filter-chip { padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(0,0,0,0.6); border-radius: 30px; font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); background: rgba(0,0,0,0.4); transition: 0.3s; letter-spacing: 1px; text-transform: lowercase; box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
+    .filter-chip.active, .filter-chip:hover { background: var(--accent); color: #fff; border-top-color: #fff; box-shadow: var(--glow-strong); transform: translateY(-3px); }
 
     .wg-featured {
-      position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 25px;
-      overflow: hidden; border: 2px solid rgba(255, 94, 126, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8), var(--glow);
-      background: #000; margin-bottom: 20px; cursor: pointer; transform-style: preserve-3d; transition: transform 0.4s;
+      position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 25px; overflow: hidden; border: 2px solid rgba(255, 94, 126, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8), var(--glow); background: #000; margin-bottom: 20px; cursor: pointer; transition: transform 0.4s;
     }
-    .wg-featured:hover { transform: translateY(-5px) scale(1.01); box-shadow: 0 30px 50px rgba(0,0,0,0.9), var(--glow-strong); border-color: rgba(255,255,255,0.5); }
+    .wg-featured:hover { transform: translateY(-5px); box-shadow: 0 30px 50px rgba(0,0,0,0.9), var(--glow-strong); border-color: rgba(255,255,255,0.5); }
     .wg-featured-media { width: 100%; height: 100%; object-fit: cover; transition: 0.7s; opacity: 0.7; }
     .wg-featured:hover .wg-featured-media { opacity: 1; transform: scale(1.03); }
 
-    .wg-play-icon {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(40px);
-      width: 70px; height: 70px; border-radius: 50%; background: rgba(255, 20, 147, 0.85);
-      border: 3px solid #fff; display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 1.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 40px var(--accent); pointer-events: none;
-      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .wg-featured.playing .wg-play-icon { opacity: 0; transform: translate(-50%, -50%) scale(1.5) translateZ(40px); }
+    .wg-play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; border-radius: 50%; background: rgba(255, 20, 147, 0.85); border: 3px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 40px var(--accent); pointer-events: none; transition: 0.4s; }
+    .wg-featured.playing .wg-play-icon { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
 
-    .wg-expand-btn {
-      position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%;
-      background: rgba(0,0,0,0.6); border: 1px solid var(--accent2); color: #fff;
-      display: flex; align-items: center; justify-content: center; z-index: 5; transition: 0.3s;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px); transform: translateZ(20px);
-    }
-    .wg-expand-btn:hover { background: var(--accent); border-color: #fff; box-shadow: var(--glow-strong); transform: translateZ(30px) scale(1.1); }
-
-    .wg-info {
-      position: absolute; bottom: 0; left: 0; right: 0; padding: 30px 25px 20px;
-      background: linear-gradient(to top, rgba(13,2,5,0.95), transparent); pointer-events: none;
-      transform: translateZ(20px);
-    }
+    .wg-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 30px 25px 20px; background: linear-gradient(to top, rgba(13,2,5,0.95), transparent); pointer-events: none; }
     .wg-info-title { font-family: var(--cursive); font-size: 2rem; color: #fff; text-shadow: 0 5px 10px rgba(0,0,0,0.8), 0 0 15px var(--accent); }
     .wg-info-desc { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin-top: 5px; }
 
-    .work-placeholder {
-      width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 15px; text-align: center; padding: 40px;
-      background: linear-gradient(135deg, rgba(255,20,147,0.15), rgba(13,2,5,0.95));
-      color: var(--accent3); transform-style: preserve-3d;
-    }
-    .work-placeholder i { font-size: 3rem; color: var(--accent2); filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); transform: translateZ(30px); }
-    .work-placeholder .wp-tag { font-family: var(--mono); font-size: 0.65rem; opacity: 0.7; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; transform: translateZ(10px); }
-
+    .work-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(255,20,147,0.15), rgba(13,2,5,0.95)); color: var(--accent3); }
+    
     .wg-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-    .wg-thumb {
-      aspect-ratio: 16/9; border-radius: 15px; overflow: hidden;
-      border: 2px solid rgba(255,255,255,0.1); transition: 0.3s; position: relative; opacity: 0.5;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.5); filter: grayscale(50%);
-    }
-    .wg-thumb:hover { opacity: 0.8; transform: translateY(-3px); filter: grayscale(0%); }
-    .wg-thumb.active { border-color: var(--accent); opacity: 1; box-shadow: 0 15px 30px rgba(0,0,0,0.7), var(--glow); transform: translateY(-5px); filter: grayscale(0%); }
+    .wg-thumb { aspect-ratio: 16/9; border-radius: 15px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); transition: 0.3s; opacity: 0.5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); filter: grayscale(50%); }
+    .wg-thumb.active, .wg-thumb:hover { border-color: var(--accent); opacity: 1; box-shadow: 0 15px 30px rgba(0,0,0,0.7), var(--glow); transform: translateY(-5px); filter: grayscale(0%); }
     .wg-thumb-media { width: 100%; height: 100%; object-fit: cover; }
 
-    .wg-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; transform: translateZ(10px); }
-    .wg-counter { font-family: var(--mono); font-size: 0.8rem; color: #fff; letter-spacing: 3px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+    .wg-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; }
+    .wg-counter { font-family: var(--mono); font-size: 0.8rem; color: #fff; letter-spacing: 3px; }
     .wg-arrows { display: flex; gap: 12px; }
-    .wg-arrow { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.5); border-top: 1px solid var(--glass-top); border-bottom: 1px solid rgba(0,0,0,0.8); color: #fff; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
-    .wg-arrow:hover { background: var(--accent); transform: translateY(-3px); box-shadow: var(--glow-strong), 0 10px 20px rgba(0,0,0,0.6); }
+    .wg-arrow { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.5); border-top: 1px solid var(--glass-top); border-bottom: 1px solid rgba(0,0,0,0.8); color: #fff; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+    .wg-arrow:hover { background: var(--accent); transform: translateY(-3px); box-shadow: var(--glow-strong); }
 
-    /* LIGHTBOX */
-    #lightbox {
-      position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(25px); display: none; align-items: center; justify-content: center; opacity: 0;
-      perspective: 1000px;
-    }
-    .lightbox-media { max-width: 90vw; max-height: 85vh; border-radius: 20px; border: 2px solid var(--glass-top); box-shadow: 0 30px 60px rgba(0,0,0,0.9), var(--glow-strong); }
-    .lightbox-close { position: absolute; top: 40px; right: 40px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,20,147,0.8); color: #fff; font-size: 1.5rem; border: 2px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; transition: 0.4s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-    .lightbox-close:hover { transform: rotate(90deg) scale(1.1); background: #fff; color: var(--accent); }
-    .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; border-radius: 50%; background: rgba(0,0,0,0.5); border-top: 1px solid var(--glass-top); color: #fff; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
-    .lightbox-prev { left: 40px; } .lightbox-next { right: 40px; }
-    .lightbox-nav:hover { background: var(--accent); border-color: #fff; box-shadow: var(--glow-strong); transform: translateY(-50%) scale(1.1); }
-
-    /* MUSIC PLAYER (3D Floating Widget) */
-    #musicPlayer {
-      position: fixed; bottom: 40px; right: 40px; z-index: 200; width: 320px;
-      background: linear-gradient(135deg, rgba(26,5,10,0.8), rgba(10,1,3,0.95));
-      backdrop-filter: blur(25px);
-      border-top: 1px solid var(--glass-top);
-      border-left: 1px solid rgba(255, 94, 126, 0.2);
-      border-bottom: 1px solid var(--glass-bottom);
-      border-right: 1px solid rgba(0,0,0,0.6);
-      border-radius: 25px; padding: 25px;
+    /* ═════ CREATIVE DOCK MENU (NEW) ═════ */
+    #glassDock {
+      position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 15px; padding: 12px 25px; border-radius: 40px;
+      background: linear-gradient(135deg, rgba(255,94,126,0.15), rgba(0,0,0,0.6));
+      border-top: 1px solid rgba(255,255,255,0.2); border-bottom: 1px solid rgba(0,0,0,0.8);
       box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 2px 10px rgba(255,255,255,0.1);
-      transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.3s;
-      transform-style: preserve-3d;
+      backdrop-filter: blur(20px); z-index: 100;
     }
-    #musicPlayer:hover { transform: translateY(-5px); box-shadow: 0 30px 50px rgba(0,0,0,0.9), var(--glow); border-top-color: rgba(255,255,255,0.4); }
-    #musicPlayer.collapsed { width: 90px; padding: 18px; border-radius: 45px; }
-    #musicPlayer.collapsed .track-info,
-    #musicPlayer.collapsed #visualizer,
-    #musicPlayer.collapsed .progress-wrap,
-    #musicPlayer.collapsed #prevBtn,
-    #musicPlayer.collapsed #nextBtn { display: none; }
+    .dock-item {
+      position: relative; width: 55px; height: 55px; border-radius: 50%;
+      background: rgba(0,0,0,0.4); border: 1px solid transparent; border-top: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-dim); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    }
+    .dock-item::after {
+      content: attr(data-tooltip); position: absolute; top: -45px; left: 50%; transform: translateX(-50%) scale(0.5);
+      background: rgba(0,0,0,0.8); color: #fff; padding: 5px 12px; border-radius: 10px; border: 1px solid var(--accent);
+      font-family: var(--mono); font-size: 0.65rem; opacity: 0; pointer-events: none; transition: 0.2s; box-shadow: var(--glow);
+    }
+    .dock-item:hover {
+      transform: translateY(-15px) scale(1.2); color: #fff; background: rgba(255,20,147,0.3);
+      border-color: var(--accent); box-shadow: 0 15px 25px rgba(0,0,0,0.5), var(--glow-strong);
+    }
+    .dock-item:hover::after { opacity: 1; transform: translateX(-50%) scale(1); }
+    .dock-item.active {
+      color: #fff; background: var(--accent); border-color: #fff;
+      box-shadow: 0 10px 20px rgba(255,20,147,0.5), inset 0 0 10px rgba(255,255,255,0.5);
+    }
+    .dock-item.active::before {
+      content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+      width: 6px; height: 6px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff;
+    }
+
+    /* ═════ LIGHTBOX (OPTIMIZED - NO LAG) ═════ */
+    #lightbox {
+      position: fixed; inset: 0; z-index: 100000; display: none; align-items: center; justify-content: center;
+      /* Remove blur from animation, apply to a static pseudo-element for performance */
+      background: rgba(0,0,0,0.85); opacity: 0; will-change: opacity;
+    }
+    #lightbox.active { opacity: 1; transition: opacity 0.3s; }
+    .lightbox-bg-blur { position: absolute; inset: 0; backdrop-filter: blur(8px); z-index: -1; }
+    
+    .lightbox-content-wrap { will-change: transform, opacity; transform: scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    #lightbox.active .lightbox-content-wrap { transform: scale(1); opacity: 1; }
+    
+    .lightbox-media { max-width: 90vw; max-height: 85vh; border-radius: 15px; border: 2px solid var(--accent); box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
+    .lightbox-close { position: absolute; top: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1.5rem; border: none; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+    .lightbox-close:hover { transform: rotate(90deg); background: #fff; color: var(--accent); }
+    .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.6); border: 1px solid var(--glass-top); color: #fff; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+    .lightbox-prev { left: 30px; } .lightbox-next { right: 30px; }
+    .lightbox-nav:hover { background: var(--accent); border-color: #fff; box-shadow: var(--glow-strong); }
+
+    /* MUSIC PLAYER & OTHERS */
+    #musicPlayer {
+      position: fixed; bottom: 120px; right: 30px; z-index: 90; width: 280px;
+      background: linear-gradient(135deg, rgba(26,5,10,0.8), rgba(10,1,3,0.95)); backdrop-filter: blur(20px);
+      border-top: 1px solid var(--glass-top); border-radius: 20px; padding: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); transition: width 0.4s;
+    }
+    #musicPlayer.collapsed { width: 80px; padding: 15px; border-radius: 40px; }
+    #musicPlayer.collapsed .track-info, #musicPlayer.collapsed #visualizer, #musicPlayer.collapsed .progress-wrap, #musicPlayer.collapsed #prevBtn, #musicPlayer.collapsed #nextBtn { display: none; }
     #musicPlayer.collapsed .player-top { margin-bottom: 0; }
     #musicPlayer.collapsed .player-controls { justify-content: center; }
 
-    .player-top { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; transform: translateZ(10px); }
-    .vinyl-record {
-      width: 55px; height: 55px; border-radius: 50%;
-      background: radial-gradient(circle, #1a050a 15%, #222 30%, #000 85%);
-      border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 8px 15px rgba(0,0,0,0.6), 0 0 15px var(--accent);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .vinyl-center { width: 12px; height: 12px; background: linear-gradient(135deg, var(--accent2), var(--accent)); border-radius: 50%; box-shadow: inset 0 2px 3px rgba(255,255,255,0.5); }
+    .player-top { display: flex; gap: 12px; align-items: center; margin-bottom: 15px; }
+    .vinyl-record { width: 45px; height: 45px; border-radius: 50%; background: radial-gradient(circle, #1a050a 15%, #222 30%, #000 85%); border: 2px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .vinyl-center { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
     .track-info { flex: 1; overflow: hidden; }
-    .track-name { font-family: var(--sans); font-size: 0.9rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-    .track-status { font-family: var(--mono); font-size: 0.55rem; color: var(--accent3); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
-    .minimize-btn { margin-left: auto; width: 35px; height: 35px; }
+    .track-name { font-family: var(--sans); font-size: 0.8rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-status { font-family: var(--mono); font-size: 0.5rem; color: var(--accent3); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+    .minimize-btn { margin-left: auto; width: 30px; height: 30px; font-size: 0.8rem; }
 
-    #visualizer { display: flex; gap: 4px; height: 25px; align-items: flex-end; margin-bottom: 20px; transform: translateZ(5px); }
-    .vis-bar { flex: 1; background: linear-gradient(to top, var(--accent), var(--accent2)); border-radius: 4px 4px 0 0; min-height: 2px; transition: height 0.1s ease; box-shadow: 0 0 8px var(--accent); }
+    #visualizer { display: flex; gap: 3px; height: 20px; align-items: flex-end; margin-bottom: 15px; }
+    .vis-bar { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.1s ease; }
 
-    .player-controls { display: flex; align-items: center; gap: 12px; transform: translateZ(15px); }
-    .ctrl-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(0,0,0,0.8); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: 0.3s; flex-shrink: 0; box-shadow: 0 5px 10px rgba(0,0,0,0.4); }
-    .play-btn { width: 48px; height: 48px; font-size: 1.1rem; background: rgba(255,20,147,0.15); border-color: var(--accent2); color: var(--accent2); }
-    .ctrl-btn:hover { background: var(--accent); color: #fff; box-shadow: var(--glow-strong), 0 8px 15px rgba(0,0,0,0.6); transform: translateY(-2px); }
-    .play-btn:hover { background: var(--accent); border-color: #fff; }
+    .player-controls { display: flex; align-items: center; gap: 10px; }
+    .ctrl-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.5); border-top: 1px solid rgba(255,255,255,0.2); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; transition: 0.3s; flex-shrink: 0; }
+    .play-btn { width: 40px; height: 40px; font-size: 1rem; background: rgba(255,20,147,0.2); color: var(--accent2); }
+    .ctrl-btn:hover { background: var(--accent); box-shadow: var(--glow); }
 
-    .progress-wrap { flex: 1; display: flex; flex-direction: column; gap: 8px; margin-left: 5px; }
-    .progress-track { height: 6px; background: rgba(0,0,0,0.6); border-radius: 3px; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.1); cursor: pointer; }
-    .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 3px; box-shadow: 0 0 10px var(--accent), inset 0 2px 2px rgba(255,255,255,0.4); }
-    .time-row { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.55rem; color: #fff; opacity: 0.7; }
+    .progress-wrap { flex: 1; display: flex; flex-direction: column; gap: 5px; margin-left: 5px; }
+    .progress-track { height: 4px; background: rgba(0,0,0,0.6); border-radius: 2px; position: relative; cursor: pointer; }
+    .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--accent2); border-radius: 2px; box-shadow: 0 0 8px var(--accent); }
+    .time-row { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.5rem; color: #fff; opacity: 0.7; }
 
     /* CMD PALETTE */
-    #cmdPalette {
-      position: fixed; top: 20%; left: 50%; transform: translate(-50%, -40px) translateZ(100px);
-      z-index: 50000; width: 500px; max-width: 90vw;
-      background: rgba(13, 2, 5, 0.75); backdrop-filter: blur(35px) saturate(150%);
-      border-top: 1px solid rgba(255,255,255,0.2); border-bottom: 1px solid rgba(0,0,0,0.8);
-      border-radius: 20px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.9), var(--glow-strong);
-      display: none; opacity: 0; overflow: hidden;
-    }
+    #cmdPalette { position: fixed; top: 20%; left: 50%; transform: translate(-50%, -40px); z-index: 50000; width: 500px; max-width: 90vw; background: rgba(13, 2, 5, 0.85); backdrop-filter: blur(20px); border: 1px solid var(--accent); border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.9), var(--glow-strong); display: none; opacity: 0; overflow: hidden; }
     #cmdPalette.open { display: block; }
-    .cmd-input-wrap { display: flex; align-items: center; gap: 15px; padding: 20px 25px; border-bottom: 1px solid rgba(0,0,0,0.5); box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
-    .cmd-input-wrap i { color: var(--accent); font-size: 1.4rem; filter: drop-shadow(0 0 5px var(--accent)); }
+    .cmd-input-wrap { display: flex; align-items: center; gap: 15px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .cmd-input-wrap i { color: var(--accent); font-size: 1.2rem; }
     #cmdInput { flex: 1; background: transparent; border: none; color: #fff; font-family: var(--mono); font-size: 1rem; outline: none; }
-    #cmdInput::placeholder { color: rgba(255,255,255,0.3); }
-    .cmd-list { max-height: 300px; overflow-y: auto; scrollbar-width: none; padding: 10px 0; }
-    .cmd-item { display: flex; align-items: center; gap: 15px; padding: 15px 25px; font-family: var(--sans); font-size: 0.9rem; font-weight: 600; color: var(--text-dim); transition: 0.2s; }
+    .cmd-list { max-height: 250px; overflow-y: auto; scrollbar-width: none; }
+    .cmd-item { display: flex; align-items: center; gap: 15px; padding: 15px 20px; font-family: var(--sans); font-size: 0.85rem; font-weight: 600; color: var(--text-dim); transition: 0.2s; }
     .cmd-item i { color: var(--accent2); width: 20px; text-align: center; }
-    .cmd-item:hover, .cmd-item.selected { background: rgba(255,20,147,0.2); color: #fff; padding-left: 30px; border-left: 4px solid var(--accent); box-shadow: inset 0 0 20px rgba(255,94,126,0.1); }
-    .cmd-empty { padding: 30px; font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim); text-align: center; opacity: 0.6; }
-
-    /* MOBILE NAV */
-    #mobileNav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; background: linear-gradient(to top, rgba(10,1,3,0.95), rgba(18,3,7,0.8)); backdrop-filter: blur(20px); border-top: 1px solid var(--glass-top); box-shadow: 0 -10px 20px rgba(0,0,0,0.5); justify-content: space-around; padding: 15px 10px max(15px, env(safe-area-inset-bottom)); }
-    .mnav-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; background: transparent; border: none; color: rgba(255,255,255,0.5); padding: 10px; border-radius: 15px; transition: 0.3s; }
-    .mnav-btn i { font-size: 1.4rem; }
-    .mnav-btn span { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1px; }
-    .mnav-btn.active { color: #fff; background: rgba(255,20,147,0.2); box-shadow: inset 0 0 15px rgba(255,20,147,0.3), 0 5px 10px rgba(0,0,0,0.3); transform: translateY(-5px); }
-
+    .cmd-item:hover, .cmd-item.selected { background: rgba(255,20,147,0.2); color: #fff; padding-left: 25px; border-left: 3px solid var(--accent); }
+    
     /* ACHIEVEMENT PILL */
-    .achievement-pill {
-      position: fixed; top: 30px; right: 30px; z-index: 400;
-      background: linear-gradient(135deg, rgba(26,5,10,0.9), rgba(10,1,3,0.95));
-      border-top: 1px solid var(--glass-top); border-bottom: 1px solid rgba(0,0,0,0.8);
-      border-radius: 30px; padding: 10px 20px; font-family: var(--mono); font-size: 0.75rem; color: #fff;
-      opacity: 0; transform: translateY(-20px) translateZ(50px); pointer-events: none;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.6), var(--glow); display: flex; align-items: center; gap: 8px; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .achievement-pill i { color: var(--accent2); filter: drop-shadow(0 0 5px var(--accent)); }
-    .achievement-pill.show { opacity: 1; transform: translateY(0) translateZ(50px); }
-    @media(max-width:768px) { .achievement-pill { top: 15px; right: 15px; font-size: 0.65rem; padding: 8px 16px; } }
+    .achievement-pill { position: fixed; top: 20px; right: 20px; z-index: 400; background: linear-gradient(135deg, rgba(26,5,10,0.9), rgba(10,1,3,0.95)); border: 1px solid var(--accent2); border-radius: 30px; padding: 8px 16px; font-family: var(--mono); font-size: 0.7rem; color: #fff; opacity: 0; transform: translateY(-20px); pointer-events: none; box-shadow: var(--glow); display: flex; align-items: center; gap: 8px; transition: 0.4s; }
+    .achievement-pill i { color: var(--accent2); }
+    .achievement-pill.show { opacity: 1; transform: translateY(0); }
 
     /* TOASTS */
-    #toastContainer { position: fixed; bottom: 40px; left: 40px; z-index: 9999990; display: flex; flex-direction: column; gap: 15px; pointer-events: none; perspective: 500px; }
-    .toast { background: linear-gradient(135deg, rgba(255,20,147,0.15), rgba(10,1,3,0.9)); border-top: 1px solid var(--glass-top); border-left: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 15px 25px; font-family: var(--mono); font-size: 0.75rem; color: #fff; box-shadow: 0 15px 30px rgba(0,0,0,0.7), var(--glow); backdrop-filter: blur(10px); max-width: 300px; transform-style: preserve-3d; }
-    @media(max-width:768px) { #toastContainer { bottom: 110px; left: 20px; right: 20px; } .toast { max-width: none; text-align: center; } }
+    #toastContainer { position: fixed; bottom: 30px; left: 30px; z-index: 9999990; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+    .toast { background: linear-gradient(135deg, rgba(255,20,147,0.15), rgba(10,1,3,0.9)); border-left: 2px solid var(--accent); border-radius: 12px; padding: 12px 20px; font-family: var(--mono); font-size: 0.75rem; color: #fff; box-shadow: var(--glow); backdrop-filter: blur(5px); }
 
   </style>
 </head>
 <body>
 
   <canvas id="bgCanvas"></canvas>
-
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
-
   <div class="achievement-pill" id="achievementPill"><i class="fas fa-star"></i> <span id="achievementText">0/4 secrets</span></div>
-
   <div id="toastContainer"></div>
 
+  <!-- ANTI-DEVTOOLS WARNING -->
   <div id="devtoolsWarning">
     <div style="font-size: 5rem; color: var(--accent); filter: drop-shadow(0 0 20px var(--accent));">✦</div>
     <h2>Access Denied ✧</h2>
     <p style="opacity: 0.7; font-family: var(--mono); font-size: 0.9rem;">Please do not inspect the source code.</p>
   </div>
 
+  <!-- INTRO SCREEN -->
   <div id="introScreen">
     <div class="intro-title" id="introTitle">
       <span>✦</span>&nbsp;<span>u</span><span>h</span><span>…</span>&nbsp;<span>✦</span>
@@ -517,38 +399,30 @@
     </div>
   </div>
 
+  <!-- MAIN INTERFACE -->
   <div id="mainInterface">
 
-    <div id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-logo">
+    <!-- TOP BAR (Profile + Actions) -->
+    <div id="topBar">
+      <div class="profile-widget">
+        <div class="top-pfp" id="topPfp"></div>
+        <div class="top-info">
           <h1>✦ uh… ✦</h1>
-          <div class="sub">dev ⋆ animator ⋆ designer</div>
-        </div>
-        <div class="sidebar-profile">
-          <div class="sidebar-pfp" id="sidebarPfp"></div>
-          <div class="sidebar-status" id="profileStatus">currently: dreaming ✧</div>
+          <div class="status" id="profileStatus">currently: dreaming ✧</div>
         </div>
       </div>
-
-      <div class="nav-items" id="navItems">
-        <button class="nav-item active" data-id="home"><i class="fas fa-heart"></i> about()</button>
-        <button class="nav-item" data-id="skills"><i class="fas fa-star"></i> skills[]</button>
-        <button class="nav-item" data-id="work"><i class="fas fa-gem"></i> work{}</button>
-        <button class="nav-item" data-id="links"><i class="fas fa-link"></i> links()</button>
-      </div>
-
-      <div class="sidebar-footer">
+      <div class="actions-widget">
         <button class="top-btn" id="terminalBtn" title="Command Palette (Cmd+K)"><i class="fas fa-terminal"></i></button>
         <button class="top-btn" id="fxBtn" title="Sparkle Burst"><i class="fas fa-wand-magic-sparkles"></i></button>
       </div>
     </div>
 
+    <!-- CONTENT PANES -->
     <div id="contentArea">
 
       <div class="content-pane active" id="pane-home">
-        <h2 class="pane-title">about() ✦</h2>
-        <p class="pane-subtitle">whoami ✧</p>
+        <h2 class="pane-title">Welcome ✦</h2>
+        <p class="pane-subtitle">dev ⋆ animator ⋆ designer</p>
 
         <div class="stat-row">
           <div class="stat-box"><div class="stat-num">8+</div><div class="stat-label">Projects</div></div>
@@ -558,8 +432,8 @@
         </div>
 
         <div class="glass-card">
-          <h3 style="font-size: 1.5rem; margin-bottom: 12px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Roblox dev & animator ♡</h3>
-          <p style="font-size: 0.95rem; line-height: 1.8; color: var(--text-dim); text-shadow: 0 1px 3px rgba(0,0,0,0.9);">
+          <h3 style="font-size: 1.5rem; margin-bottom: 12px; color: #fff;">Roblox dev & animator ♡</h3>
+          <p style="font-size: 0.95rem; line-height: 1.8; color: var(--text-dim);">
             I build dreamy Roblox experiences with fluid Blender animations, polished Lua UI, and cozy atmospheres. Every sparkle is intentional. ❀
           </p>
           <div class="tags">
@@ -567,32 +441,26 @@
             <span class="tag">blender ⋆</span>
             <span class="tag">lua ⋆</span>
             <span class="tag">ui/ux ⋆</span>
-            <span class="tag">composer ⋆</span>
           </div>
         </div>
-
-        <p style="font-family: var(--mono); font-size: 0.65rem; opacity: 0.4; letter-spacing: 2px; text-align: center; margin-top: 30px;">// psst — there are secrets hidden around this site ✧</p>
+        <p style="font-family: var(--mono); font-size: 0.65rem; opacity: 0.4; letter-spacing: 2px; text-align: center; margin-top: 20px;">// psst — there are secrets hidden around this site ✧</p>
       </div>
 
       <div class="content-pane" id="pane-skills">
         <h2 class="pane-title">skills[] ✦</h2>
         <p class="pane-subtitle">tech stack ✧</p>
-
         <div class="glass-card">
           <div class="skill-row"><div class="skill-label"><span>Lua / Roblox Dev</span><span class="skill-pct">92%</span></div><div class="skill-bar"><div class="skill-fill" data-w="92"></div></div></div>
           <div class="skill-row"><div class="skill-label"><span>Animation (Blender)</span><span class="skill-pct">88%</span></div><div class="skill-bar"><div class="skill-fill" data-w="88"></div></div></div>
           <div class="skill-row"><div class="skill-label"><span>UI / UX Design</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" data-w="85"></div></div></div>
           <div class="skill-row"><div class="skill-label"><span>Composer</span><span class="skill-pct">65%</span></div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
-          <p style="margin-top:25px; opacity:0.5; font-family:var(--mono); font-size:0.65rem; text-align:center;">// always learning more ∘</p>
         </div>
       </div>
 
       <div class="content-pane" id="pane-work">
         <h2 class="pane-title">work{} ✦</h2>
         <p class="pane-subtitle">gallery ✧</p>
-
         <div class="tag-filter-row" id="wgFilters"></div>
-
         <div id="workGallery">
           <div class="wg-featured" id="wgFeatured"></div>
           <div class="wg-strip" id="wgStrip"></div>
@@ -610,69 +478,67 @@
         <h2 class="pane-title">links() ✦</h2>
         <p class="pane-subtitle">reach me / find me ✧</p>
         <div class="glass-card">
-          <div class="links-section-title">contact</div>
           <div class="social-link-row">
             <a class="social-link" href="https://discord.gg/QJfTJjtYJJ" target="_blank"><i class="fab fa-discord"></i> discord.gg/QJfTJjtYJJ</a>
             <button class="copy-btn" data-copy="https://discord.gg/QJfTJjtYJJ" title="Copy link"><i class="fas fa-copy"></i></button>
           </div>
-
-          <div class="links-section-title">roblox</div>
           <div class="social-link-row">
-            <a class="social-link" href="https://www.roblox.com/users/1803582764/profile" target="_blank"><i class="fas fa-user"></i> Profile</a>
+            <a class="social-link" href="https://www.roblox.com/users/1803582764/profile" target="_blank"><i class="fas fa-user"></i> Roblox Profile</a>
             <button class="copy-btn" data-copy="https://www.roblox.com/users/1803582764/profile" title="Copy link"><i class="fas fa-copy"></i></button>
           </div>
-          <div class="social-link-row">
-            <a class="social-link" href="https://www.roblox.com/communities/34305901" target="_blank"><i class="fas fa-users"></i> Group / Community</a>
-            <button class="copy-btn" data-copy="https://www.roblox.com/communities/34305901" title="Copy link"><i class="fas fa-copy"></i></button>
-          </div>
         </div>
       </div>
 
     </div>
 
-    <div id="musicPlayer">
-      <div class="player-top">
-        <div class="vinyl-record" id="vinylRecord"><div class="vinyl-center"></div></div>
-        <div class="track-info">
-          <div class="track-name" id="trackName">— no track —</div>
-          <div class="track-status" id="trackStatus">⏸ paused</div>
-        </div>
-        <button class="ctrl-btn minimize-btn" id="minimizeBtn" title="Minimize player"><i class="fas fa-minus"></i></button>
-      </div>
-      <div id="visualizer"></div>
-      <div class="player-controls">
-        <button class="ctrl-btn" id="prevBtn"><i class="fas fa-step-backward"></i></button>
-        <button class="ctrl-btn play-btn" id="playBtn"><i class="fas fa-play"></i></button>
-        <button class="ctrl-btn" id="nextBtn"><i class="fas fa-step-forward"></i></button>
-        <div class="progress-wrap">
-          <div class="progress-track" id="progressTrack"><div class="progress-fill" id="progressFill"></div></div>
-          <div class="time-row"><span id="curTime">0:00</span><span id="durTime">0:00</span></div>
-        </div>
-      </div>
+    <!-- CREATIVE DOCK MENU -->
+    <div id="glassDock">
+      <button class="dock-item active" data-id="home" data-tooltip="about()"><i class="fas fa-heart"></i></button>
+      <button class="dock-item" data-id="skills" data-tooltip="skills[]"><i class="fas fa-star"></i></button>
+      <button class="dock-item" data-id="work" data-tooltip="work{}"><i class="fas fa-gem"></i></button>
+      <button class="dock-item" data-id="links" data-tooltip="links()"><i class="fas fa-link"></i></button>
     </div>
 
-    <div id="cmdPalette">
-      <div class="cmd-input-wrap">
-        <i class="fas fa-search"></i>
-        <input type="text" id="cmdInput" placeholder="Search commands... (e.g. 'home', 'work')" autocomplete="off">
+  </div>
+
+  <!-- MUSIC PLAYER -->
+  <div id="musicPlayer">
+    <div class="player-top">
+      <div class="vinyl-record" id="vinylRecord"><div class="vinyl-center"></div></div>
+      <div class="track-info">
+        <div class="track-name" id="trackName">— no track —</div>
+        <div class="track-status" id="trackStatus">⏸ paused</div>
       </div>
-      <div class="cmd-list" id="cmdList"></div>
+      <button class="ctrl-btn minimize-btn" id="minimizeBtn" title="Minimize player"><i class="fas fa-minus"></i></button>
     </div>
-
-    <div id="lightbox">
-      <button class="lightbox-close"><i class="fas fa-times"></i></button>
-      <button class="lightbox-nav lightbox-prev"><i class="fas fa-chevron-left"></i></button>
-      <button class="lightbox-nav lightbox-next"><i class="fas fa-chevron-right"></i></button>
-      <div class="lightbox-content" id="lightboxContent"></div>
+    <div id="visualizer"></div>
+    <div class="player-controls">
+      <button class="ctrl-btn" id="prevBtn"><i class="fas fa-step-backward"></i></button>
+      <button class="ctrl-btn play-btn" id="playBtn"><i class="fas fa-play" style="margin-left: 3px;"></i></button>
+      <button class="ctrl-btn" id="nextBtn"><i class="fas fa-step-forward"></i></button>
+      <div class="progress-wrap">
+        <div class="progress-track" id="progressTrack"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="time-row"><span id="curTime">0:00</span><span id="durTime">0:00</span></div>
+      </div>
     </div>
+  </div>
 
-    <nav id="mobileNav">
-      <button class="mnav-btn active" data-id="home"><i class="fas fa-heart"></i><span>Home</span></button>
-      <button class="mnav-btn" data-id="skills"><i class="fas fa-star"></i><span>Skills</span></button>
-      <button class="mnav-btn" data-id="work"><i class="fas fa-gem"></i><span>Work</span></button>
-      <button class="mnav-btn" data-id="links"><i class="fas fa-link"></i><span>Links</span></button>
-    </nav>
+  <!-- LIGHTBOX (OPTIMIZED) -->
+  <div id="lightbox">
+    <div class="lightbox-bg-blur"></div>
+    <button class="lightbox-close"><i class="fas fa-times"></i></button>
+    <button class="lightbox-nav lightbox-prev"><i class="fas fa-chevron-left"></i></button>
+    <button class="lightbox-nav lightbox-next"><i class="fas fa-chevron-right"></i></button>
+    <div class="lightbox-content-wrap" id="lightboxContent"></div>
+  </div>
 
+  <!-- COMMAND PALETTE -->
+  <div id="cmdPalette">
+    <div class="cmd-input-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" id="cmdInput" placeholder="Search commands... (e.g. 'home', 'work')" autocomplete="off">
+    </div>
+    <div class="cmd-list" id="cmdList"></div>
   </div>
 
   <audio id="bgAudio" preload="metadata" crossorigin="anonymous"></audio>
@@ -681,43 +547,49 @@
     (function() {
       'use strict';
 
-      console.log('%c✦ hey, nice job peeking backstage ✦', 'color:#ff5e7e;font-size:14px;font-family:monospace;');
+      // ═════ ANTI-THEFT & SECURITY REINFORCEMENTS ═════
+      console.clear();
+      console.log("%c✦ uh... ✦", "color:#ff1493; font-size:45px; font-family:sans-serif; font-weight:bold; text-shadow: 0 0 15px #ff5e7e;");
+      console.log("%cThis console is monitored. Do not attempt to steal code or assets.", "color:#ffb3c6; font-size:14px; font-family:monospace;");
+      
+      const devWarn = document.getElementById('devtoolsWarning');
+      
+      // Block Right Click
+      document.addEventListener('contextmenu', e => e.preventDefault());
+      // Block Drag and Drop
+      document.addEventListener('dragstart', e => e.preventDefault());
+      // Block Shortcuts
+      document.addEventListener('keydown', e => {
+        // Block F12, Ctrl+Shift+I/J/C, Ctrl+U (Source), Ctrl+S (Save), Ctrl+P (Print)
+        if (e.key === 'F12' || 
+           (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) || 
+           (e.ctrlKey && ['U','u','S','s','P','p'].includes(e.key))) {
+          e.preventDefault();
+          showToast("Nice try ✦");
+        }
+      });
+      // Aggressive Debugger Loop
+      setInterval(() => {
+        const t = performance.now();
+        debugger;
+        if (performance.now() - t > 100) {
+          devWarn.style.display = 'flex'; document.body.style.filter = 'blur(15px)';
+        } else {
+          devWarn.style.display = 'none'; document.body.style.filter = 'none';
+        }
+      }, 500);
 
       const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let currentPane = 'home';
       let lightboxOpen = false;
 
-      // ═════ SECURITY & ANTI-TAMPER ═════
-      const devWarn = document.getElementById('devtoolsWarning');
-      document.addEventListener('contextmenu', e => e.preventDefault());
-      document.addEventListener('keydown', e => {
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) {
-          e.preventDefault();
-        }
-      });
-      setInterval(() => {
-        const t = performance.now();
-        debugger;
-        if (performance.now() - t > 100) {
-          devWarn.style.display = 'flex';
-          document.body.style.filter = 'blur(10px)';
-        } else {
-          devWarn.style.display = 'none';
-          document.body.style.filter = 'none';
-        }
-      }, 1000);
-
       // ═════ TOASTS ═════
       function showToast(msg) {
         const c = document.getElementById('toastContainer');
         const t = document.createElement('div');
-        t.className = 'toast';
-        t.textContent = msg;
-        c.appendChild(t);
-        gsap.fromTo(t, { opacity: 0, x: -30, rotationX: 45 }, { opacity: 1, x: 0, rotationX: 0, duration: 0.4, ease: "back.out(1.5)" });
-        setTimeout(() => {
-          gsap.to(t, { opacity: 0, x: -30, rotationX: -45, duration: 0.4, onComplete: () => t.remove() });
-        }, 3000);
+        t.className = 'toast'; t.textContent = msg; c.appendChild(t);
+        gsap.fromTo(t, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease: "back.out(1.5)" });
+        setTimeout(() => { gsap.to(t, { opacity: 0, x: -30, duration: 0.4, onComplete: () => t.remove() }); }, 3000);
       }
 
       // ═════ CONFETTI ═════
@@ -726,27 +598,19 @@
         const colors = ['#ff1493', '#ff5e7e', '#ff8da1', '#ffffff'];
         for (let i = 0; i < count; i++) {
           const p = document.createElement('div');
-          p.style.position = 'fixed';
-          p.style.left = x + 'px';
-          p.style.top = y + 'px';
-          p.style.width = '6px';
-          p.style.height = '6px';
+          p.style.position = 'fixed'; p.style.left = x + 'px'; p.style.top = y + 'px';
+          p.style.width = '6px'; p.style.height = '6px';
           p.style.background = colors[i % colors.length];
           p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-          p.style.pointerEvents = 'none';
-          p.style.zIndex = 9999997;
+          p.style.pointerEvents = 'none'; p.style.zIndex = 9999997;
           p.style.boxShadow = '0 0 10px ' + colors[i % colors.length];
           document.body.appendChild(p);
-          const angle = Math.random() * Math.PI * 2;
-          const dist = 100 + Math.random() * 200;
-          const dx = Math.cos(angle) * dist;
-          const dy = Math.sin(angle) * dist + 100;
-          const rot = Math.random() * 720 - 360;
-          gsap.to(p, { x: dx, y: dy, rotation: rot, opacity: 0, duration: 1 + Math.random() * 0.8, ease: 'power2.out', onComplete: () => p.remove() });
+          const angle = Math.random() * Math.PI * 2; const dist = 100 + Math.random() * 200;
+          gsap.to(p, { x: Math.cos(angle)*dist, y: Math.sin(angle)*dist + 100, rotation: Math.random()*720-360, opacity: 0, duration: 1+Math.random()*0.8, ease: 'power2.out', onComplete: () => p.remove() });
         }
       }
 
-      // ═════ EASTER EGG / ACHIEVEMENT TRACKING ═════
+      // ═════ EASTER EGGS (FIXED LOGIC) ═════
       const TOTAL_SECRETS = 4;
       const secretsFound = new Set();
       function updateAchievementPill() {
@@ -757,24 +621,21 @@
         if (secretsFound.has(id)) return;
         secretsFound.add(id);
         updateAchievementPill();
-        if (secretsFound.size === TOTAL_SECRETS) {
-          setTimeout(() => showToast('✦ all secrets found — you really are curious ✦'), 700);
-        }
+        if (secretsFound.size === TOTAL_SECRETS) setTimeout(() => showToast('✦ all secrets found — you really are curious ✦'), 700);
       }
 
-      const konamiSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      // 1. Konami
+      const konamiSeq = ['arrowup','arrowup','arrowdown','arrowdown','arrowleft','arrowright','arrowleft','arrowright','b','a'];
       let konamiPos = 0;
       document.addEventListener('keydown', e => {
-        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        const key = e.key.toLowerCase();
         if (key === konamiSeq[konamiPos]) {
           konamiPos++;
           if (konamiPos === konamiSeq.length) {
             konamiPos = 0;
+            if (secretsFound.has('konami')) return; // Prevent re-triggering logic break
             unlockSecret('konami');
-            if (!REDUCED_MOTION) {
-              document.body.classList.toggle('rainbow-mode');
-              confettiBurst(window.innerWidth / 2, window.innerHeight / 3, 60);
-            }
+            if (!REDUCED_MOTION) { document.body.classList.toggle('rainbow-mode'); confettiBurst(window.innerWidth/2, window.innerHeight/3, 60); }
             showToast('✦ konami code — rainbow mode ✦');
           }
         } else {
@@ -782,796 +643,281 @@
         }
       });
 
+      // 2. PFP Click
       let pfpClicks = 0, pfpClickTimer = null;
-      const sidebarPfp = document.getElementById('sidebarPfp');
-      sidebarPfp.addEventListener('click', () => {
+      document.getElementById('topPfp').addEventListener('click', () => {
+        if (secretsFound.has('pfp')) return; // Fix logic break: stops registering after found
         pfpClicks++;
         clearTimeout(pfpClickTimer);
         pfpClickTimer = setTimeout(() => { pfpClicks = 0; }, 1500);
         if (pfpClicks >= 7) {
           pfpClicks = 0;
-          const r = sidebarPfp.getBoundingClientRect();
-          confettiBurst(r.left + r.width / 2, r.top + r.height / 2, 30);
+          const r = document.getElementById('topPfp').getBoundingClientRect();
+          confettiBurst(r.left + r.width/2, r.top + r.height/2, 30);
           showToast('✧ you found a secret ✧');
           unlockSecret('pfp');
           statuses.push('currently: caught snooping ♡');
         }
       });
 
+      // 3. Double Click Background
       document.addEventListener('dblclick', e => {
-        if (e.target.closest('button, a, input, .nav-item, .mnav-btn, .glass-card, .wg-featured, .wg-thumb, #musicPlayer')) return;
+        // Fix logic break: Strict check to ensure it's not a button or content pane
+        if (e.target.closest('button, a, input, .dock-item, .glass-card, .wg-featured, .wg-thumb, #musicPlayer, #topBar')) return;
         confettiBurst(e.clientX, e.clientY, 25);
         unlockSecret('dblclick');
       });
 
       // ═════ FAST CANVAS 2D BACKGROUND ═════
-      const canvas = document.getElementById('bgCanvas');
-      const ctx = canvas.getContext('2d', { alpha: false });
-      let width, height;
-      const symbols = ['✦', '♡', '✧', '⋆', '∘'];
-      const particles = [];
+      const canvas = document.getElementById('bgCanvas'); const ctx = canvas.getContext('2d', { alpha: false });
+      let width, height; const symbols = ['✦', '♡', '✧', '⋆', '∘']; const particles = [];
+      let mx = window.innerWidth/2, my = window.innerHeight/2; let rx = mx, ry = my; let lastTrailTime = 0;
 
-      // VARIABLES PROPERLY MOVED UP HERE
-      let mx = window.innerWidth/2, my = window.innerHeight/2;
-      let rx = mx, ry = my;
-      let lastTrailTime = 0;
+      function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize); resize();
 
-      function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resize);
-      resize();
-
-      for(let i=0; i<60; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          s: symbols[Math.floor(Math.random() * symbols.length)],
-          size: Math.random() * 12 + 10,
-          speedY: Math.random() * 0.6 + 0.2,
-          speedX: (Math.random() - 0.5) * 0.4,
-          opacity: Math.random() * 0.4 + 0.1,
-          pulse: Math.random() * 0.02
-        });
-      }
+      for(let i=0; i<60; i++) particles.push({ x: Math.random()*width, y: Math.random()*height, s: symbols[Math.floor(Math.random()*symbols.length)], size: Math.random()*12+10, speedY: Math.random()*0.6+0.2, speedX: (Math.random()-0.5)*0.4, opacity: Math.random()*0.4+0.1, pulse: Math.random()*0.02 });
 
       function drawBg() {
-        const grad = ctx.createLinearGradient(0, 0, 0, height);
-        grad.addColorStop(0, '#0d0205');
-        grad.addColorStop(1, '#1a050a');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, width, height);
+        const grad = ctx.createLinearGradient(0, 0, 0, height); grad.addColorStop(0, '#0d0205'); grad.addColorStop(1, '#1a050a');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
 
         particles.forEach(p => {
-          p.y -= p.speedY;
-          p.x += p.speedX;
-
+          p.y -= p.speedY; p.x += p.speedX;
           if (!REDUCED_MOTION && window.matchMedia('(pointer:fine)').matches) {
-            const dx = p.x - mx, dy = p.y - my;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            if (dist > 0 && dist < 120) {
-              const force = (120 - dist) / 120;
-              p.x += (dx / dist) * force * 2;
-              p.y += (dy / dist) * force * 2;
-            }
+            const dx = p.x - mx, dy = p.y - my; const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist > 0 && dist < 120) { const force = (120 - dist) / 120; p.x += (dx/dist)*force*2; p.y += (dy/dist)*force*2; }
           }
-
           p.opacity += Math.sin(Date.now() * p.pulse) * 0.005;
-          if (p.opacity < 0.05) p.opacity = 0.05;
-          if (p.opacity > 0.7) p.opacity = 0.7;
-
-          if (p.y < -30) {
-            p.y = height + 30;
-            p.x = Math.random() * width;
-          }
-
-          ctx.fillStyle = `rgba(255, 94, 126, ${p.opacity})`;
-          ctx.font = `${p.size}px 'JetBrains Mono'`;
-          // Draw with slight shadow effect
-          ctx.shadowColor = 'rgba(255, 20, 147, 0.5)';
-          ctx.shadowBlur = 10;
-          ctx.fillText(p.s, p.x, p.y);
-          ctx.shadowBlur = 0; // reset
+          if (p.opacity < 0.05) p.opacity = 0.05; if (p.opacity > 0.7) p.opacity = 0.7;
+          if (p.y < -30) { p.y = height + 30; p.x = Math.random() * width; }
+          ctx.fillStyle = `rgba(255, 94, 126, ${p.opacity})`; ctx.font = `${p.size}px 'JetBrains Mono'`;
+          ctx.shadowColor = 'rgba(255, 20, 147, 0.5)'; ctx.shadowBlur = 10;
+          ctx.fillText(p.s, p.x, p.y); ctx.shadowBlur = 0;
         });
         requestAnimationFrame(drawBg);
       }
       drawBg();
 
       // ═════ CUSTOM CURSOR & EFFECTS ═════
-      const cursor = document.getElementById('cursor');
-      const cursorRing = document.getElementById('cursor-ring');
-
+      const cursor = document.getElementById('cursor'), cursorRing = document.getElementById('cursor-ring');
       if (window.matchMedia('(pointer:fine)').matches) {
         document.addEventListener('mousemove', e => {
-          mx = e.clientX; my = e.clientY;
-          cursor.style.left = mx + 'px';
-          cursor.style.top = my + 'px';
-
-          if (!REDUCED_MOTION) {
-            const now = Date.now();
-            if (now - lastTrailTime > 50) {
-              lastTrailTime = now;
-              const d = document.createElement('div');
-              d.className = 'cursor-trail-dot';
-              d.style.left = mx + 'px';
-              d.style.top = my + 'px';
-              document.body.appendChild(d);
-              gsap.to(d, { opacity: 0, scale: 0.1, duration: 0.7, ease: "power2.out", onComplete: () => d.remove() });
-            }
+          mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+          if (!REDUCED_MOTION && Date.now() - lastTrailTime > 50) {
+            lastTrailTime = Date.now();
+            const d = document.createElement('div'); d.className = 'cursor-trail-dot'; d.style.left = mx + 'px'; d.style.top = my + 'px';
+            document.body.appendChild(d); gsap.to(d, { opacity: 0, scale: 0.1, duration: 0.7, onComplete: () => d.remove() });
           }
         });
-
-        gsap.ticker.add(() => {
-          rx += (mx - rx) * 0.15;
-          ry += (my - ry) * 0.15;
-          cursorRing.style.left = rx + 'px';
-          cursorRing.style.top = ry + 'px';
-        });
-
-        document.addEventListener('mouseover', e => {
-          const hoverable = e.target.closest('button, a, .nav-item, .wg-thumb, .social-link, .tag, input, .progress-track, .wg-featured');
-          cursor.classList.toggle('hover', !!hoverable);
-          cursorRing.classList.toggle('hover', !!hoverable);
-        });
-
-        document.addEventListener('click', e => {
-          for (let i = 0; i < 6; i++) {
-            const p = document.createElement('div');
-            p.className = 'click-burst';
-            p.textContent = ['✦', '♡', '✧', '⋆'][Math.floor(Math.random()*4)];
-            p.style.left = mx + 'px';
-            p.style.top = my + 'px';
-            const angle = Math.random() * Math.PI * 2;
-            const dist = 25 + Math.random() * 50;
-            p.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
-            p.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 800);
+        gsap.ticker.add(() => { rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15; cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px'; });
+        document.addEventListener('mouseover', e => { const h = e.target.closest('button, a, .dock-item, .wg-thumb, .social-link, .tag, input, .wg-featured'); cursor.classList.toggle('hover', !!h); cursorRing.classList.toggle('hover', !!h); });
+        document.addEventListener('click', () => {
+          for (let i = 0; i < 4; i++) {
+            const p = document.createElement('div'); p.className = 'click-burst'; p.textContent = ['✦','♡','✧'][Math.floor(Math.random()*3)];
+            p.style.left = mx + 'px'; p.style.top = my + 'px';
+            const a = Math.random()*Math.PI*2, d = 25+Math.random()*50;
+            p.style.setProperty('--dx', Math.cos(a)*d+'px'); p.style.setProperty('--dy', Math.sin(a)*d+'px');
+            document.body.appendChild(p); setTimeout(() => p.remove(), 800);
           }
         });
       }
 
-      // ═════ INTRO SCREEN (3D Upgraded) ═════
-      const introScreen = document.getElementById('introScreen');
-      const introTitle = document.getElementById('introTitle');
-      const progressPercent = document.getElementById('progressPercent');
-
+      // ═════ INTRO SCREEN ═════
+      const introScreen = document.getElementById('introScreen'), introTitle = document.getElementById('introTitle'), progressPercent = document.getElementById('progressPercent');
       let progress = 0;
       const progInt = setInterval(() => {
         progress += Math.random() * 6 + 2;
-        if(progress >= 100) {
-          progress = 100;
-          clearInterval(progInt);
-          revealIntro();
-        }
+        if(progress >= 100) { progress = 100; clearInterval(progInt); revealIntro(); }
         progressPercent.textContent = Math.floor(progress) + '%';
       }, 100);
 
       function revealIntro() {
         gsap.to('#loaderGrp', { opacity: 0, y: 30, scale: 0.8, duration: 0.5, ease: "back.in(1.5)" });
-
-        const spans = introTitle.querySelectorAll('span');
         gsap.to(introTitle, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" });
-        gsap.fromTo(spans,
-          { y: 50, opacity: 0, rotationX: -90 },
-          { y: 0, opacity: 1, rotationX: 0, stagger: 0.1, ease: "back.out(2)", duration: 0.7 }
-        );
-
+        gsap.fromTo(introTitle.querySelectorAll('span'), { y: 50, opacity: 0, rotationX: -90 }, { y: 0, opacity: 1, rotationX: 0, stagger: 0.1, ease: "back.out(2)", duration: 0.7 });
         setTimeout(() => {
-          gsap.to(introScreen, {
-            opacity: 0, scale: 1.1, duration: 0.8, ease: "power2.inOut",
-            onComplete: () => {
-              introScreen.style.display = 'none';
-              launchMain();
-            }
-          });
+          gsap.to(introScreen, { opacity: 0, scale: 1.1, duration: 0.8, ease: "power2.inOut", onComplete: () => { introScreen.style.display = 'none'; launchMain(); } });
         }, 1900);
       }
 
       function launchMain() {
-        const main = document.getElementById('mainInterface');
-        main.style.display = 'flex';
-        // 3D Glass Window Entry Animation
-        gsap.fromTo(main, 
-          { opacity: 0, scale: 0.85, rotationX: 10, y: 50 }, 
-          { opacity: 1, scale: 1, rotationX: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.7)" }
-        );
-
+        const main = document.getElementById('mainInterface'); main.style.display = 'flex';
+        gsap.fromTo(main, { opacity: 0, scale: 0.85, rotationX: 10, y: 50 }, { opacity: 1, scale: 1, rotationX: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.7)" });
         document.querySelectorAll('.pane-title').forEach(el => { el.dataset.original = el.textContent; });
-
-        renderFilterChips();
-        buildWorkGallery('all');
-        setupCmdPalette();
-        tryAutoPlayMusic();
-        initTilt();
-
-        if (!REDUCED_MOTION) {
-          document.querySelectorAll('.stat-box').forEach((b, i) => {
-            b.classList.add('floaty');
-            b.style.animationDelay = (i * 0.4) + 's';
-          });
-        }
-
+        renderFilterChips(); buildWorkGallery('all'); setupCmdPalette(); tryAutoPlayMusic();
+        if (!REDUCED_MOTION) document.querySelectorAll('.stat-box').forEach((b, i) => { b.classList.add('floaty'); b.style.animationDelay = (i * 0.4) + 's'; });
         setTimeout(animateSkillBars, 700);
-
-        let sIdx = 0;
-        setInterval(() => {
-          sIdx = (sIdx + 1) % statuses.length;
-          const el = document.getElementById('profileStatus');
-          gsap.to(el, { opacity: 0, y: -10, rotationX: 90, duration: 0.4, onComplete: () => {
-            el.textContent = statuses[sIdx];
-            gsap.fromTo(el, { opacity: 0, y: 10, rotationX: -90 }, { opacity: 0.9, y: 0, rotationX: 0, duration: 0.4, ease: "back.out(2)" });
-          }});
+        let sIdx = 0; setInterval(() => {
+          sIdx = (sIdx + 1) % statuses.length; const el = document.getElementById('profileStatus');
+          gsap.to(el, { opacity: 0, y: -10, rotationX: 90, duration: 0.4, onComplete: () => { el.textContent = statuses[sIdx]; gsap.fromTo(el, { opacity: 0, y: 10, rotationX: -90 }, { opacity: 0.9, y: 0, rotationX: 0, duration: 0.4, ease: "back.out(2)" }); }});
         }, 5000);
       }
-
       const statuses = ['currently: dreaming ✧', 'currently: animating ♡', 'currently: scripting ✦', 'currently: in studio ⋆'];
 
-      // ═════ SKILL BARS ═════
+      // ═════ SKILL BARS & TEXT SCRAMBLE ═════
       function animateSkillBars() {
         document.querySelectorAll('#pane-skills .skill-fill').forEach(b => {
-          const target = parseInt(b.dataset.w, 10);
-          b.style.width = target + '%';
-          const row = b.closest('.skill-row');
-          const pctEl = row ? row.querySelector('.skill-pct') : null;
-          if (!pctEl) return;
+          const target = parseInt(b.dataset.w, 10); b.style.width = target + '%';
+          const pctEl = b.closest('.skill-row')?.querySelector('.skill-pct'); if (!pctEl) return;
           if (REDUCED_MOTION) { pctEl.textContent = target + '%'; return; }
           const start = performance.now();
-          const dur = 1500;
           function tick(now) {
-            const t = Math.min((now - start) / dur, 1);
-            // Easing function for numbers
-            const easeT = 1 - Math.pow(1 - t, 3);
-            pctEl.textContent = Math.floor(easeT * target) + '%';
+            const t = Math.min((now - start) / 1500, 1);
+            pctEl.textContent = Math.floor((1 - Math.pow(1 - t, 3)) * target) + '%';
             if (t < 1) requestAnimationFrame(tick);
           }
           requestAnimationFrame(tick);
         });
       }
-
-      // ═════ CARD TILT (3D Enhancements) ═════
-      function initTilt() {
-        if (REDUCED_MOTION || !window.matchMedia('(pointer:fine)').matches) return;
-        document.querySelectorAll('.glass-card').forEach(card => {
-          card.addEventListener('mousemove', e => {
-            const r = card.getBoundingClientRect();
-            const px = (e.clientX - r.left) / r.width - 0.5;
-            const py = (e.clientY - r.top) / r.height - 0.5;
-            // Increased the rotation multiplier for more pronounced 3D effect
-            gsap.to(card, { rotateX: py * -12, rotateY: px * 12, transformPerspective: 800, duration: 0.4, ease: 'power2.out' });
-          });
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' });
-          });
-        });
-      }
-
-      // ═════ TEXT SCRAMBLE ═════
       function scrambleText(el, finalText) {
         if (REDUCED_MOTION || !finalText) { el.textContent = finalText || el.textContent; return; }
-        const chars = '✦✧⋆∘♡ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        clearInterval(el._scrambleInt);
-        let iter = 0;
+        const chars = '✦✧⋆∘♡ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'; clearInterval(el._scrambleInt); let iter = 0;
         el._scrambleInt = setInterval(() => {
-          el.textContent = finalText.split('').map((c, i) => {
-            if (c === ' ') return ' ';
-            if (i < iter) return finalText[i];
-            return chars[Math.floor(Math.random() * chars.length)];
-          }).join('');
-          iter += 1;
-          if (iter >= finalText.length) {
-            clearInterval(el._scrambleInt);
-            el.textContent = finalText;
-          }
+          el.textContent = finalText.split('').map((c, i) => { if (c === ' ') return ' '; if (i < iter) return finalText[i]; return chars[Math.floor(Math.random() * chars.length)]; }).join('');
+          iter++; if (iter >= finalText.length) { clearInterval(el._scrambleInt); el.textContent = finalText; }
         }, 30);
       }
 
-      // ═════ NAVIGATION LOGIC ═════
+      // ═════ DOCK NAVIGATION ═════
       function activatePane(id) {
         currentPane = id;
-        document.querySelectorAll('.nav-item, .mnav-btn').forEach(b => {
-          b.classList.toggle('active', b.dataset.id === id);
-        });
-
+        document.querySelectorAll('.dock-item').forEach(b => b.classList.toggle('active', b.dataset.id === id));
         document.querySelectorAll('.content-pane').forEach(p => {
           if (p.id === 'pane-' + id) {
-            p.classList.add('active');
-            const titleEl = p.querySelector('.pane-title');
+            p.classList.add('active'); const titleEl = p.querySelector('.pane-title');
             if (titleEl) scrambleText(titleEl, titleEl.dataset.original);
-            if (id === 'skills') {
-              // Reset and re-animate skill bars
-              document.querySelectorAll('#pane-skills .skill-fill').forEach(b => b.style.width = '0%');
-              setTimeout(animateSkillBars, 150);
-            }
-          } else {
-            p.classList.remove('active');
-          }
+            if (id === 'skills') { document.querySelectorAll('#pane-skills .skill-fill').forEach(b => b.style.width = '0%'); setTimeout(animateSkillBars, 150); }
+          } else { p.classList.remove('active'); }
         });
       }
-
-      document.querySelectorAll('.nav-item, .mnav-btn').forEach(btn => {
-        btn.addEventListener('click', () => activatePane(btn.dataset.id));
-      });
+      document.querySelectorAll('.dock-item').forEach(btn => btn.addEventListener('click', () => activatePane(btn.dataset.id)));
 
       // ═════ WORK GALLERY ═════
       const WORK_ITEMS = [
         { title: 'Jinx ✦', desc: 'cute animation test', tags: ['animation', 'blender'], type: 'video', src: 'assets/videos/Jinx.mp4' },
         { title: 'Settings UI', desc: 'soft pastel design', tags: ['ui', 'design'], type: 'image', src: 'assets/images/Settings.png' },
-      //  { title: 'Donation Jar Tycoon', desc: 'F-key placement, ProximityPrompt donation UI, DataStore persistence, and a group-membership skin system.', tags: ['systems', 'tycoon', 'datastore'], type: 'placeholder' },
-
+        { title: 'Placeholder', desc: 'Placeholder description', tags: ['systems', 'tycoon'], type: 'placeholder' },
+       
       ];
-
-      let filteredItems = [];
-      let wgIndex = 0;
-      const wgFeatured = document.getElementById('wgFeatured');
-      const wgStrip = document.getElementById('wgStrip');
-      const lightbox = document.getElementById('lightbox');
-      const lbContent = document.getElementById('lightboxContent');
-
-      function tagIcon(tag) {
-        const map = { animation: 'fa-film', ui: 'fa-palette', design: 'fa-palette', systems: 'fa-cubes', datastore: 'fa-database', tycoon: 'fa-coins', vfx: 'fa-wand-magic-sparkles', combat: 'fa-crosshairs', movement: 'fa-horse', camera: 'fa-video' };
-        return map[tag] || 'fa-cube';
-      }
+      let filteredItems = [], wgIndex = 0;
+      const wgFeatured = document.getElementById('wgFeatured'), wgStrip = document.getElementById('wgStrip'), lightbox = document.getElementById('lightbox'), lbContent = document.getElementById('lightboxContent');
+      function tagIcon(tag) { const map = { animation: 'fa-film', ui: 'fa-palette', design: 'fa-palette', systems: 'fa-cubes', tycoon: 'fa-coins' }; return map[tag] || 'fa-cube'; }
 
       function renderFilterChips() {
-        const tagSet = new Set(['all']);
-        WORK_ITEMS.forEach(item => item.tags.forEach(t => tagSet.add(t)));
-        const row = document.getElementById('wgFilters');
-        row.innerHTML = '';
+        const tagSet = new Set(['all']); WORK_ITEMS.forEach(item => item.tags.forEach(t => tagSet.add(t)));
+        const row = document.getElementById('wgFilters'); row.innerHTML = '';
         [...tagSet].forEach(tag => {
-          const chip = document.createElement('button');
-          chip.className = 'filter-chip' + (tag === 'all' ? ' active' : '');
-          chip.textContent = tag === 'all' ? 'all ✦' : tag;
-          chip.addEventListener('click', () => {
-            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            buildWorkGallery(tag);
-          });
+          const chip = document.createElement('button'); chip.className = 'filter-chip' + (tag === 'all' ? ' active' : ''); chip.textContent = tag === 'all' ? 'all ✦' : tag;
+          chip.addEventListener('click', () => { document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); buildWorkGallery(tag); });
           row.appendChild(chip);
         });
       }
-
       function buildWorkGallery(filterTag) {
-        filteredItems = filterTag === 'all' ? WORK_ITEMS.slice() : WORK_ITEMS.filter(it => it.tags.includes(filterTag));
-        wgStrip.innerHTML = '';
-
-        if (!filteredItems.length) {
-          wgFeatured.innerHTML = '<div class="work-placeholder"><i class="fas fa-ghost"></i><div>nothing here yet ✧</div></div>';
-          document.getElementById('wgCounter').textContent = '00 / 00';
-          return;
-        }
-
+        filteredItems = filterTag === 'all' ? WORK_ITEMS.slice() : WORK_ITEMS.filter(it => it.tags.includes(filterTag)); wgStrip.innerHTML = '';
+        if (!filteredItems.length) { wgFeatured.innerHTML = '<div class="work-placeholder"><i class="fas fa-ghost"></i><div>nothing here yet ✧</div></div>'; document.getElementById('wgCounter').textContent = '00 / 00'; return; }
         filteredItems.forEach((item, i) => {
-          const th = document.createElement('div');
-          th.className = 'wg-thumb';
-          th.dataset.idx = i;
-
-          if (item.type === 'placeholder') {
-            th.innerHTML = `<div class="wg-thumb-media" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(255,20,147,0.15), rgba(0,0,0,0.8));"><i class="fas ${tagIcon(item.tags[0])}" style="color:var(--accent2);font-size:1.5rem;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.8));"></i></div>`;
-          } else {
-            const media = document.createElement(item.type === 'video' ? 'video' : 'img');
-            media.className = 'wg-thumb-media';
-            if (item.type === 'video') {
-              media.muted = true;
-              media.preload = 'metadata';
-              if (item.poster) media.setAttribute('poster', item.poster);
-            }
-            media.src = item.src;
-            media.onerror = () => {
-              th.innerHTML = `<div class="wg-thumb-media" style="display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);"><i class="fas ${tagIcon(item.tags[0])}" style="color:var(--accent2);"></i></div>`;
-            };
+          const th = document.createElement('div'); th.className = 'wg-thumb'; th.dataset.idx = i;
+          if (item.type === 'placeholder') th.innerHTML = `<div class="wg-thumb-media" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(255,20,147,0.15), rgba(0,0,0,0.8));"><i class="fas ${tagIcon(item.tags[0])}" style="color:var(--accent2);font-size:1.5rem;"></i></div>`;
+          else {
+            const media = document.createElement(item.type === 'video' ? 'video' : 'img'); media.className = 'wg-thumb-media';
+            if (item.type === 'video') { media.muted = true; media.preload = 'metadata'; if (item.poster) media.setAttribute('poster', item.poster); }
+            media.src = item.src; media.onerror = () => th.innerHTML = `<div class="wg-thumb-media" style="display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);"><i class="fas ${tagIcon(item.tags[0])}" style="color:var(--accent2);"></i></div>`;
             th.appendChild(media);
           }
-
-          th.addEventListener('click', () => setWgIndex(i, false));
-          wgStrip.appendChild(th);
+          th.addEventListener('click', () => setWgIndex(i, false)); wgStrip.appendChild(th);
         });
-
         setWgIndex(0, false);
       }
-
       function setWgIndex(idx, autoplay) {
-        if (!filteredItems.length) return;
-        wgIndex = idx;
-        const item = filteredItems[idx];
-        
-        // Slight fade out/in effect for the main viewer
+        if (!filteredItems.length) return; wgIndex = idx; const item = filteredItems[idx];
         gsap.to(wgFeatured, { opacity: 0.5, scale: 0.98, duration: 0.15, onComplete: () => {
-          wgFeatured.innerHTML = '';
-          wgFeatured.classList.remove('playing');
-          wgFeatured.onclick = null;
-
+          wgFeatured.innerHTML = ''; wgFeatured.classList.remove('playing'); wgFeatured.onclick = null;
           if (item.type === 'placeholder') {
-            const ph = document.createElement('div');
-            ph.className = 'work-placeholder';
-            ph.innerHTML = `<i class="fas ${tagIcon(item.tags[0])}"></i><div style="font-family:var(--cursive);font-size:2rem;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,0.8);">${item.title}</div><div style="font-family:var(--mono);font-size:0.8rem;max-width:70%;line-height:1.6;text-shadow:0 1px 3px rgba(0,0,0,0.9);">${item.desc}</div><div class="wp-tag">media coming soon ✧</div>`;
-            wgFeatured.appendChild(ph);
+            wgFeatured.innerHTML = `<div class="work-placeholder"><i class="fas ${tagIcon(item.tags[0])}"></i><div style="font-family:var(--cursive);font-size:2rem;color:#fff;">${item.title}</div><div style="font-family:var(--mono);font-size:0.8rem;max-width:70%;line-height:1.6;">${item.desc}</div><div class="wp-tag">media coming soon ✧</div></div>`;
           } else {
-            const media = document.createElement(item.type === 'video' ? 'video' : 'img');
-            media.className = 'wg-featured-media';
-            media.id = 'wgMedia';
-
-            if (item.type === 'video') {
-              media.playsInline = true;
-              if (item.poster) media.setAttribute('poster', item.poster);
-              if (autoplay) { media.autoplay = true; media.muted = false; wgFeatured.classList.add('playing'); }
-              else media.muted = true;
-            }
-            media.src = item.src;
-            media.onerror = () => {
-              wgFeatured.innerHTML = `<div class="work-placeholder"><i class="fas fa-triangle-exclamation"></i><div style="font-family:var(--cursive);font-size:2rem;color:#fff;">${item.title}</div><div class="wp-tag">media not found — check the file path ✧</div></div>`;
-            };
-
-            const playIcon = document.createElement('div');
-            playIcon.className = 'wg-play-icon';
-            playIcon.innerHTML = '<i class="fas fa-play" style="margin-left: 5px;"></i>';
-
-            const info = document.createElement('div');
-            info.className = 'wg-info';
-            info.innerHTML = `<div class="wg-info-title">${item.title}</div><div class="wg-info-desc">${item.desc}</div>`;
-
-            const expandBtn = document.createElement('button');
-            expandBtn.className = 'wg-expand-btn';
-            expandBtn.innerHTML = '<i class="fas fa-expand"></i>';
-            expandBtn.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(wgIndex); });
-
+            const media = document.createElement(item.type === 'video' ? 'video' : 'img'); media.className = 'wg-featured-media'; media.id = 'wgMedia';
+            if (item.type === 'video') { media.playsInline = true; if (autoplay) { media.autoplay = true; media.muted = false; wgFeatured.classList.add('playing'); } else media.muted = true; }
+            media.src = item.src; media.onerror = () => wgFeatured.innerHTML = `<div class="work-placeholder"><i class="fas fa-triangle-exclamation"></i><div style="font-family:var(--cursive);font-size:2rem;color:#fff;">${item.title}</div><div class="wp-tag">media not found</div></div>`;
             wgFeatured.appendChild(media);
-            if (item.type === 'video') wgFeatured.appendChild(playIcon);
-            wgFeatured.appendChild(info);
-            wgFeatured.appendChild(expandBtn);
-
-            if (item.type === 'video') {
-              wgFeatured.onclick = () => {
-                const v = document.getElementById('wgMedia');
-                if (v.paused) { v.muted = false; v.play(); wgFeatured.classList.add('playing'); }
-                else { v.pause(); wgFeatured.classList.remove('playing'); }
-              };
-            } else {
-              wgFeatured.onclick = () => openLightbox(wgIndex);
-            }
+            if (item.type === 'video') { const pi = document.createElement('div'); pi.className = 'wg-play-icon'; pi.innerHTML = '<i class="fas fa-play" style="margin-left:5px;"></i>'; wgFeatured.appendChild(pi); }
+            const info = document.createElement('div'); info.className = 'wg-info'; info.innerHTML = `<div class="wg-info-title">${item.title}</div><div class="wg-info-desc">${item.desc}</div>`; wgFeatured.appendChild(info);
+            const expandBtn = document.createElement('button'); expandBtn.className = 'wg-expand-btn'; expandBtn.innerHTML = '<i class="fas fa-expand"></i>'; expandBtn.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(wgIndex); }); wgFeatured.appendChild(expandBtn);
+            if (item.type === 'video') wgFeatured.onclick = () => { const v = document.getElementById('wgMedia'); if (v.paused) { v.muted = false; v.play(); wgFeatured.classList.add('playing'); } else { v.pause(); wgFeatured.classList.remove('playing'); } };
+            else wgFeatured.onclick = () => openLightbox(wgIndex);
           }
-
-          gsap.to(wgFeatured, { opacity: 1, scale: 1, duration: 0.25, ease: "power2.out" });
+          gsap.to(wgFeatured, { opacity: 1, scale: 1, duration: 0.25 });
         }});
-
         document.querySelectorAll('.wg-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
         document.getElementById('wgCounter').textContent = `${String(idx+1).padStart(2,'0')} / ${String(filteredItems.length).padStart(2,'0')}`;
       }
+      document.getElementById('wgPrev').addEventListener('click', () => { if (filteredItems.length) setWgIndex((wgIndex - 1 + filteredItems.length) % filteredItems.length, false); });
+      document.getElementById('wgNext').addEventListener('click', () => { if (filteredItems.length) setWgIndex((wgIndex + 1) % filteredItems.length, false); });
 
-      function prevSlide() { if (filteredItems.length) setWgIndex((wgIndex - 1 + filteredItems.length) % filteredItems.length, false); }
-      function nextSlide() { if (filteredItems.length) setWgIndex((wgIndex + 1) % filteredItems.length, false); }
-      document.getElementById('wgPrev').addEventListener('click', prevSlide);
-      document.getElementById('wgNext').addEventListener('click', nextSlide);
-
-      // Swipe support (mobile)
-      let touchStartX = 0;
-      wgFeatured.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
-      wgFeatured.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        if (Math.abs(dx) > 50) { dx < 0 ? nextSlide() : prevSlide(); }
-      }, { passive: true });
-
-      // Lightbox
+      // ═════ LIGHTBOX (LAG FIXED) ═════
       function openLightbox(idx) {
         if (!filteredItems.length || filteredItems[idx].type === 'placeholder') return;
-        wgIndex = idx;
-        lightboxOpen = true;
-        const item = filteredItems[idx];
+        wgIndex = idx; lightboxOpen = true; const item = filteredItems[idx];
         lbContent.innerHTML = '';
-        const el = document.createElement(item.type === 'video' ? 'video' : 'img');
-        el.className = 'lightbox-media';
-        el.src = item.src;
-        el.onerror = () => { lbContent.innerHTML = '<div class="work-placeholder" style="border-radius:20px;padding:80px;"><i class="fas fa-triangle-exclamation"></i><div style="margin-top:15px;">media not found ✧</div></div>'; };
+        const el = document.createElement(item.type === 'video' ? 'video' : 'img'); el.className = 'lightbox-media'; el.src = item.src;
         if (item.type === 'video') { el.controls = true; el.autoplay = true; }
         lbContent.appendChild(el);
-
         lightbox.style.display = 'flex';
-        gsap.fromTo(lightbox, { opacity: 0 }, { opacity: 1, duration: 0.4 });
-        gsap.fromTo(lbContent, { scale: 0.8, rotationX: 10 }, { scale: 1, rotationX: 0, duration: 0.5, ease: "back.out(1.2)" });
+        // Force reflow
+        void lightbox.offsetWidth;
+        lightbox.classList.add('active');
       }
-
       function closeLightbox() {
-        lightboxOpen = false;
-        gsap.to(lightbox, { opacity: 0, duration: 0.3, onComplete: () => {
-          lightbox.style.display = 'none';
-          lbContent.innerHTML = '';
-        }});
+        lightboxOpen = false; lightbox.classList.remove('active');
+        setTimeout(() => { lightbox.style.display = 'none'; lbContent.innerHTML = ''; }, 300);
       }
-
       document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
       document.querySelector('.lightbox-prev').addEventListener('click', () => openLightbox((wgIndex - 1 + filteredItems.length) % filteredItems.length));
       document.querySelector('.lightbox-next').addEventListener('click', () => openLightbox((wgIndex + 1) % filteredItems.length));
-
-      lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
-      lightbox.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        if (Math.abs(dx) > 50) {
-          dx < 0 ? document.querySelector('.lightbox-next').click() : document.querySelector('.lightbox-prev').click();
-        }
-      }, { passive: true });
-
-      // Keyboard navigation
       document.addEventListener('keydown', e => {
         if (document.getElementById('cmdPalette').classList.contains('open')) return;
-        if (lightboxOpen) {
-          if (e.key === 'ArrowLeft') document.querySelector('.lightbox-prev').click();
-          if (e.key === 'ArrowRight') document.querySelector('.lightbox-next').click();
-          if (e.key === 'Escape') closeLightbox();
-          return;
-        }
-        if (currentPane === 'work') {
-          if (e.key === 'ArrowLeft') prevSlide();
-          if (e.key === 'ArrowRight') nextSlide();
-        }
+        if (lightboxOpen) { if (e.key === 'ArrowLeft') document.querySelector('.lightbox-prev').click(); if (e.key === 'ArrowRight') document.querySelector('.lightbox-next').click(); if (e.key === 'Escape') closeLightbox(); return; }
+        if (currentPane === 'work') { if (e.key === 'ArrowLeft') document.getElementById('wgPrev').click(); if (e.key === 'ArrowRight') document.getElementById('wgNext').click(); }
       });
 
       // ═════ MUSIC PLAYER ═════
-      const tracks = [
-        { title: "I can't live without you", file: 'assets/Music.mp3' },
-        { title: 'Lingering', file: 'assets/Music2.mp3' },
-        { title: 'Call me Back', file: 'assets/Music3.mp3' },
-        { title: 'Memories', file: 'assets/Music5.mp3' }
-      ];
-      const audio = document.getElementById('bgAudio');
-      const playBtn = document.getElementById('playBtn');
-      const trackName = document.getElementById('trackName');
-      const trackStatus = document.getElementById('trackStatus');
-      const vinylRecord = document.getElementById('vinylRecord');
-      const progressFill = document.getElementById('progressFill');
-      const curTime = document.getElementById('curTime');
-      const durTime = document.getElementById('durTime');
+      const tracks = [ { title: "I can't live without you", file: 'assets/Music.mp3' }, { title: 'Lingering', file: 'assets/Music2.mp3' } ];
+      const audio = document.getElementById('bgAudio'), playBtn = document.getElementById('playBtn'), trackName = document.getElementById('trackName'), trackStatus = document.getElementById('trackStatus'), vinylRecord = document.getElementById('vinylRecord'), progressFill = document.getElementById('progressFill'), curTime = document.getElementById('curTime'), durTime = document.getElementById('durTime');
+      let curTrack = 0, isPlaying = false, audioCtx, analyser, source;
+      const visBars = []; for(let i=0; i<20; i++) { const b = document.createElement('div'); b.className = 'vis-bar'; document.getElementById('visualizer').appendChild(b); visBars.push(b); }
+      function fmt(s) { if (!s || isNaN(s)) return '0:00'; const m = Math.floor(s / 60), sc = Math.floor(s % 60); return m + ':' + (sc < 10 ? '0' : '') + sc; }
+      function initAudioCtx() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); analyser = audioCtx.createAnalyser(); analyser.fftSize = 64; source = audioCtx.createMediaElementSource(audio); source.connect(analyser); analyser.connect(audioCtx.destination); } if (audioCtx.state === 'suspended') audioCtx.resume(); }
+      function loadTrack(idx) { audio.src = tracks[idx].file; trackName.textContent = tracks[idx].title; audio.load(); }
+      function setPlayState(state) { isPlaying = state; trackStatus.textContent = state ? '▶ playing' : '⏸ paused'; trackStatus.style.color = state ? 'var(--accent)' : 'var(--accent3)'; playBtn.innerHTML = state ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play" style="margin-left:3px;"></i>'; vinylRecord.style.animation = state ? 'spin 3s linear infinite' : 'none'; }
+      audio.addEventListener('timeupdate', () => { progressFill.style.width = ((audio.currentTime / audio.duration * 100) || 0) + '%'; curTime.textContent = fmt(audio.currentTime); if (analyser && isPlaying) { const data = new Uint8Array(analyser.frequencyBinCount); analyser.getByteFrequencyData(data); visBars.forEach((b, i) => { b.style.height = ((data[i]/255)*22+2) + 'px'; }); } else { visBars.forEach(b => b.style.height = '2px'); }});
+      audio.addEventListener('loadedmetadata', () => durTime.textContent = fmt(audio.duration)); audio.addEventListener('play', () => setPlayState(true)); audio.addEventListener('pause', () => setPlayState(false)); audio.addEventListener('ended', () => { curTrack = (curTrack + 1) % tracks.length; loadTrack(curTrack); if (isPlaying) audio.play(); });
+      playBtn.addEventListener('click', () => { initAudioCtx(); if (isPlaying) audio.pause(); else audio.play(); });
+      document.getElementById('prevBtn').addEventListener('click', () => { curTrack = (curTrack - 1 + tracks.length) % tracks.length; loadTrack(curTrack); if (isPlaying) { initAudioCtx(); audio.play(); } });
+      document.getElementById('nextBtn').addEventListener('click', () => { curTrack = (curTrack + 1) % tracks.length; loadTrack(curTrack); if (isPlaying) { initAudioCtx(); audio.play(); } });
+      document.getElementById('progressTrack').addEventListener('click', e => { if (!audio.duration) return; const r = e.currentTarget.getBoundingClientRect(); audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration; });
+      document.getElementById('minimizeBtn').addEventListener('click', (e) => { e.stopPropagation(); const mp = document.getElementById('musicPlayer'); const col = mp.classList.toggle('collapsed'); document.getElementById('minimizeBtn').querySelector('i').className = col ? 'fas fa-plus' : 'fas fa-minus'; });
+      loadTrack(0); function tryAutoPlayMusic() { const p = audio.play(); if(p !== undefined) p.then(() => initAudioCtx()).catch(() => setPlayState(false)); }
+      document.head.appendChild(Object.assign(document.createElement('style'), {innerText: `@keyframes spin { 100% { transform: rotate(360deg); } }`}));
 
-      let curTrack = 0;
-      let isPlaying = false;
-      let audioCtx, analyser, source;
+      // ═════ COPY & CMD PALETTE ═════
+      document.querySelectorAll('.copy-btn').forEach(btn => btn.addEventListener('click', async () => { try { await navigator.clipboard.writeText(btn.dataset.copy); showToast('✧ link copied ✧'); } catch (err) { showToast('couldn\'t copy'); } }));
+      
+      const cmdPalette = document.getElementById('cmdPalette'), cmdInput = document.getElementById('cmdInput'), cmdList = document.getElementById('cmdList');
+      const commands = [ { label: 'about() ✦', id: 'home', icon: 'fa-heart' }, { label: 'skills[] ✦', id: 'skills', icon: 'fa-star' }, { label: 'work{} ✦', id: 'work', icon: 'fa-gem' }, { label: 'links() ✦', id: 'links', icon: 'fa-link' } ];
+      let cmdSel = 0, filteredCmds = [], partyInterval = null;
+      function togglePartyMode() { const a = document.body.classList.toggle('party-mode'); unlockSecret('party'); if (a) { showToast('🎉 party mode activated 🎉'); if (!REDUCED_MOTION) { let c = 0; partyInterval = setInterval(() => { confettiBurst(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.6, 20); c++; if (c>10) { clearInterval(partyInterval); document.body.classList.remove('party-mode'); } }, 400); } } else { showToast('party mode off'); clearInterval(partyInterval); } }
+      document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); toggleCmd(); } if (e.key === '/' && !e.target.closest('input')) { e.preventDefault(); toggleCmd(); } });
+      document.getElementById('terminalBtn').addEventListener('click', toggleCmd);
+      cmdInput.addEventListener('input', () => { filterCmds(); renderCmds(); });
+      cmdInput.addEventListener('keydown', e => { if(e.key==='ArrowDown') { e.preventDefault(); cmdSel=Math.min(cmdSel+1, filteredCmds.length-1); renderCmds(); } if(e.key==='ArrowUp') { e.preventDefault(); cmdSel=Math.max(cmdSel-1, 0); renderCmds(); } if(e.key==='Enter' && filteredCmds[cmdSel]) { e.preventDefault(); executeCommand(filteredCmds[cmdSel]); } if(e.key==='Escape') closeCmd(); });
+      function toggleCmd() { if(cmdPalette.classList.contains('open')) closeCmd(); else { cmdPalette.classList.add('open'); cmdInput.value = ''; filterCmds(); renderCmds(); gsap.fromTo(cmdPalette, {opacity: 0, y:-60}, {opacity: 1, y:-40, duration: 0.3, ease: "back.out(1.2)"}); setTimeout(() => cmdInput.focus(), 50); } }
+      function closeCmd() { gsap.to(cmdPalette, {opacity: 0, y:-60, duration: 0.2, onComplete: () => cmdPalette.classList.remove('open')}); }
+      function filterCmds() { const q = cmdInput.value.toLowerCase(); filteredCmds = commands.filter(c => c.label.toLowerCase().includes(q)); if('party'.includes(q) && q.length>0) filteredCmds.push({ label: '🎉 party mode', id: '__party', icon: 'fa-gift' }); cmdSel = 0; }
+      function executeCommand(cmd) { if (cmd.id === '__party') togglePartyMode(); else activatePane(cmd.id); closeCmd(); }
+      function renderCmds() { cmdList.innerHTML = ''; if (!filteredCmds.length) { cmdList.innerHTML = '<div class="cmd-empty">no commands found ✧</div>'; return; } filteredCmds.forEach((c, i) => { const d = document.createElement('div'); d.className = 'cmd-item' + (i === cmdSel ? ' selected' : ''); d.innerHTML = `<i class="fas ${c.icon}"></i> ${c.label}`; d.addEventListener('click', () => executeCommand(c)); cmdList.appendChild(d); }); }
 
-      const visContainer = document.getElementById('visualizer');
-      const visBars = [];
-      for(let i=0; i<20; i++) {
-        const b = document.createElement('div');
-        b.className = 'vis-bar';
-        visContainer.appendChild(b);
-        visBars.push(b);
-      }
-
-      function fmt(s) {
-        if (!s || isNaN(s)) return '0:00';
-        const m = Math.floor(s / 60), sc = Math.floor(s % 60);
-        return m + ':' + (sc < 10 ? '0' : '') + sc;
-      }
-
-      function initAudioCtx() {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          analyser = audioCtx.createAnalyser();
-          analyser.fftSize = 64;
-          source = audioCtx.createMediaElementSource(audio);
-          source.connect(analyser);
-          analyser.connect(audioCtx.destination);
-        }
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-      }
-
-      function loadTrack(idx) {
-        audio.src = tracks[idx].file;
-        trackName.textContent = tracks[idx].title;
-        audio.load();
-      }
-
-      function setPlayState(state) {
-        isPlaying = state;
-        trackStatus.textContent = state ? '▶ playing' : '⏸ paused';
-        trackStatus.style.color = state ? 'var(--accent)' : 'var(--accent3)';
-        playBtn.innerHTML = state ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play" style="margin-left:3px;"></i>';
-        vinylRecord.style.animation = state ? 'spin 3s linear infinite' : 'none';
-      }
-
-      audio.addEventListener('timeupdate', () => {
-        progressFill.style.width = ((audio.currentTime / audio.duration * 100) || 0) + '%';
-        curTime.textContent = fmt(audio.currentTime);
-
-        if (analyser && isPlaying) {
-          const data = new Uint8Array(analyser.frequencyBinCount);
-          analyser.getByteFrequencyData(data);
-          visBars.forEach((b, i) => {
-            const h = (data[i] / 255) * 22 + 2;
-            b.style.height = h + 'px';
-          });
-        } else {
-          visBars.forEach(b => b.style.height = '2px');
-        }
-      });
-
-      audio.addEventListener('loadedmetadata', () => durTime.textContent = fmt(audio.duration));
-      audio.addEventListener('play', () => setPlayState(true));
-      audio.addEventListener('pause', () => setPlayState(false));
-      audio.addEventListener('ended', () => {
-        curTrack = (curTrack + 1) % tracks.length;
-        loadTrack(curTrack);
-        if (isPlaying) audio.play();
-      });
-
-      playBtn.addEventListener('click', () => {
-        initAudioCtx();
-        if (isPlaying) audio.pause(); else audio.play();
-      });
-
-      document.getElementById('prevBtn').addEventListener('click', () => {
-        curTrack = (curTrack - 1 + tracks.length) % tracks.length;
-        loadTrack(curTrack);
-        if (isPlaying) { initAudioCtx(); audio.play(); }
-      });
-
-      document.getElementById('nextBtn').addEventListener('click', () => {
-        curTrack = (curTrack + 1) % tracks.length;
-        loadTrack(curTrack);
-        if (isPlaying) { initAudioCtx(); audio.play(); }
-      });
-
-      document.getElementById('progressTrack').addEventListener('click', e => {
-        if (!audio.duration) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
-      });
-
-      document.getElementById('minimizeBtn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        const mp = document.getElementById('musicPlayer');
-        const collapsed = mp.classList.toggle('collapsed');
-        document.getElementById('minimizeBtn').querySelector('i').className = collapsed ? 'fas fa-plus' : 'fas fa-minus';
-      });
-
-      loadTrack(0);
-
-      function tryAutoPlayMusic() {
-        const p = audio.play();
-        if(p !== undefined) {
-          p.then(() => { initAudioCtx(); }).catch(() => { setPlayState(false); });
-        }
-      }
-
-      const styleSheet = document.createElement('style');
-      styleSheet.innerText = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
-      document.head.appendChild(styleSheet);
-
-      // ═════ COPY-TO-CLIPBOARD ═════
-      document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          try {
-            await navigator.clipboard.writeText(btn.dataset.copy);
-            showToast('✧ link copied ✧');
-          } catch (err) {
-            showToast('couldn\'t copy — long-press the link to copy manually');
-          }
-        });
-      });
-
-      // ═════ COMMAND PALETTE ═════
-      const cmdPalette = document.getElementById('cmdPalette');
-      const cmdInput = document.getElementById('cmdInput');
-      const cmdList = document.getElementById('cmdList');
-      const commands = [
-        { label: 'about() ✦', id: 'home', icon: 'fa-heart' },
-        { label: 'skills[] ✦', id: 'skills', icon: 'fa-star' },
-        { label: 'work{} ✦', id: 'work', icon: 'fa-gem' },
-        { label: 'links() ✦', id: 'links', icon: 'fa-link' }
-      ];
-      const hiddenCommands = [
-        { label: '🎉 party mode', id: '__party', icon: 'fa-gift', trigger: 'party' }
-      ];
-      let cmdSel = 0;
-      let filteredCmds = [];
-      let partyInterval = null;
-
-      function togglePartyMode() {
-        const active = document.body.classList.toggle('party-mode');
-        unlockSecret('party');
-        if (active) {
-          showToast('🎉 party mode activated 🎉');
-          if (!REDUCED_MOTION) {
-            let count = 0;
-            partyInterval = setInterval(() => {
-              confettiBurst(Math.random() * window.innerWidth, Math.random() * window.innerHeight * 0.6, 20);
-              count++;
-              if (count > 10) {
-                clearInterval(partyInterval);
-                document.body.classList.remove('party-mode');
-              }
-            }, 400);
-          }
-        } else {
-          showToast('party mode off');
-          if (partyInterval) clearInterval(partyInterval);
-        }
-      }
-
-      function setupCmdPalette() {
-        document.addEventListener('keydown', e => {
-          if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); toggleCmd(); }
-          if (e.key === '/' && !e.target.closest('input')) { e.preventDefault(); toggleCmd(); }
-        });
-        document.getElementById('terminalBtn').addEventListener('click', toggleCmd);
-
-        cmdInput.addEventListener('input', () => { filterCmds(); renderCmds(); });
-        cmdInput.addEventListener('keydown', e => {
-          if(e.key === 'ArrowDown') { e.preventDefault(); cmdSel = Math.min(cmdSel+1, filteredCmds.length-1); renderCmds(); }
-          if(e.key === 'ArrowUp') { e.preventDefault(); cmdSel = Math.max(cmdSel-1, 0); renderCmds(); }
-          if(e.key === 'Enter' && filteredCmds[cmdSel]) {
-            e.preventDefault();
-            executeCommand(filteredCmds[cmdSel]);
-          }
-          if(e.key === 'Escape') closeCmd();
-        });
-      }
-
-      function toggleCmd() {
-        if(cmdPalette.classList.contains('open')) closeCmd();
-        else {
-          cmdPalette.classList.add('open');
-          cmdInput.value = ''; filterCmds(); renderCmds();
-          gsap.fromTo(cmdPalette, {opacity: 0, y:-60, rotationX: -15}, {opacity: 1, y:-40, rotationX: 0, duration: 0.3, ease: "back.out(1.2)"});
-          setTimeout(() => cmdInput.focus(), 50);
-        }
-      }
-
-      function closeCmd() {
-        gsap.to(cmdPalette, {opacity: 0, y:-60, rotationX: 15, duration: 0.2, onComplete: () => cmdPalette.classList.remove('open')});
-      }
-
-      function filterCmds() {
-        const q = cmdInput.value.toLowerCase();
-        const visibleMatches = commands.filter(c => c.label.toLowerCase().includes(q));
-        const hiddenMatches = q.length > 0 ? hiddenCommands.filter(c => c.trigger.includes(q)) : [];
-        filteredCmds = [...visibleMatches, ...hiddenMatches];
-        cmdSel = 0;
-      }
-
-      function executeCommand(cmd) {
-        if (cmd.id.startsWith('__')) {
-          if (cmd.id === '__party') togglePartyMode();
-        } else {
-          activatePane(cmd.id);
-        }
-        closeCmd();
-      }
-
-      function renderCmds() {
-        cmdList.innerHTML = '';
-        if (!filteredCmds.length) {
-          const empty = document.createElement('div');
-          empty.className = 'cmd-empty';
-          empty.textContent = 'no commands found ✧';
-          cmdList.appendChild(empty);
-          return;
-        }
-        filteredCmds.forEach((c, i) => {
-          const div = document.createElement('div');
-          div.className = 'cmd-item' + (i === cmdSel ? ' selected' : '');
-          div.innerHTML = `<i class="fas ${c.icon}"></i> ${c.label}`;
-          div.addEventListener('click', () => executeCommand(c));
-          cmdList.appendChild(div);
-        });
-      }
-
-      // Sparkle FX button
-      document.getElementById('fxBtn').addEventListener('click', () => {
-        for(let i=0; i<20; i++) {
-          setTimeout(() => {
-            const p = document.createElement('div');
-            p.className = 'click-burst';
-            p.textContent = '✧';
-            p.style.left = (Math.random() * window.innerWidth) + 'px';
-            p.style.top = (Math.random() * window.innerHeight) + 'px';
-            const a = Math.random() * Math.PI*2;
-            const d = 60 + Math.random()*120;
-            p.style.setProperty('--dx', Math.cos(a)*d + 'px');
-            p.style.setProperty('--dy', Math.sin(a)*d + 'px');
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 800);
-          }, i*40);
-        }
-      });
+      // Sparkle FX
+      document.getElementById('fxBtn').addEventListener('click', () => { for(let i=0; i<20; i++) setTimeout(() => { const p = document.createElement('div'); p.className = 'click-burst'; p.textContent = '✧'; p.style.left = (Math.random()*window.innerWidth)+'px'; p.style.top = (Math.random()*window.innerHeight)+'px'; const a = Math.random()*Math.PI*2, d = 60+Math.random()*120; p.style.setProperty('--dx', Math.cos(a)*d+'px'); p.style.setProperty('--dy', Math.sin(a)*d+'px'); document.body.appendChild(p); setTimeout(() => p.remove(), 800); }, i*40); });
 
     })();
   </script>
